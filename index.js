@@ -7,6 +7,7 @@ const fs = require('fs');
 const mongoose = require("mongoose");
 const morgan = require('morgan');
 const passport = require("passport");
+const path = require("path");
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
@@ -24,10 +25,10 @@ mongoose.connect("mongodb://" + config.mongo.host + ":" + config.mongo.port + "/
 });
 
 // register each model with Mongoose
-var modelsDir = __dirname + "/models/";
+const modelsDir = path.resolve(__dirname + "/models/");
 fs.readdirSync(modelsDir).forEach((file) => {
   if(file.substr(-3) == '.js') {
-    var filePath = modelsDir + file;
+    const filePath = path.resolve(modelsDir + "/" + file);
     require(filePath)(config, mongoose);
   }
 });
@@ -77,14 +78,14 @@ const router = express.Router();
 app.use('/v1', router);
 fs.readdirSync('./routes').forEach((file) => {
   if(file.substr(-3) == '.js') {
-    let route = require('./routes/' + file);
+    const route = require('./routes/' + file);
     route(app, mongoose, passport, router);
   }
 });
 
 // setup views for documentation
 app.use(express.static('public'));
-app.set('views', __dirname + '/public');
+app.set('views', path.resolve(__dirname + '/public'));
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 
@@ -95,7 +96,7 @@ const server = app.listen(config.server.port, () => {
 
 // create admin user if user doesn't exit, but only when running locally
 if (process.env.NODE_ENV == "local") {
-  let User = mongoose.model("User");
+  const User = mongoose.model("User");
   User.update({
     email: "test@example.com"
   }, {

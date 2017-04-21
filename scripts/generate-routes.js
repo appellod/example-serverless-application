@@ -16,15 +16,18 @@ if (!process.argv[2]) {
 }
 
 const file = process.argv[2];
-const model = require(__dirname + "/../models/" + file)({}, mongoose);
+const models = path.resolve(__dirname + "/../models/" + file);
+const model = require(models)({}, mongoose);
 const name = model.modelName;
 const namePlural = pluralize(name);
 const nameCamel = name.substring(0, 1).toLowerCase() + name.slice(1);
 const nameCamelPlural = namePlural.substring(0, 1).toLowerCase() + namePlural.slice(1);
 const attributes = model.schema.paths;
 
-const routeData = require(__dirname + "/../templates/routes")(name, namePlural, nameCamel, nameCamelPlural, attributes);
-const testData = require(__dirname + "/../templates/routes-test")(name, namePlural, nameCamel, nameCamelPlural, attributes);
+const routeTemplate = path.resolve(__dirname + "/../templates/routes");
+const testTemplate = path.resolve(__dirname + "/../templates/routes-test");
+const routeData = require(routeTemplate)(name, namePlural, nameCamel, nameCamelPlural, attributes);
+const testData = require(testTemplate)(name, namePlural, nameCamel, nameCamelPlural, attributes);
 
 const routePath = path.resolve(__dirname + "/../routes/" + nameCamelPlural + ".js");
 const testPath = path.resolve(__dirname + "/../test/routes/" + nameCamelPlural + ".js");

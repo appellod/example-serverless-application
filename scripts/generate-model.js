@@ -25,8 +25,10 @@ if (!regex.test(process.argv[2])) {
 const name = process.argv[2].substring(0, 1).toUpperCase() + process.argv[2].slice(1);
 const nameCamel = name.substring(0, 1).toLowerCase() + name.slice(1);
 
-const modelData = require(__dirname + "/../templates/model")(name, nameCamel);
-const testData = require(__dirname + "/../templates/model-test")(name, nameCamel);
+const modelTemplate = path.resolve(__dirname + "/../templates/model");
+const testTemplate = path.resolve(__dirname + "/../templates/model-test");
+const modelData = require(modelTemplate)(name, nameCamel);
+const testData = require(testTemplate)(name, nameCamel);
 
 const modelPath = path.resolve(__dirname + "/../models/" + nameCamel + ".js");
 const testPath = path.resolve(__dirname + "/../test/models/" + nameCamel + ".js");
