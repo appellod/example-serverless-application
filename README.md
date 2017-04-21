@@ -126,12 +126,12 @@ parameters to the *mock()* function. Refer to the User model to see an example.
 **Generating Routes for a Model**  
 Basic CRUD endpoints can be generated for any model. Simply run:
 ```
-npm run generate-route -- [fileName]
+npm run generate-routes -- [fileName]
 ```
 The file name should be the model's file name without any path information. For
 example, a User model defined in user.js would use the command:
 ```
-npm run generate-route -- user.js
+npm run generate-routes -- user.js
 ```
 This will generate the route file in routes/ and a test file in test/routes/.
 
