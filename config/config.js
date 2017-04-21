@@ -2,6 +2,7 @@
 
 module.exports = {
   test: {
+    environment: "test",
     mongo: {
       host: "127.0.0.1",
       port: "27017",
@@ -19,6 +20,7 @@ module.exports = {
     }
   },
   local: {
+    environment: "local",
     mongo: {
       host: "127.0.0.1",
       port: "27017",
@@ -36,6 +38,7 @@ module.exports = {
     }
   },
   dev: {
+    environment: "dev",
     mongo: {
       host: "127.0.0.1",
       port: "27017",
@@ -53,6 +56,7 @@ module.exports = {
     }
   },
   staging: {
+    environment: "staging",
     mongo: {
       host: "127.0.0.1",
       port: "27017",
@@ -70,6 +74,7 @@ module.exports = {
     }
   },
   prod: {
+    environment: "prod",
     mongo: {
       host: "127.0.0.1",
       port: "27017",

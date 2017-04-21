@@ -13,15 +13,15 @@ const MongoStore = require('connect-mongo')(session);
 
 // load environment
 const environment = process.env.NODE_ENV || "local";
-const config = require('./config/config')[environment];
-if (process.env.NODE_ENV != "test") console.log("Using Environment: " + environment);
+const config = require("./config/config")[environment];
+if (config.environment != "test") console.log("Using Environment: " + config.environment);
 
 // setup Mongoose
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://" + config.mongo.host + ":" + config.mongo.port + "/" + config.mongo.database, (err) => {
   if (err) throw err;
 
-  if (process.env.NODE_ENV != "test") console.log("Mongoose connection successful.");
+  if (config.environment != "test") console.log("Mongoose connection successful.");
 });
 
 // register each model with Mongoose
@@ -35,7 +35,7 @@ fs.readdirSync(modelsDir).forEach((file) => {
 
 // setup Express
 const app = express();
-if (process.env.NODE_ENV != "test") app.use(morgan("dev"));
+if (config.environment != "test") app.use(morgan("dev"));
 app.use(cors());
 app.disable('x-powered-by');
 
@@ -78,7 +78,7 @@ const router = express.Router();
 app.use('/v1', router);
 fs.readdirSync('./routes').forEach((file) => {
   if(file.substr(-3) == '.js') {
-    const route = require('./routes/' + file);
+    const route = require("./routes/" + file);
     route(app, mongoose, passport, router);
   }
 });
@@ -91,11 +91,11 @@ app.engine('html', require('ejs').renderFile);
 
 // start Express
 const server = app.listen(config.server.port, () => {
-  if (process.env.NODE_ENV != "test") console.log('Web server running on port %s.', config.server.port);
+  if (config.environment != "test") console.log('Web server running on port %s.', config.server.port);
 });
 
 // create admin user if user doesn't exit, but only when running locally
-if (process.env.NODE_ENV == "local") {
+if (config.environment == "local") {
   const User = mongoose.model("User");
   User.update({
     email: "test@example.com"

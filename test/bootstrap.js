@@ -5,7 +5,7 @@ const async = require("async");
 process.env.NODE_ENV = "test";
 
 // start the API server
-const index = require('../index');
+const index = require("../index");
 const config = index.config;
 const mongoose = index.mongoose;
 
