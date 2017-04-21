@@ -116,7 +116,7 @@ A new data model can be generated using the following script:
 npm run generate-model -- [ModelName]
 ```
 This will generate a new model file within the models/ directory and a test file
-within the test/models/ directory. Data modeling is done using [Mongoose](http://mongoosejs.com/). Add any attributes, indexes, hooks or 
+within the test/models/ directory. Data modeling is done using [Mongoose](http://mongoosejs.com/). Add any attributes, indexes, hooks or
 methods that you need.
 
 Note that a *mock()* function is generated with each model to make testing
@@ -172,7 +172,7 @@ configurations are available here. Five environments are included by default:
 * test: For running the test suite.
 * local: For running on localhost.
 * dev: For running on a remote server in a development environment.
-* staging: For running on a remote server in a staging enviroment.
+* staging: For running on a remote server in a staging environment.
 * prod: For running on a remote server in production.
 
 Environment can be selected by setting the NODE_ENV system environment variable.
