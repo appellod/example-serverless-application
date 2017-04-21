@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt-nodejs');
 const chance = new require('chance')();
 const request = require("request");
 
-module.exports = (config, mongoose) => {
+module.exports = function(config, mongoose) {
 	const Schema = mongoose.Schema;
 	const schema = Schema({
 		email: {

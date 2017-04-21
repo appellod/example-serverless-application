@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = (app, mongoose, passport, router) => {
+module.exports = function(app, mongoose, passport, router) {
 	const User = mongoose.model("User");
 
   /**

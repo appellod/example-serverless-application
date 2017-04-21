@@ -3,7 +3,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
-module.exports = (config, mongoose) => {
+module.exports = function(config, mongoose) {
   const User = mongoose.model("User");
 
 	chai.use(chaiHttp);

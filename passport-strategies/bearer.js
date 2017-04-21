@@ -2,7 +2,7 @@
 
 const BearerStrategy = require("passport-http-bearer");
 
-module.exports = (mongoose, passport) => {
+module.exports = function(mongoose, passport) {
   const User = mongoose.model("User");
 
   passport.use(new BearerStrategy((token, done) => {

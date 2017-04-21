@@ -2,7 +2,7 @@
 
 const path = require("path");
 
-module.exports = (app, mongoose, passport, router) => {
+module.exports = function(app, mongoose, passport, router) {
 	const User = mongoose.model("User");
 
 	/**
