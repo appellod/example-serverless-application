@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = (name, nameCamel) => {
+module.exports = function(name, nameCamel) {
   const data = `"use strict";
 
 const chance = new require('chance')();

@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = (name, namePlural, nameCamel, nameCamelPlural, attributes) => {
+module.exports = function(name, namePlural, nameCamel, nameCamelPlural, attributes) {
   const ignore = [
     "_id",
     "__v",
