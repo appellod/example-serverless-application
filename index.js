@@ -28,7 +28,7 @@ mongoose.connect("mongodb://" + config.mongo.host + ":" + config.mongo.port + "/
 const modelsDir = path.resolve(__dirname + "/models/");
 fs.readdirSync(modelsDir).forEach((file) => {
   if(file.substr(-3) == '.js') {
-    const filePath = path.resolve(modelsDir + "/" + file);
+    const filePath = path.join(modelsDir, file);
     require(filePath)(config, mongoose);
   }
 });
