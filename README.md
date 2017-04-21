@@ -115,9 +115,9 @@ A new data model can be generated using the following script:
 ```
 npm run generate-model -- [ModelName]
 ```
-This will generate a new model file within the models/ folder. Data modeling is
-done using [Mongoose](http://mongoosejs.com/). Add any attributes, indexes,
-hooks or methods that you need.
+This will generate a new model file within the models/ directory and a test file
+within the test/models/ directory. Data modeling is done using [Mongoose](http://mongoosejs.com/). Add any attributes, indexes, hooks or 
+methods that you need.
 
 Note that a *mock()* function is generated with each model to make testing
 easier. Any required attributes should be set using [Chance](https://github.com/chancejs/chancejs) if they are not supplied as
