@@ -10,7 +10,7 @@ module.exports = {
 		},
 		server: {
 			host: "127.0.0.1",
-			port: "3004"
+			port: "3001"
 		},
 		mailgun: {
 			domain: "sandboxf70278866c584b1980bc071d8029e646.mailgun.org",
@@ -19,7 +19,7 @@ module.exports = {
 		passwordReset: {
 			company: "Example Team",
 			from: "no-reply@example.com",
-			url: "http://127.0.0.1:3004/reset-password.html"
+			url: "http://127.0.0.1:3001/reset-password.html"
 		}
 	},
 	local: {
@@ -31,7 +31,7 @@ module.exports = {
 		},
 		server: {
 			host: "127.0.0.1",
-			port: "3003"
+			port: "3000"
 		},
 		mailgun: {
 			domain: "sandboxf70278866c584b1980bc071d8029e646.mailgun.org",
@@ -40,7 +40,7 @@ module.exports = {
 		passwordReset: {
 			company: "Example Team",
 			from: "no-reply@example.com",
-			url: "http://127.0.0.1:3003/reset-password.html"
+			url: "http://127.0.0.1:3000/reset-password.html"
 		}
 	},
 	dev: {
@@ -52,7 +52,7 @@ module.exports = {
 		},
 		server: {
 			host: "127.0.0.1",
-			port: "3002"
+			port: "3000"
 		},
 		mailgun: {
 			domain: "sandboxf70278866c584b1980bc071d8029e646.mailgun.org",
@@ -61,7 +61,7 @@ module.exports = {
 		passwordReset: {
 			company: "Example Team",
 			from: "no-reply@example.com",
-			url: "http://127.0.0.1:3002/reset-password.html"
+			url: "http://127.0.0.1:3000/reset-password.html"
 		}
 	},
 	staging: {
@@ -73,7 +73,7 @@ module.exports = {
 		},
 		server: {
 			host: "127.0.0.1",
-			port: "3001"
+			port: "3000"
 		},
 		mailgun: {
 			domain: "sandboxf70278866c584b1980bc071d8029e646.mailgun.org",
@@ -82,7 +82,7 @@ module.exports = {
 		passwordReset: {
 			company: "Example Team",
 			from: "no-reply@example.com",
-			url: "http://127.0.0.1:3001/reset-password.html"
+			url: "http://127.0.0.1:3000/reset-password.html"
 		}
 	},
 	prod: {
