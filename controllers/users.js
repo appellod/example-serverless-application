@@ -3,7 +3,7 @@
 module.exports = function(app, mongoose, passport, router) {
 	const User = mongoose.model("User");
 
-  /**
+	/**
 	 * @api {get} /users Get Users
 	 * @apiName GetUsers
 	 * @apiGroup Users

@@ -1,30 +1,30 @@
 "use strict";
 
 module.exports = function(name, namePlural, nameCamel, nameCamelPlural, attributes) {
-  const ignore = [
-    "_id",
-    "__v",
-    "createdAt",
-    "updatedAt"
-  ];
+	const ignore = [
+		"_id",
+		"__v",
+		"createdAt",
+		"updatedAt"
+	];
 
-  let attributesDocumentation = "";
-  for (let key in attributes) {
-    let attr = attributes[key];
+	let attributesDocumentation = "";
+	for (let key in attributes) {
+		let attr = attributes[key];
 
-    if (!ignore.includes(key)) {
-      attributesDocumentation += "	 * @apiParam {" + attr.instance + "} " + key + " <i>Awaiting Documentation</i>\n";
-    }
-  }
-  attributesDocumentation = attributesDocumentation.replace("     ", "");
-  attributesDocumentation = attributesDocumentation.substring(0, attributesDocumentation.length - 1);
+		if (!ignore.includes(key)) {
+			attributesDocumentation += "	 * @apiParam {" + attr.instance + "} " + key + " <i>Awaiting Documentation</i>\n";
+		}
+	}
+	attributesDocumentation = attributesDocumentation.replace("     ", "");
+	attributesDocumentation = attributesDocumentation.substring(0, attributesDocumentation.length - 1);
 
-  const data = `"use strict";
+	const data = `"use strict";
 
 module.exports = function(app, mongoose, passport, router) {
 	const ${name} = mongoose.model("${name}");
 
-  /**
+	/**
 	 * @api {get} /${nameCamelPlural} Get ${namePlural}
 	 * @apiName Get${namePlural}
 	 * @apiGroup ${namePlural}
@@ -133,8 +133,7 @@ ${attributesDocumentation}
 			}
 		});
 	});
-
 };`;
 
-  return data;
+	return data;
 };

@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function(name, nameCamel) {
-  const data = `"use strict";
+	const data = `"use strict";
 
 const chai = require('chai');
 
@@ -16,5 +16,5 @@ describe("models/${nameCamel}.js", () => {
 });
 `;
 
-  return data;
+	return data;
 };

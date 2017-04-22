@@ -33,7 +33,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/authentication.js",
+    "filename": "controllers/authentication.js",
     "groupTitle": "Authentication"
   },
   {
@@ -84,7 +84,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/authentication.js",
+    "filename": "controllers/authentication.js",
     "groupTitle": "Authentication"
   },
   {
@@ -95,7 +95,7 @@
     "group": "Authentication",
     "description": "<p>Logs a user out.</p>",
     "version": "0.0.0",
-    "filename": "routes/authentication.js",
+    "filename": "controllers/authentication.js",
     "groupTitle": "Authentication"
   },
   {
@@ -118,21 +118,8 @@
         ]
       }
     },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "resetHash",
-            "description": "<p>The reset password hash.</p>"
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
-    "filename": "routes/authentication.js",
+    "filename": "controllers/authentication.js",
     "groupTitle": "Authentication"
   },
   {
@@ -163,7 +150,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/authentication.js",
+    "filename": "controllers/authentication.js",
     "groupTitle": "Authentication"
   },
   {
@@ -214,7 +201,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/authentication.js",
+    "filename": "controllers/authentication.js",
     "groupTitle": "Authentication"
   },
   {
@@ -265,7 +252,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/users.js",
+    "filename": "controllers/users.js",
     "groupTitle": "Users"
   },
   {
@@ -302,7 +289,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/users.js",
+    "filename": "controllers/users.js",
     "groupTitle": "Users"
   },
   {
@@ -360,7 +347,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/users.js",
+    "filename": "controllers/users.js",
     "groupTitle": "Users"
   },
   {
@@ -384,7 +371,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/users.js",
+    "filename": "controllers/users.js",
     "groupTitle": "Users"
   },
   {
@@ -435,7 +422,7 @@
       }
     },
     "version": "0.0.0",
-    "filename": "routes/users.js",
+    "filename": "controllers/users.js",
     "groupTitle": "Users"
   }
 ]

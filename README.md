@@ -27,27 +27,28 @@ logout, and password recovery endpoints include full test coverage.
 Any route can be protected by token-based authentication. Any request to a
 secured route must include a valid access token in the Authorization HTTP
 header. The token will then be matched to a user and made accessible within
-routes via the *req.user* variable. Tokens expire after 30 days. Any invalid
+controllers via the *req.user* variable. Tokens expire after 30 days. Any invalid
 tokens will receive a 401 Unauthorized HTTP response.
 
 **API Documentation Generator**  
 The API uses ApiDoc to generate API documentation based on in-line comments
-before each API endpoint. Full documentation is included for all authentication endpoints such as signup, login and logout. Documentation is easily updated
+before each API endpoint. Full documentation is included for all authentication
+endpoints such as signup, login and logout. Documentation is easily updated
 using a single command. Documentation also requires that a user logs in to
 view the documentation, providing security for sensitive information.
 
 **Easy Test Suite**  
-Included test suite is ready to test any models or routes in your application.
+Included test suite is ready to test any model or controller in your application.
 Tests are performed using Mocha. All database collections are cleared before
 each test to make sure that every test uses fresh data. Helper method is
 included for easily testing both secured and unsecured API endpoints.
 
-**Model and Route Generators**  
-Routes can easily be generated from Mongoose models using a built-in generator
-script. Generator will create a route file with basic CRUD endpoints and
+**Model and Controller Generators**  
+Controllers can easily be generated from Mongoose models using a built-in generator
+script. Generator will create a controller file with basic CRUD endpoints and
 documentation for each of the model's attributes. A test file offering basic
-test coverage will also be generated for the route. Route and test templates
-are easily accessible and can be changed to fit your needs.
+test coverage will also be generated for the controller. Templates are easily
+accessible and can be changed to fit your needs.
 
 **ES6 Support**  
 Most of the code is written with ES6 ensuring that coding conventions are
@@ -110,7 +111,7 @@ environment, or at the very least, the test and local environments.
 
 ## Working on the API
 
-**Adding a New Model**  
+**Generating a New Model**  
 A new data model can be generated using the following script:
 ```
 npm run generate-model -- [ModelName]
@@ -123,17 +124,17 @@ Note that a *mock()* function is generated with each model to make testing
 easier. Any required attributes should be set using [Chance](https://github.com/chancejs/chancejs) if they are not supplied as
 parameters to the *mock()* function. Refer to the User model to see an example.
 
-**Generating Routes for a Model**  
+**Generating a Controller for a Model**  
 Basic CRUD endpoints can be generated for any model. Simply run:
 ```
-npm run generate-routes -- [fileName]
+npm run generate-controller -- [fileName]
 ```
 The file name should be the model's file name without any path information. For
 example, a User model defined in user.js would use the command:
 ```
-npm run generate-routes -- user.js
+npm run generate-controller -- user.js
 ```
-This will generate the route file in routes/ and a test file in test/routes/.
+This will generate the controller file in controllers/ and a test file in test/controllers/.
 
 **Running the Test Suite**  
 Try running the test suite to make sure everything is working correctly with:
@@ -145,7 +146,7 @@ fail, check to make sure all required fields are set in the model's *mock()*
 function.
 
 **Updating the API Documentation**  
-In the newly generated route file, documentation will be automatically included
+In the newly generated controller file, documentation will be automatically included
 above each endpoint. The only thing that should need to be modified is the
 model's attribute descriptions. Replace any instance of the following text with
 proper descriptions:
@@ -193,14 +194,14 @@ basic token-based authentication to any API endpoint.
 Contains the files for the API documentation. Includes a login view so users
 can authenticate themselves before viewing the documentation.
 
-**routes/**  
-All routes for the API are defined here.
+**controllers/**  
+All controllers for the API are defined here.
 
 **scripts/**  
-Scripts such as the Model and Route generator scripts are included here.
+Scripts such as the Model and Controller generator scripts are included here.
 
 **templates/**  
-Templates for the Model and Route generator scripts are defined here.
+Templates for the Model and Controller generator scripts are defined here.
 
 **test/**  
 All tests are included here. Mocha must be installed globally before the test

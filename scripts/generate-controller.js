@@ -1,6 +1,6 @@
 /**
- * Generates a route and test file for the given model file.
- * @arg {String} file The filename of the model to generate routes for.
+ * Generates a controller and test file for the given model file.
+ * @arg {String} file The filename of the model to generate controllers for.
  */
 
 "use strict";
@@ -24,19 +24,19 @@ const nameCamel = name.substring(0, 1).toLowerCase() + name.slice(1);
 const nameCamelPlural = namePlural.substring(0, 1).toLowerCase() + namePlural.slice(1);
 const attributes = model.schema.paths;
 
-const routeTemplate = path.resolve(__dirname + "/../templates/routes");
-const testTemplate = path.resolve(__dirname + "/../templates/routes-test");
-const routeData = require(routeTemplate)(name, namePlural, nameCamel, nameCamelPlural, attributes);
+const controllerTemplate = path.resolve(__dirname + "/../templates/controller");
+const testTemplate = path.resolve(__dirname + "/../templates/controller-test");
+const controllerData = require(controllerTemplate)(name, namePlural, nameCamel, nameCamelPlural, attributes);
 const testData = require(testTemplate)(name, namePlural, nameCamel, nameCamelPlural, attributes);
 
-const routePath = path.resolve(__dirname + "/../routes/" + nameCamelPlural + ".js");
-const testPath = path.resolve(__dirname + "/../test/routes/" + nameCamelPlural + ".js");
+const controllerPath = path.resolve(__dirname + "/../controllers/" + nameCamelPlural + ".js");
+const testPath = path.resolve(__dirname + "/../test/controllers/" + nameCamelPlural + ".js");
 
-if (!fs.existsSync(routePath)) {
-	fs.writeFileSync(routePath, routeData);
-	console.log("Generated route file at:", routePath);
+if (!fs.existsSync(controllerPath)) {
+	fs.writeFileSync(controllerPath, controllerData);
+	console.log("Generated controller file at:", controllerPath);
 } else {
-	console.log("Route file already exists at:", routePath);
+	console.log("Controller file already exists at:", controllerPath);
 }
 
 if (!fs.existsSync(testPath)) {

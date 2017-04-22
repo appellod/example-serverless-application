@@ -18,8 +18,8 @@ if (!process.argv[2]) {
 // make sure model name is only letters
 let regex = /^[a-zA-Z]+$/
 if (!regex.test(process.argv[2])) {
-  console.error(new Error("Model name must consist of only letters."));
-  process.exit(1);
+	console.error(new Error("Model name must consist of only letters."));
+	process.exit(1);
 }
 
 const name = process.argv[2].substring(0, 1).toUpperCase() + process.argv[2].slice(1);

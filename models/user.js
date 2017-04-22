@@ -191,8 +191,8 @@ module.exports = function(config, mongoose) {
 	 * @param {String} next.user The updated user.
 	 */
 	schema.methods.requestPasswordReset = function(next) {
-		if (!config.mailgun) {
-			let error = new Error("Mailgun settings not specified in configuration file.");
+		if (!config.mailgun || !config.passwordReset) {
+			let error = new Error("Mailgun and/or password reset settings not specified in configuration file.");
 			return next(error);
 		}
 
@@ -200,22 +200,21 @@ module.exports = function(config, mongoose) {
 		this.save((err, user) => {
 			if (err) console.error(err);
 
-			let html = "";
+			let resetUrl = config.passwordReset.url + "?resetHash=" + user.resetHash;
 
-			html += "You have requested to reset your password. Please click the link below to create a new password:<br><br>";
-
-			let host = config.server.host;
-			let port = (config.server.port != 80) ? ":" + config.server.port : "";
-			let resetUrl = host + port + "/reset-password.html?resetHash=" + user.resetHash;
-			html += resetUrl;
-
-			html += "<br><br>Thank you,<br>" + config.mailgun.company;
+			let html = "You have requested to reset your password. Please click the link below to create a new password:";
+			html += "<br><br>";
+			html += "<a href='" + resetUrl + "'>" + resetUrl + "</a>";
+			html += "<br><br>";
+			html += "Thank you,";
+			html += "<br>"
+			html += config.passwordReset.company;
 
 			let url = 'https://api:key-' + config.mailgun.key + '@api.mailgun.net/v3/' + config.mailgun.domain + '/messages';
 			request.post({
 				url: url,
 				form: {
-					from: config.mailgun.noreply,
+					from: config.passwordReset.from,
 					to: user.email,
 					subject: 'Reset Password',
 					html: html

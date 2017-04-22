@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function(name, nameCamel) {
-  const data = `"use strict";
+	const data = `"use strict";
 
 const chance = new require('chance')();
 
@@ -31,5 +31,5 @@ module.exports = function(config, mongoose) {
 }
 `;
 
-  return data;
+	return data;
 };

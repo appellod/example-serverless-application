@@ -1,57 +1,57 @@
 body {
-  background: #c0c0c0;
-  font-family: Arial;
+	background: #c0c0c0;
+	font-family: Arial;
 }
 
 #form-container {
-  background: white;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+	background: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 
-  border: 2px solid #777777;
-  display: block;
-  padding: 5px;
-  width: 300px;
+	border: 2px solid #777777;
+	display: block;
+	padding: 5px;
+	width: 300px;
 }
 
 #form-container h1 {
-  font-size: 1.75em;
-  margin: 4px 0px 7px 0px;
-  padding: 0px;
-  text-align: center;
-  white-space: nowrap;
+	font-size: 1.75em;
+	margin: 4px 0px 7px 0px;
+	padding: 0px;
+	text-align: center;
+	white-space: nowrap;
 }
 
 #form-container input {
-  border: 1px solid #777777;
-  display: block;
-  margin: 2px 0px;
-  padding: 10px;
-  width: 100%;
+	border: 1px solid #777777;
+	display: block;
+	margin: 2px 0px;
+	padding: 10px;
+	width: 100%;
 }
 
 #form-container input[type=text],
 #form-container input[type=email],
 #form-container input[type=password] {
-  width: calc(100% - 22px);
+	width: calc(100% - 22px);
 }
 
 #form-container input[type=submit] {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 #form-error {
-  color: red;
-  display: none;
-  margin: 0px 0px 10px 0px;
-  text-align: center;
+	color: red;
+	display: none;
+	margin: 0px 0px 10px 0px;
+	text-align: center;
 }
 
 #form-success {
-  font-weight: bold;
-  display: none;
-  margin: 0px 0px 10px 0px;
-  text-align: center;
+	font-weight: bold;
+	display: none;
+	margin: 0px 0px 10px 0px;
+	text-align: center;
 }

@@ -127,8 +127,6 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiDescription Sends password reset email to the user.
 	 *
 	 * @apiParam {String} email The user's email address.
-	 *
-	 * @apiSuccess {String} resetHash The reset password hash.
 	 */
 	router.post('/authentication/request-password-reset', (req, res) => {
 		User.findOne({
