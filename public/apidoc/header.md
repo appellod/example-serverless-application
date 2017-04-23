@@ -22,7 +22,7 @@ containing an error message. An example error response would be:
 {"error":"Query parameters must be valid JSON."}
 ```
 
-## **GET Requests**  
+## **GET Parameters**  
 GET parameters must be valid JSON accessible within the "query" parameter.
 
 For example, if you are trying to supply the following parameters:

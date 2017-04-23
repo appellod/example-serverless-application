@@ -16,7 +16,7 @@
 		"url": "https://api.example.com/v1",
 		"header": {
 			"title": "Using the API",
-			"filename": "apidoc-header.md"
+			"filename": "public/apidoc/header.md"
 		}
 	},
 	"dependencies": {
