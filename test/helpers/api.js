@@ -39,14 +39,14 @@ module.exports = function(config, mongoose) {
 
 					if (user) {
 						token = user.tokens[0]._id;
-						res();
+						return res();
 					} else {
 						let err = new Error("User with email " + email + " not found.");
-						rej(err);
+						return rej(err);
 					}
 				});
 			} else {
-				res();
+				return res();
 			}
 		});
 
