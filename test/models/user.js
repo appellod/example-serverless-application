@@ -65,8 +65,8 @@ describe("models/user.js", function() {
 		let user, token;
 
 		beforeEach(function(done) {
-			User.mock({}, (err, testUser) => {
-				testUser.login((err, _user, _token) => {
+			User.mock({}, (err, _user) => {
+				_user.login((err, _user, _token) => {
 					user = _user;
 					token = _token;
 
@@ -88,8 +88,8 @@ describe("models/user.js", function() {
 		let user, token;
 
 		beforeEach(function(done) {
-			User.mock({}, (err, testUser) => {
-				testUser.login((err, _user, _token) => {
+			User.mock({}, (err, _user) => {
+				_user.login((err, _user, _token) => {
 					user = _user;
 					token = _token;
 
