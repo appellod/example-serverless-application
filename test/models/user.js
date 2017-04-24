@@ -1,6 +1,7 @@
 "use strict";
 
 const chai = require('chai');
+const nock = require("nock");
 
 // set up test suite and import models
 const bs = require("../bootstrap");
@@ -108,12 +109,19 @@ describe("models/user.js", () => {
 		});
 	});
 
-	describe("schema.methods.requestPasswordReset()", () => {
+	describe.only("schema.methods.requestPasswordReset()", () => {
 		let user;
 
 		beforeEach((done) => {
 			User.mock({}, (err, _user) => {
 				user = _user;
+
+				var scope = nock(/mailgun\.net/)
+					.post(/.*/)
+					.reply(200, {
+						id: "<20170422765241.92160.12345.951E2345@sandboxf70783234584b198234561d8029e646.mailgun.org>",
+						message: "Queued. Thank you."
+					});
 
 				done();
 			});
