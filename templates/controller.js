@@ -31,6 +31,7 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiDescription Returns an array of ${nameFormalPlural}.
 	 *
 	 * @apiParam {Number} limit Number of records to return.
+	 * @apiParam {String} select A string of fields to select separated by spaces.
 	 * @apiParam {Number} skip Number of records to skip.
 	 * @apiParam {String} sort The sorting of the records.
 	 * @apiParam {Object} where The where clause for the query.
@@ -43,6 +44,7 @@ module.exports = function(app, mongoose, passport, router) {
 			.sort(req.query.sort)
 			.skip(req.query.skip)
 			.limit(req.query.limit)
+			.select(req.query.select)
 			.exec((err, ${nameCamelPlural}) => {
 				if (err) {
 					res.status(400).json({ error: err.message });
