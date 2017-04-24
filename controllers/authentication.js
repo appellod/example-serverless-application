@@ -52,7 +52,7 @@ module.exports = function(app, mongoose, passport, router) {
 
 		User.create({
 			email: req.body.email,
-			password: User.getPasswordHash(req.body.password)
+			password: req.body.password
 		}, (err, user) => {
 			if (err) {
 				res.status(400).json({ error: err.message });

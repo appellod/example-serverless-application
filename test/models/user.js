@@ -9,11 +9,11 @@ const User = bs.mongoose.model("User");
 
 const expect = chai.expect;
 
-describe("models/user.js", () => {
-	describe("schema.statics.resetPassword()", () => {
+describe("models/user.js", function() {
+	describe("schema.statics.resetPassword()", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				_user.requestPasswordReset((err, _user) => {
 					user = _user;
@@ -23,7 +23,7 @@ describe("models/user.js", () => {
 			});
 		});
 
-		it("updates the user's password", (done) => {
+		it("updates the user's password", function(done) {
 			User.resetPassword(user.resetHash, "password", (err, _user) => {
 				expect(_user.password).to.not.eq(user.password);
 
@@ -31,7 +31,7 @@ describe("models/user.js", () => {
 			});
 		});
 
-		it("removes the user's resetHash", (done) => {
+		it("removes the user's resetHash", function(done) {
 			User.resetPassword(user.resetHash, "password", (err, _user) => {
 				expect(_user.resetHash).to.be.undefined;
 
@@ -40,10 +40,10 @@ describe("models/user.js", () => {
 		});
 	});
 
-	describe("schema.methods.login()", () => {
+	describe("schema.methods.login()", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				user = _user;
 
@@ -51,7 +51,7 @@ describe("models/user.js", () => {
 			});
 		});
 
-		it("adds an access token to the user's tokens array", (done) => {
+		it("adds an access token to the user's tokens array", function(done) {
 			user.login((err, user, token) => {
 				expect(user.tokens.length).to.eq(1);
 				expect(user.tokens[0]._id.toString()).to.eq(token.toString());
@@ -61,10 +61,10 @@ describe("models/user.js", () => {
 		});
 	});
 
-	describe("schema.methods.logout()", () => {
+	describe("schema.methods.logout()", function() {
 		let user, token;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, testUser) => {
 				testUser.login((err, _user, _token) => {
 					user = _user;
@@ -75,7 +75,7 @@ describe("models/user.js", () => {
 			});
 		});
 
-		it("removes the token that was used for the API request", (done) => {
+		it("removes the token that was used for the API request", function(done) {
 			user.logout(token, (err, user) => {
 				expect(user.tokens.length).to.eq(0);
 
@@ -84,10 +84,10 @@ describe("models/user.js", () => {
 		});
 	});
 
-	describe("schema.methods.refreshToken()", () => {
+	describe("schema.methods.refreshToken()", function() {
 		let user, token;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, testUser) => {
 				testUser.login((err, _user, _token) => {
 					user = _user;
@@ -98,7 +98,7 @@ describe("models/user.js", () => {
 			});
 		});
 
-		it("updates the token's expiresAt", (done) => {
+		it("updates the token's expiresAt", function(done) {
 			let expiresAt = user.tokens[0].expiresAt;
 
 			user.refreshToken(token, (err, user) => {
@@ -109,10 +109,10 @@ describe("models/user.js", () => {
 		});
 	});
 
-	describe.only("schema.methods.requestPasswordReset()", () => {
+	describe("schema.methods.requestPasswordReset()", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				user = _user;
 
@@ -127,7 +127,7 @@ describe("models/user.js", () => {
 			});
 		});
 
-		it("sets the user's resetHash to a random hash", (done) => {
+		it("sets the user's resetHash to a random hash", function(done) {
 			user.requestPasswordReset((err, user) => {
 				expect(err).to.be.null;
 				expect(user.resetHash).to.be.defined;

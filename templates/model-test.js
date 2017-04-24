@@ -11,7 +11,7 @@ const ${name} = bs.mongoose.model("${name}");
 
 const expect = chai.expect;
 
-describe("models/${nameCamel}.js", () => {
+describe("models/${nameCamel}.js", function() {
 
 });
 `;

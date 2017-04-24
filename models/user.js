@@ -33,12 +33,12 @@ module.exports = function(config, mongoose) {
 	schema.index({ email: 1 }, { unique: true });
 
 	schema.pre('save', function(next) {
-		if (this.isModified('username')) {
-			this.username = this.username.toLowerCase();
-		}
-
 		if (this.isModified('email')) {
 			this.email = this.email.toLowerCase();
+		}
+
+		if (this.isModified('password')) {
+			this.password = this.constructor.getPasswordHash(this.password);
 		}
 
 		return next();
@@ -246,7 +246,7 @@ module.exports = function(config, mongoose) {
 	 */
 	schema.statics.mock = function(params, next) {
 		if (!params.email) params.email = chance.email();
-		if (!params.password) params.password = this.getPasswordHash(chance.hash());
+		if (!params.password) params.password = chance.hash();
 
 		this.create(params, function(err, record) {
 			if (err) console.error(err);

@@ -35,7 +35,7 @@ module.exports = function(name, namePlural, nameCamel, nameCamelPlural, attribut
 			}
 		}
 	}
-	attributeAssertions = attributeAssertions.replace("        ", "");
+	attributeAssertions = attributeAssertions.replace("				", "");
 	attributeAssertions = attributeAssertions.substring(0, attributeAssertions.length - 1);
 
 	const data = `"use strict";
@@ -52,15 +52,15 @@ const expect = chai.expect;
 // make API calls a little easier
 const api = require("../helpers/api")(bs.config, bs.mongoose);
 
-describe("controllers/${nameCamelPlural}.js", () => {
-	describe("GET /${nameCamelPlural}", () => {
-		beforeEach((done) => {
-			${name}.mock({}, (${nameCamel}) => {
+describe("controllers/${nameCamelPlural}.js", function() {
+	describe("GET /${nameCamelPlural}", function() {
+		beforeEach(function(done) {
+			${name}.mock({}, (err, _${nameCamel}) => {
 				return done();
 			});
 		});
 
-		it("returns all ${nameCamelPlural}", (done) => {
+		it("returns all ${nameCamelPlural}", function(done) {
 			let method = "get";
 			let path = "/${nameCamelPlural}";
 			let params = null;
@@ -75,13 +75,13 @@ describe("controllers/${nameCamelPlural}.js", () => {
 		});
 	});
 
-	describe("POST /${nameCamelPlural}", () => {
-		it("creates a new ${nameCamel}", (done) => {
+	describe("POST /${nameCamelPlural}", function() {
+		it("creates a new ${nameCamel}", function(done) {
 			let method = "post";
 			let path = "/${nameCamelPlural}";
 			let params = {
-	    		${attributeParams}
-	  		};
+    		${attributeParams}
+  		};
 
 			api.request(method, path, params, "test@example.com", (err, res) => {
 				expect(res.status).to.eq(200);
@@ -93,10 +93,10 @@ describe("controllers/${nameCamelPlural}.js", () => {
 		});
 	});
 
-	describe("GET /${nameCamelPlural}/:id", () => {
+	describe("GET /${nameCamelPlural}/:id", function() {
 		let ${nameCamel};
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			${name}.mock({}, (err, _${nameCamel}) => {
 				${nameCamel} = _${nameCamel};
 
@@ -104,7 +104,7 @@ describe("controllers/${nameCamelPlural}.js", () => {
 			});
 		});
 
-		it("returns the ${nameCamel}", (done) => {
+		it("returns the ${nameCamel}", function(done) {
 			let method = "get";
 			let path = "/${nameCamelPlural}/" + ${nameCamel}._id;
 			let params = null;
@@ -119,10 +119,10 @@ describe("controllers/${nameCamelPlural}.js", () => {
 		});
 	});
 
-	describe("PUT /${nameCamelPlural}/:id", () => {
+	describe("PUT /${nameCamelPlural}/:id", function() {
 		let ${nameCamel};
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			${name}.mock({}, (err, _${nameCamel}) => {
 				${nameCamel} = _${nameCamel};
 
@@ -130,7 +130,7 @@ describe("controllers/${nameCamelPlural}.js", () => {
 			});
 		});
 
-		it("updates and returns the ${nameCamel}", (done) => {
+		it("updates and returns the ${nameCamel}", function(done) {
 			let method = "put";
 			let path = "/${nameCamelPlural}/" + ${nameCamel}._id;
 			let params = {
@@ -147,10 +147,10 @@ describe("controllers/${nameCamelPlural}.js", () => {
 		});
 	});
 
-	describe("DELETE /${nameCamelPlural}/:id", () => {
+	describe("DELETE /${nameCamelPlural}/:id", function() {
 		let ${nameCamel};
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			${name}.mock({}, (err, _${nameCamel}) => {
 				${nameCamel} = _${nameCamel};
 
@@ -158,7 +158,7 @@ describe("controllers/${nameCamelPlural}.js", () => {
 			});
 		});
 
-		it("returns a 200 status", (done) => {
+		it("returns a 200 status", function(done) {
 			let method = "delete";
 			let path = "/${nameCamelPlural}/" + ${nameCamel}._id;
 			let params = null;

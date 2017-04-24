@@ -12,15 +12,15 @@ const expect = chai.expect;
 // make API calls a little easier
 const api = require("../helpers/api")(bs.config, bs.mongoose);
 
-describe("controllers/users.js", () => {
-	describe("GET /users", () => {
-		beforeEach((done) => {
-			User.mock({}, (user) => {
+describe("controllers/users.js", function() {
+	describe("GET /users", function() {
+		beforeEach(function(done) {
+			User.mock({}, (err, _user) => {
 				return done();
 			});
 		});
 
-		it("returns all users", (done) => {
+		it("returns all users", function(done) {
 			let method = "get";
 			let path = "/users";
 			let params = null;
@@ -35,33 +35,30 @@ describe("controllers/users.js", () => {
 		});
 	});
 
-	describe("POST /users", () => {
-		it("creates a new user", (done) => {
+	describe("POST /users", function() {
+		it("creates a new user", function(done) {
 			let method = "post";
 			let path = "/users";
 			let params = {
-				email: chance.email(),
-				level: chance.integer(),
-				password: chance.word(),
-				resetHash: chance.word()
-			};
+    		email: chance.email(),
+				password: chance.hash()
+  		};
 
 			api.request(method, path, params, "test@example.com", (err, res) => {
 				expect(res.status).to.eq(200);
 
 				expect(res.body.user.email).to.eq(params.email);
-				expect(res.body.user.level).to.eq(params.level);
-				expect(res.body.user.resetHash).to.eq(params.resetHash);
+				expect(res.body.user.password).to.not.eq(params.password);
 
 				done();
 			});
 		});
 	});
 
-	describe("GET /users/:id", () => {
+	describe("GET /users/:id", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				user = _user;
 
@@ -69,7 +66,7 @@ describe("controllers/users.js", () => {
 			});
 		});
 
-		it("returns the user", (done) => {
+		it("returns the user", function(done) {
 			let method = "get";
 			let path = "/users/" + user._id;
 			let params = null;
@@ -84,10 +81,10 @@ describe("controllers/users.js", () => {
 		});
 	});
 
-	describe("PUT /users/:id", () => {
+	describe("PUT /users/:id", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				user = _user;
 
@@ -95,33 +92,27 @@ describe("controllers/users.js", () => {
 			});
 		});
 
-		it("updates and returns the user", (done) => {
+		it("updates and returns the user", function(done) {
 			let method = "put";
 			let path = "/users/" + user._id;
 			let params = {
-				email: chance.word(),
-				level: chance.integer(),
-				password: chance.word(),
-				resetHash: chance.word()
+				email: chance.email(),
 			};
 
 			api.request(method, path, params, "test@example.com", (err, res) => {
 				expect(res.status).to.eq(200);
 
 				expect(res.body.user.email).to.eq(params.email);
-				expect(res.body.user.level).to.eq(params.level);
-				expect(res.body.user.password).to.eq(params.password);
-				expect(res.body.user.resetHash).to.eq(params.resetHash);
 
 				done();
 			});
 		});
 	});
 
-	describe("DELETE /users/:id", () => {
+	describe("DELETE /users/:id", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				user = _user;
 
@@ -129,7 +120,7 @@ describe("controllers/users.js", () => {
 			});
 		});
 
-		it("returns a 200 status", (done) => {
+		it("returns a 200 status", function(done) {
 			let method = "delete";
 			let path = "/users/" + user._id;
 			let params = null;

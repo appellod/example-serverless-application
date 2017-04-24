@@ -11,10 +11,10 @@ const expect = chai.expect;
 // make API calls a little easier
 const api = require("../helpers/api")(bs.config, bs.mongoose);
 
-describe("controllers/authentication.js", () => {
-	describe("GET /authentication/availability", () => {
-		context("when email is available", () => {
-			it("returns isAvailable set to true", (done) => {
+describe("controllers/authentication.js", function() {
+	describe("GET /authentication/availability", function() {
+		context("when email is available", function() {
+			it("returns isAvailable set to true", function(done) {
 				let method = "get";
 				let path = "/authentication/availability";
 				let params = {
@@ -29,14 +29,14 @@ describe("controllers/authentication.js", () => {
 			});
 		});
 
-		context("when email is unavailable", () => {
-			beforeEach((done) => {
+		context("when email is unavailable", function() {
+			beforeEach(function(done) {
 				User.mock({ email: "taken@example.com" }, (err, user) => {
 					done();
 				});
 			});
 
-			it("returns isAvailable set to false", (done) => {
+			it("returns isAvailable set to false", function(done) {
 				let method = "get";
 				let path = "/authentication/availability";
 				let params = {
@@ -52,8 +52,8 @@ describe("controllers/authentication.js", () => {
 		});
 	});
 
-	describe("POST /authentication/signup", () => {
-		it("returns the user and access token", (done) => {
+	describe("POST /authentication/signup", function() {
+		it("returns the user and access token", function(done) {
 			let method = "post";
 			let path = "/authentication/signup";
 			let params = {
@@ -70,19 +70,19 @@ describe("controllers/authentication.js", () => {
 		});
 	});
 
-	describe("POST /authentication/login", () => {
+	describe("POST /authentication/login", function() {
 		let user;
 
-		beforeEach((done) => {
-			User.mock({ password: User.getPasswordHash("password") }, (err, _user) => {
+		beforeEach(function(done) {
+			User.mock({ password: "password" }, (err, _user) => {
 				user = _user;
 
 				done();
 			});
 		});
 
-		context("when credentials are correct", () => {
-			it("returns the user and access token", (done) => {
+		context("when credentials are correct", function() {
+			it("returns the user and access token", function(done) {
 				let method = "post";
 				let path = "/authentication/login";
 				let params = {
@@ -99,8 +99,8 @@ describe("controllers/authentication.js", () => {
 			});
 		});
 
-		context("when credentials are incorrect", () => {
-			it("returns an error message", (done)=> {
+		context("when credentials are incorrect", function() {
+			it("returns an error message", function(done) {
 				let method = "post";
 				let path = "/authentication/login";
 				let params = {
@@ -118,10 +118,10 @@ describe("controllers/authentication.js", () => {
 		});
 	});
 
-	describe("DELETE /authentication/logout", () => {
+	describe("DELETE /authentication/logout", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				_user.login((err, _user) => {
 					user = _user;
@@ -131,7 +131,7 @@ describe("controllers/authentication.js", () => {
 			});
 		});
 
-		it("returns a 200 status", (done) => {
+		it("returns a 200 status", function(done) {
 			let method = "delete";
 			let path = "/authentication/logout";
 			let params = null;
@@ -144,10 +144,10 @@ describe("controllers/authentication.js", () => {
 		});
 	});
 
-	describe("POST /authentication/request-password-reset", () => {
+	describe("POST /authentication/request-password-reset", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				_user.login((err, _user) => {
 					user = _user;
@@ -157,7 +157,7 @@ describe("controllers/authentication.js", () => {
 			});
 		});
 
-		it("returns a 200 status", (done) => {
+		it("returns a 200 status", function(done) {
 			let method = "post";
 			let path = "/authentication/request-password-reset";
 			let params = {
@@ -172,10 +172,10 @@ describe("controllers/authentication.js", () => {
 		});
 	});
 
-	describe("POST /authentication/reset-password", () => {
+	describe("POST /authentication/reset-password", function() {
 		let user;
 
-		beforeEach((done) => {
+		beforeEach(function(done) {
 			User.mock({}, (err, _user) => {
 				_user.login((err, _user) => {
 					_user.requestPasswordReset((err, _user) => {
@@ -187,7 +187,7 @@ describe("controllers/authentication.js", () => {
 			});
 		});
 
-		it("returns a 200 status", (done) => {
+		it("returns a 200 status", function(done) {
 			let method = "post";
 			let path = "/authentication/reset-password";
 			let params = {
