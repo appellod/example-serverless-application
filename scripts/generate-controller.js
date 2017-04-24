@@ -22,11 +22,13 @@ const name = model.modelName;
 const namePlural = pluralize(name);
 const nameCamel = name.substring(0, 1).toLowerCase() + name.slice(1);
 const nameCamelPlural = namePlural.substring(0, 1).toLowerCase() + namePlural.slice(1);
+const nameFormal = name.replace(/([A-Z])/g, ' $1').trim();
+const nameFormalPlural = namePlural.replace(/([A-Z])/g, ' $1').trim();
 const attributes = model.schema.paths;
 
 const controllerTemplate = path.resolve(__dirname + "/../templates/controller");
 const testTemplate = path.resolve(__dirname + "/../templates/controller-test");
-const controllerData = require(controllerTemplate)(name, namePlural, nameCamel, nameCamelPlural, attributes);
+const controllerData = require(controllerTemplate)(name, namePlural, nameCamel, nameCamelPlural, nameFormal, nameFormalPlural, attributes);
 const testData = require(testTemplate)(name, namePlural, nameCamel, nameCamelPlural, attributes);
 
 const controllerPath = path.resolve(__dirname + "/../controllers/" + nameCamelPlural + ".js");

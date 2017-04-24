@@ -11,7 +11,7 @@ const mongoose = index.mongoose;
 
 const User = mongoose.model("User");
 
-beforeEach((done) => {
+beforeEach(function(done) {
 	// remove all records from DB
 	let models = mongoose.modelNames();
 	async.each(models, (model, next) => {

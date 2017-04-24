@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function(name, namePlural, nameCamel, nameCamelPlural, attributes) {
+module.exports = function(name, namePlural, nameCamel, nameCamelPlural, nameFormal, nameFormalPlural, attributes) {
 	const ignore = [
 		"_id",
 		"__v",
@@ -25,17 +25,17 @@ module.exports = function(app, mongoose, passport, router) {
 	const ${name} = mongoose.model("${name}");
 
 	/**
-	 * @api {get} /${nameCamelPlural} Get ${namePlural}
+	 * @api {get} /${nameCamelPlural} Get ${nameFormalPlural}
 	 * @apiName Get${namePlural}
 	 * @apiGroup ${namePlural}
-	 * @apiDescription Returns an array of ${nameCamelPlural}.
+	 * @apiDescription Returns an array of ${nameFormalPlural}.
 	 *
 	 * @apiParam {Number} limit Number of records to return.
 	 * @apiParam {Number} skip Number of records to skip.
 	 * @apiParam {String} sort The sorting of the records.
 	 * @apiParam {Object} where The where clause for the query.
 	 *
-	 * @apiSuccess {Array} ${nameCamelPlural} Array of ${nameCamelPlural} matching the criteria.
+	 * @apiSuccess {Array} ${nameCamelPlural} Array of ${nameFormalPlural} matching the criteria.
 	 */
 	router.get('/${nameCamelPlural}', passport.authenticate('bearer', { session: false }), (req, res) => {
 		${name}
@@ -53,14 +53,14 @@ module.exports = function(app, mongoose, passport, router) {
 	});
 
 	/**
-	 * @api {post} /${nameCamelPlural} Create ${name}
+	 * @api {post} /${nameCamelPlural} Create ${nameFormal}
 	 * @apiName Create${name}
 	 * @apiGroup ${namePlural}
-	 * @apiDescription Creates and returns a new ${nameCamel}.
+	 * @apiDescription Creates and returns a new ${nameFormal}.
 	 *
 ${attributesDocumentation}
 	 *
-	 * @apiSuccess {Object} ${nameCamel} The new ${nameCamel}.
+	 * @apiSuccess {Object} ${nameCamel} The new ${nameFormal}.
 	 */
 	router.post('/${nameCamelPlural}', passport.authenticate('bearer', { session: false }), (req, res) => {
 		${name}.create(req.body, (err, ${nameCamel}) => {
@@ -73,14 +73,14 @@ ${attributesDocumentation}
 	});
 
 	/**
-	 * @api {get} /${nameCamelPlural}/:id Get ${name}
+	 * @api {get} /${nameCamelPlural}/:id Get ${nameFormal}
 	 * @apiName Get${name}
 	 * @apiGroup ${namePlural}
-	 * @apiDescription Returns a ${nameCamel} by ID.
+	 * @apiDescription Returns a ${nameFormal} by ID.
 	 *
-	 * @apiParam {String} :id The ID of the ${nameCamel}.
+	 * @apiParam {String} :id The ID of the ${nameFormal}.
 	 *
-	 * @apiSuccess {Object} ${nameCamel} The ${nameCamel} matching the given ID.
+	 * @apiSuccess {Object} ${nameCamel} The ${nameFormal} matching the given ID.
 	 */
 	router.get('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
 		${name}.findOne({ _id: req.params.id }, (err, ${nameCamel}) => {
@@ -93,15 +93,15 @@ ${attributesDocumentation}
 	});
 
 	/**
-	 * @api {put} /${nameCamelPlural}/:id Update ${name}
+	 * @api {put} /${nameCamelPlural}/:id Update ${nameFormal}
 	 * @apiName Update${name}
 	 * @apiGroup ${namePlural}
-	 * @apiDescription Updates and returns a ${nameCamel}.
+	 * @apiDescription Updates and returns a ${nameFormal}.
 	 *
-	 * @apiParam {String} :id The ID of the ${nameCamel}.
+	 * @apiParam {String} :id The ID of the ${nameFormal}.
 ${attributesDocumentation}
 	 *
-	 * @apiSuccess {Object} ${nameCamel} The updated ${nameCamel}.
+	 * @apiSuccess {Object} ${nameCamel} The updated ${nameFormal}.
 	 */
 	router.put('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
 		${name}.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, ${nameCamel}) => {
@@ -114,12 +114,12 @@ ${attributesDocumentation}
 	});
 
 	/**
-	 * @api {delete} /${nameCamelPlural}/:id Remove ${name}
+	 * @api {delete} /${nameCamelPlural}/:id Remove ${nameFormal}
 	 * @apiName Remove${name}
 	 * @apiGroup ${namePlural}
-	 * @apiDescription Removes a ${nameCamel}.
+	 * @apiDescription Removes a ${nameFormal}.
 	 *
-	 * @apiParam {String} :id The ID of the ${nameCamel}.
+	 * @apiParam {String} :id The ID of the ${nameFormal}.
 	 */
 	router.delete('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
 		${name}.remove({ _id: req.params.id }, (err, result) => {

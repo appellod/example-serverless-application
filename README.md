@@ -174,7 +174,7 @@ configurations are available here. Five environments are included by default:
 * local: For running on localhost.
 * dev: For running on a remote server in a development environment.
 * staging: For running on a remote server in a staging environment.
-* prod: For running on a remote server in production.
+* prod: For running on a remote server in a production environment.
 
 Environment can be selected by setting the NODE_ENV system environment variable.
 An example for running the API in production mode on Linux-based machines is:
