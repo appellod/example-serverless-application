@@ -46,7 +46,7 @@ module.exports = function(app, mongoose, passport, router) {
 	 */
 	router.post('/authentication/signup', (req, res) => {
 		if (!req.body.email || !req.body.password) {
-			res.status(400).json({ error: { message: "Please provide an email address and password." } });
+			res.status(400).json({ error: "Please provide an email address and password." });
 			return;
 		}
 
