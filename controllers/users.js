@@ -106,14 +106,19 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiParam {String} :id The ID of the user.
 	 */
 	router.delete('/users/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		User.remove({ _id: req.params.id }, (err, result) => {
+		User.findOne({ _id: req.params.id }, (err, user) => {
 			if (err) {
 				res.status(400).json({ error: err.message });
-			} else if (result.result.n == 0) {
-				let err = new Error("User not found.");
-				res.status(400).json({ error: err.message });
+			} else if (!user) {
+				res.status(400).json({ error: "User not found." });
 			} else {
-				res.json({ message: "User removed successfully." });
+				user.remove((err, user) => {
+					if (err) {
+						res.status(400).json({ error: err.message });
+					} else {
+						res.json({ message: "User removed successfully." });
+					}
+				});
 			}
 		});
 	});

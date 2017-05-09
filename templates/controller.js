@@ -124,14 +124,19 @@ ${attributesDocumentation}
 	 * @apiParam {String} :id The ID of the ${nameFormal}.
 	 */
 	router.delete('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		${name}.remove({ _id: req.params.id }, (err, result) => {
+		${name}.findOne({ _id: req.params.id }, (err, ${nameCamel}) => {
 			if (err) {
 				res.status(400).json({ error: err.message });
-			} else if (result.result.n == 0) {
-				let err = new Error("${name} not found.");
-				res.status(400).json({ error: err.message });
+			} else if (!${nameCamel}) {
+				res.status(400).json({ error: "${name} not found." });
 			} else {
-				res.json({ message: "${name} removed successfully." });
+				${nameCamel}.remove((err, ${nameCamel}) => {
+					if (err) {
+						res.status(400).json({ error: err.message });
+					} else {
+						res.json({ message: "${name} removed successfully." });
+					}
+				});
 			}
 		});
 	});
