@@ -88,11 +88,23 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiSuccess {Object} user The updated user.
 	 */
 	router.put('/users/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, user) => {
+		User.findOne({ _id: req.params.id }, (err, user) => {
 			if (err) {
 				res.status(400).json({ error: err.message });
+			} else if (!user) {
+				res.status(400).json({ error: "User not found." });
 			} else {
-				res.json({ user: user });
+				for (let key in req.body) {
+					user[key] = req.body[key];
+				}
+
+				user.save((err, user) => {
+					if (err) {
+						res.status(400).json({ error: err.message });
+					} else {
+						res.json({ user: user });
+					}
+				});
 			}
 		});
 	});

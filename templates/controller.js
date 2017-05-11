@@ -106,11 +106,23 @@ ${attributesDocumentation}
 	 * @apiSuccess {Object} ${nameCamel} The updated ${nameFormal}.
 	 */
 	router.put('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		${name}.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, ${nameCamel}) => {
+		${name}.findOne({ _id: req.params.id }, (err, ${nameCamel}) => {
 			if (err) {
 				res.status(400).json({ error: err.message });
+			} else if (!${nameCamel}) {
+				res.status(400).json({ error: "${name} not found." });
 			} else {
-				res.json({ ${nameCamel}: ${nameCamel} });
+				for (let key in req.body) {
+					${nameCamel}[key] = req.body[key];
+				}
+
+				${nameCamel}.save((err, ${nameCamel}) => {
+					if (err) {
+						res.status(400).json({ error: err.message });
+					} else {
+						res.json({ ${nameCamel}: ${nameCamel} });
+					}
+				});
 			}
 		});
 	});
