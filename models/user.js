@@ -77,16 +77,16 @@ module.exports = function(config, mongoose) {
 	 * Resets a user's password.
 	 * @param {String} resetHash The user's resetHash.
 	 * @param {String} newPassword The user's new password.
+     * @return {Promise.<Object>} The updated user.
 	 */
-	schema.statics.resetPassword = function(resetHash, newPassword, next) {
+	schema.statics.resetPassword = async function(resetHash, newPassword) {
 		let User = this;
 
 		if (!resetHash || !newPassword) {
-			let err = new Error("Please provide a resetHash and newPassword.");
-			return next(err);
+			throw new Error("Please provide a resetHash and newPassword.");
 		}
 
-		User.findOneAndUpdate({
+        const user = await User.findOneAndUpdate({
 			resetHash: resetHash
 		}, {
 			password: User.getPasswordHash(newPassword),
@@ -96,23 +96,20 @@ module.exports = function(config, mongoose) {
 			}
 		}, {
 			new: true
-		}, (err, user) => {
-			if (err) console.error(err);
-
-			return next(err, user);
 		});
+
+        return user;
 	}
 
 	/**
 	 * Logs a user in.
 	 * @param {Callback} next The callback.
-	 * @param {Object} next.user The user that was logged in.
-	 * @param {String} next.token The access token created upon login.
+	 * @return {Promise.<Object>} The new access token and updated user.
 	 */
-	schema.methods.login = function(next) {
+	schema.methods.login = async function() {
 		let User = this.constructor;
 
-		User.findOneAndUpdate({
+        const user = await User.findOneAndUpdate({
 			_id: this._id
 		}, {
 			$push: {
@@ -122,45 +119,39 @@ module.exports = function(config, mongoose) {
 			}
 		}, {
 			new: true
-		}, (err, user) => {
-			if (err) console.error(err);
-
-			let token = user.tokens[user.tokens.length - 1]._id;
-
-			if (next) return next(err, user, token);
 		});
+
+        const token = user.tokens[user.tokens.length - 1]._id;
+
+        return { token, user };
 	}
 
 	/**
 	 * Refreshes the given token's expiration date.
 	 * @param {String} token The token's ID.
-	 * @param {Callback} next The callback.
-	 * @param {Object} next.user The updated user.
+	 * @return {Promise.<Object>} The updated user.
 	 */
-	schema.methods.refreshToken = function(token, next) {
+	schema.methods.refreshToken = async function(token) {
 		let User = this.constructor;
 
-		User.findOneAndUpdate({
+        const user = await User.findOneAndUpdate({
 			_id: this._id,
 			"tokens._id": token
 		}, {
 			"tokens.$.expiresAt": User.getTokenExpirationDate()
 		}, {
 			new: true
-		}, (err, user) => {
-			if (err) console.error(err);
-
-			return next(err, user);
 		});
+
+        return user;
 	}
 
 	/**
 	 * Logs the user out.
 	 * @param {String} token The access token to be cleared.
-	 * @param {Callback} next The callback.
-	 * @param {Object} next.user The updated user.
+	 * @return {Promise.<Object>} The updated user.
 	 */
-	schema.methods.logout = function(token, next) {
+	schema.methods.logout = async function(token) {
 		let User = this.constructor;
 
 		if (!token) {
@@ -168,7 +159,7 @@ module.exports = function(config, mongoose) {
 			return next(error);
 		}
 
-		User.findOneAndUpdate({
+        const user = await User.findOneAndUpdate({
 			_id: this._id
 		}, {
 			$pull: {
@@ -178,81 +169,75 @@ module.exports = function(config, mongoose) {
 			}
 		}, {
 			new: true
-		}, function(err, user) {
-			if (err) console.error(err);
-
-			return next(null, user);
 		});
+
+        return user;
 	}
 
 	/**
 	 * Generates a resetHash and sends the user a Reset Password email.
-	 * @param {Callback} next The callback.
-	 * @param {String} next.user The updated user.
+	 * @return {Promise.<Object>} The updated user.
 	 */
-	schema.methods.requestPasswordReset = function(next) {
+	schema.methods.requestPasswordReset = async function() {
 		if (!config.mailgun || !config.passwordReset) {
 			let error = new Error("Mailgun and/or password reset settings not specified in configuration file.");
 			return next(error);
 		}
 
 		this.resetHash = chance.hash();
-		this.save((err, user) => {
-			if (err) console.error(err);
 
-			let resetUrl = config.passwordReset.url + "?resetHash=" + user.resetHash;
+        const user = await this.save();
 
-			let html = "You have requested to reset your password. Please click the link below to create a new password:";
-			html += "<br><br>";
-			html += "<a href='" + resetUrl + "'>" + resetUrl + "</a>";
-			html += "<br><br>";
-			html += "Thank you,";
-			html += "<br>"
-			html += config.passwordReset.company;
+		let resetUrl = config.passwordReset.url + "?resetHash=" + user.resetHash;
 
-			let url = 'https://api:key-' + config.mailgun.key + '@api.mailgun.net/v3/' + config.mailgun.domain + '/messages';
-			request.post({
-				url: url,
-				form: {
-					from: config.passwordReset.from,
-					to: user.email,
-					subject: 'Reset Password',
-					html: html
-				}
-			}, function(err, response, body) {
-				// if an error occured with Mailgun, clear the resetHash
-				if (err) {
-					console.error(err);
+		let html = "You have requested to reset your password. Please click the link below to create a new password:";
+		html += "<br><br>";
+		html += "<a href='" + resetUrl + "'>" + resetUrl + "</a>";
+		html += "<br><br>";
+		html += "Thank you,";
+		html += "<br>"
+		html += config.passwordReset.company;
 
-					this.resetHash = undefined;
-					this.save((err, user) => {
-						if (err) console.error(err);
+		let url = 'https://api:key-' + config.mailgun.key + '@api.mailgun.net/v3/' + config.mailgun.domain + '/messages';
 
-						let error = new Error("An error occured sending the password reset email.");
-						return next(error, user);
-					});
-				} else {
-					return next(err, user);
-				}
-			});
-		});
+        try {
+            const body = await new Promise((res, rej) => {
+                request.post({
+        			url: url,
+        			form: {
+        				from: config.passwordReset.from,
+        				to: user.email,
+        				subject: 'Reset Password',
+        				html: html
+        			}
+        		}, function(err, response, body) {
+                    return err ? rej(err) : res(body);
+                });
+            });
+
+            return user;
+        } catch (e) {
+            console.error(e);
+
+            this.resetHash = undefined;
+            await this.save();
+
+            throw new Error("An error occured sending the password reset email.");
+        }
 	}
 
 	/**
 	 * Creates a record with randomized required parameters if not specified.
 	 * @param {Object} params The parameters to initialize the record with.
-	 * @param {Callback} next The callback.
-	 * @param {Object} next.record The created record.
+	 * @return {Promise.<Object>} The mocked record.
 	 */
-	schema.statics.mock = function(params, next) {
+	schema.statics.mock = async function(params) {
 		if (!params.email) params.email = chance.email();
 		if (!params.password) params.password = chance.hash();
 
-		this.create(params, function(err, record) {
-			if (err) console.error(err);
+        const record = await this.create(params);
 
-			next(err, record);
-		});
+        return record;
 	}
 
 	return mongoose.model('User', schema);

@@ -32,22 +32,19 @@ module.exports = function(app, mongoose, passport, router) {
 	 * Logs the user in if the username and password are correct and redirects
 	 * them to documentation page.
 	 */
-	app.post('/login', (req, res) => {
-		User.findOne({ email: req.body.email }, (err, user) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-				return;
-			}
+	app.post('/login', async (req, res) => {
+        try {
+            const user = await User.findOne({ email: req.body.email });
 
-			if (user && user.isValidPassword(req.body.password)) {
+            if (user && user.isValidPassword(req.body.password)) {
 				req.session.isLoggedIn = true;
 				res.send();
 			} else {
 				req.session.isLoggedIn = false;
-
-				let error = new Error("Incorrect email address or password.");
-				res.status(400).json({ error: error.message });
+				res.status(400).json({ error: "Incorrect email address or password." });
 			}
-		});
+        } catch (e) {
+            res.status(400).json({ error: e.message });
+        }
 	});
 };

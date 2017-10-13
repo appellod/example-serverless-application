@@ -15,22 +15,15 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiSuccess {Boolean} isAvailable True if the email is available, false otherwise.
 	 */
-	router.get('/authentication/availability', (req, res) => {
-		if ( req.query.email ) {
-			let email = req.query.email;
-			User.findOne({ email: email }, (err, user) => {
-				if (err) console.error(err);
+	router.get('/authentication/availability', router.catchErrors(async (req, res) => {
+		if (!req.query.email) {
+            res.json({ isAvailable: false });
+            return;
+        }
 
-				if (user) {
-					res.json({ isAvailable: false });
-				} else {
-					res.json({ isAvailable: true });
-				}
-			});
-		} else {
-			res.json({ isAvailable: false });
-		}
-	});
+        const user = await User.findOne({ email: req.query.email });
+        res.json({ isAvailable: !user })
+	}));
 
 	/**
 	 * @api {post} /authentication/signup Sign Up
@@ -44,31 +37,20 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiSuccess {Object} user The created user.
 	 * @apiSuccess {String} token The user's access token.
 	 */
-	router.post('/authentication/signup', (req, res) => {
+	router.post('/authentication/signup', router.catchErrors(async (req, res) => {
 		if (!req.body.email || !req.body.password) {
 			res.status(400).json({ error: "Please provide an email address and password." });
 			return;
 		}
 
-		User.create({
-			email: req.body.email,
-			password: req.body.password
-		}, (err, user) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-				return;
-			}
+        let user = await User.create({
+            email: req.body.email,
+            password: req.body.password
+        });
+        const results = await user.login();
 
-			user.login((err, user, token) => {
-				if (err) {
-					res.status(400).json({ error: err.message });
-					return;
-				}
-
-				res.json({ user: user, token: token });
-			});
-		});
-	});
+        res.json(results);
+	}));
 
 	/**
 	 * @api {post} /authentication/login Log In
@@ -82,24 +64,23 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiSuccess {Object} user The user.
 	 * @apiSuccess {String} token The user's access token.
 	 */
-	router.post('/authentication/login', (req, res) => {
+	router.post('/authentication/login', router.catchErrors(async (req, res) => {
 		if (!req.body.email || !req.body.password) {
 			res.status(400).json({ error: "Please provide an email address and password." });
 			return;
 		}
 
-		User.findOne({ email: req.body.email }, (err, user) => {
-			if (!user || !user.isValidPassword(req.body.password)) {
-				res.status(400).json({ error: "Incorrect username or password." });
-				return;
-			}
+        let user = await User.findOne({ email: req.body.email });
 
-			user.login((err, user, token) => {
-				req.user = user;
-				res.json({ user: user, token: token });
-			});
-		});
-	});
+        if (!user || !user.isValidPassword(req.body.password)) {
+            res.status(400).json({ error: "Incorrect username or password." });
+            return;
+        }
+
+        const results = await user.login();
+
+        res.json(results);
+	}));
 
 	/**
 	 * @api {delete} /authentication/logout Log Out
@@ -107,18 +88,13 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiGroup Authentication
 	 * @apiDescription Logs a user out.
 	 */
-	router.delete('/authentication/logout', passport.authenticate('bearer', { session: false }), (req, res) => {
+	router.delete('/authentication/logout', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
 		let token = req.get('authorization').replace("Bearer ", "");
 
-		req.user.logout(token, (err, user) => {
-			if (err) {
-				res.status(400).json({ err: err });
-				return;
-			}
+        await req.user.logout(token);
 
-			res.send({ message: "Logout successful." });
-		});
-	});
+        res.send({ message: "Logout successful." });
+	}));
 
 	/**
 	 * @api {post} /authentication/request-password-reset Request Password Reset
@@ -128,26 +104,18 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiParam {String} email The user's email address.
 	 */
-	router.post('/authentication/request-password-reset', (req, res) => {
-		User.findOne({
-			email: req.body.email
-		}, (err, user) => {
-			if (!user) {
-				let err = new Error("User with email " + req.body.email + " not found.");
-				res.status(400).json({ error: err.message });
-				return;
-			}
+	router.post('/authentication/request-password-reset', router.catchErrors(async (req, res) => {
+        let user = await User.findOne({ email: req.body.email });
 
-			user.requestPasswordReset((err, user) => {
-				if (err) {
-					res.status(400).json({ error: err.message });
-					return;
-				}
+        if (!user) {
+            res.status(400).json({ error: "User with email " + req.body.email + " not found." });
+            return;
+        }
 
-				res.json({ message: "Password reset email sent successfully." });
-			});
-		});
-	});
+        user = await user.requestPasswordReset();
+
+        res.json({ message: "Password reset email sent successfully." });
+	}));
 
 	/**
 	 * @api {post} /authentication/reset-password Reset Password
@@ -158,16 +126,14 @@ module.exports = function(app, mongoose, passport, router) {
 	 * @apiParam {String} resetHash The reset password hash.
 	 * @apiParam {String} password The new password.
 	 */
-	router.post('/authentication/reset-password', (req, res) => {
-		User.resetPassword(req.body.resetHash, req.body.password, (err, user) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else if (!user) {
-				let err = new Error("No users matching given resetHash.");
-				res.status(400).json({ error: err.message });
-			} else {
-				res.json({ message: "Password reset successfully." });
-			}
-		});
-	});
+	router.post('/authentication/reset-password', router.catchErrors(async (req, res) => {
+        const user = await User.resetPassword(req.body.resetHash, req.body.password);
+
+        if (!user) {
+			res.status(400).json({ error: "No users matching given resetHash." });
+            return;
+        }
+
+        res.json({ message: "Password reset successfully." });
+	}));
 };

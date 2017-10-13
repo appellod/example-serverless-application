@@ -1,5 +1,7 @@
 "use strict";
 
+global.Promise = require('bluebird');
+
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const express = require("express");
@@ -78,8 +80,20 @@ const router = express.Router();
 app.use('/v1', router);
 fs.readdirSync('./controllers').forEach((file) => {
 	if(file.substr(-3) == '.js') {
+        // setup global promise catcher
+        router.catchErrors = (fn) => {
+            return (req, res) => {
+                const routePromise = fn(req, res);
+                if (routePromise.catch) {
+                    routePromise.catch(err => {
+                        res.status(400).json({ error: err.message });
+                    });
+                }
+            };
+        };
+
 		const controller = require("./controllers/" + file);
-		controller(app, mongoose, passport, router);
+        controller(app, mongoose, passport, router);
 	}
 });
 

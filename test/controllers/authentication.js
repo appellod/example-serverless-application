@@ -14,192 +14,146 @@ const api = require("../helpers/api")(bs.config, bs.mongoose);
 describe("controllers/authentication.js", function() {
 	describe("GET /authentication/availability", function() {
 		context("when email is available", function() {
-			it("returns isAvailable set to true", function(done) {
-				let method = "get";
-				let path = "/authentication/availability";
-				let params = {
+			it("returns isAvailable set to true", async function() {
+				const method = "get";
+				const path = "/authentication/availability";
+				const params = {
 					email: "available@example.com"
 				};
 
-				api.request(method, path, params, null, (err, res) => {
-					expect(res.body.isAvailable).to.be.true;
-
-					done();
-				});
+                const res = await api.request(method, path, params, null);
+                expect(res.body.isAvailable).to.be.true;
 			});
 		});
 
 		context("when email is unavailable", function() {
-			beforeEach(function(done) {
-				User.mock({ email: "taken@example.com" }, (err, user) => {
-					done();
-				});
+			beforeEach(async function() {
+                await User.mock({ email: "taken@example.com" });
 			});
 
-			it("returns isAvailable set to false", function(done) {
-				let method = "get";
-				let path = "/authentication/availability";
-				let params = {
+			it("returns isAvailable set to false", async function() {
+				const method = "get";
+				const path = "/authentication/availability";
+				const params = {
 					email: "taken@example.com"
 				};
 
-				api.request(method, path, params, null, (err, res) => {
-					expect(res.body.isAvailable).to.be.false;
-
-					done();
-				});
+				const res = await api.request(method, path, params, null);
+				expect(res.body.isAvailable).to.be.false;
 			});
 		});
 	});
 
 	describe("POST /authentication/signup", function() {
-		it("returns the user and access token", function(done) {
-			let method = "post";
-			let path = "/authentication/signup";
-			let params = {
-				email: "test@example.com",
+		it("returns the user and access token", async function() {
+			const method = "post";
+			const path = "/authentication/signup";
+			const params = {
+				email: "user@example.com",
 				password: "password"
 			};
 
-			api.request(method, path, params, null, (err, res) => {
-				expect(res.body.user).to.be.defined;
-				expect(res.body.token).to.be.defined;
-
-				done();
-			});
+			const res = await api.request(method, path, params, null);
+            expect(res.body.user).to.be.defined;
+			expect(res.body.token).to.be.defined;
 		});
 	});
 
 	describe("POST /authentication/login", function() {
 		let user;
 
-		beforeEach(function(done) {
-			User.mock({ password: "password" }, (err, _user) => {
-				user = _user;
-
-				done();
-			});
+		beforeEach(async function() {
+            user = await User.mock({ password: "password" });
 		});
 
 		context("when credentials are correct", function() {
-			it("returns the user and access token", function(done) {
-				let method = "post";
-				let path = "/authentication/login";
-				let params = {
+			it("returns the user and access token", async function() {
+				const method = "post";
+				const path = "/authentication/login";
+				const params = {
 					email: user.email,
 					password: "password"
 				};
 
-				api.request(method, path, params, null, (err, res) => {
-					expect(res.body.user).to.be.defined;
-					expect(res.body.token).to.be.defined;
-
-					done();
-				});
+				const res = await api.request(method, path, params, null);
+                expect(res.body.user).to.be.defined;
+				expect(res.body.token).to.be.defined;
 			});
 		});
 
 		context("when credentials are incorrect", function() {
-			it("returns an error message", function(done) {
-				let method = "post";
-				let path = "/authentication/login";
-				let params = {
+			it("returns an error message", async function() {
+				const method = "post";
+				const path = "/authentication/login";
+				const params = {
 					email: user.email,
 					password: "wrong"
 				};
 
-				api.request(method, path, params, null, (err, res) => {
-					expect(res.status).to.eq(400);
-					expect(res.body.error).to.be.defined;
-
-					done();
-				});
+				const res = await api.request(method, path, params, null);
+                expect(res.status).to.eq(400);
+				expect(res.body.error).to.be.defined;
 			});
 		});
 	});
 
 	describe("DELETE /authentication/logout", function() {
-		let user;
+		let token, user;
 
-		beforeEach(function(done) {
-			User.mock({}, (err, _user) => {
-				_user.login((err, _user) => {
-					user = _user;
-
-					done();
-				});
-			});
+		beforeEach(async function() {
+            user = await User.mock({});
+            ({ token, user} = await user.login());
 		});
 
-		it("returns a 200 status", function(done) {
-			let method = "delete";
-			let path = "/authentication/logout";
-			let params = null;
+		it("returns a 200 status", async function() {
+			const method = "delete";
+			const path = "/authentication/logout";
+			const params = null;
 
-			api.request(method, path, params, user.email, (err, res) => {
-				expect(res.status).to.eq(200);
-
-				done();
-			});
+			const res = await api.request(method, path, params, user.email);
+            expect(res.status).to.eq(200);
 		});
 	});
 
 	describe("POST /authentication/request-password-reset", function() {
-		let user;
+		let token, user;
 
-		beforeEach(function(done) {
-			User.mock({}, (err, _user) => {
-				_user.login((err, _user) => {
-					user = _user;
-
-					done();
-				});
-			});
+		beforeEach(async function() {
+            user = await User.mock({});
+            ({ token, user} = await user.login());
 		});
 
-		it("returns a 200 status", function(done) {
-			let method = "post";
-			let path = "/authentication/request-password-reset";
-			let params = {
+		it("returns a 200 status", async function() {
+			const method = "post";
+			const path = "/authentication/request-password-reset";
+			const params = {
 				email: user.email
 			};
 
-			api.request(method, path, params, null, (err, res) => {
-				expect(res.status).to.eq(200);
-
-				done();
-			});
+			const res = await api.request(method, path, params, null);
+			expect(res.status).to.eq(200);
 		});
 	});
 
 	describe("POST /authentication/reset-password", function() {
-		let user;
+		let token, user;
 
-		beforeEach(function(done) {
-			User.mock({}, (err, _user) => {
-				_user.login((err, _user) => {
-					_user.requestPasswordReset((err, _user) => {
-						user = _user;
-
-						done();
-					});
-				});
-			});
+		beforeEach(async function() {
+            user = await User.mock({});
+            ({ token, user} = await user.login());
+            user = await user.requestPasswordReset();
 		});
 
-		it("returns a 200 status", function(done) {
-			let method = "post";
-			let path = "/authentication/reset-password";
-			let params = {
+		it("returns a 200 status", async function() {
+			const method = "post";
+			const path = "/authentication/reset-password";
+			const params = {
 				resetHash: user.resetHash,
 				password: "newpassword"
 			};
 
-			api.request(method, path, params, user.email, (err, res) => {
-				expect(res.status).to.eq(200);
-
-				done();
-			});
+			const res = await api.request(method, path, params, user.email);
+            expect(res.status).to.eq(200);
 		});
 	});
 });

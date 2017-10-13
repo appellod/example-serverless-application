@@ -17,21 +17,17 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiSuccess {Array} users Array of users matching the criteria.
 	 */
-	router.get('/users', passport.authenticate('bearer', { session: false }), (req, res) => {
-		User
+	router.get('/users', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+		const users = await User
 			.find(req.query.where)
 			.sort(req.query.sort)
 			.skip(req.query.skip)
 			.limit(req.query.limit)
 			.select(req.query.select)
-			.exec((err, users) => {
-				if (err) {
-					res.status(400).json({ error: err.message });
-				} else {
-					res.json({ users: users });
-				}
-			});
-	});
+			.exec();
+
+        res.json({ users });
+	}));
 
 	/**
 	 * @api {post} /users Create User
@@ -45,15 +41,11 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiSuccess {Object} user The new user.
 	 */
-	router.post('/users', passport.authenticate('bearer', { session: false }), (req, res) => {
-		User.create(req.body, (err, user) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else {
-				res.json({ user: user });
-			}
-		});
-	});
+	router.post('/users', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        const user = await User.create(req.body);
+
+        res.json({ user });
+	}));
 
 	/**
 	 * @api {get} /users/:id Get User
@@ -65,15 +57,11 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiSuccess {Object} user The user matching the given ID.
 	 */
-	router.get('/users/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		User.findOne({ _id: req.params.id }, (err, user) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else {
-				res.json({ user: user });
-			}
-		});
-	});
+	router.get('/users/:id', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        const user = await User.findOne({ _id: req.params.id });
+
+        res.json({ user });
+	}));
 
 	/**
 	 * @api {put} /users/:id Update User
@@ -87,27 +75,22 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiSuccess {Object} user The updated user.
 	 */
-	router.put('/users/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		User.findOne({ _id: req.params.id }, (err, user) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else if (!user) {
-				res.status(400).json({ error: "User not found." });
-			} else {
-				for (let key in req.body) {
-					user[key] = req.body[key];
-				}
+	router.put('/users/:id', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        let user = await User.findOne({ _id: req.params.id });
 
-				user.save((err, user) => {
-					if (err) {
-						res.status(400).json({ error: err.message });
-					} else {
-						res.json({ user: user });
-					}
-				});
-			}
-		});
-	});
+        if (!user) {
+            res.status(400).json({ error: "User not found" });
+            return;
+        }
+
+        for (let key in req.body) {
+            user[key] = req.body[key];
+        }
+
+        user = await user.save();
+
+        res.json({ user });
+	}));
 
 	/**
 	 * @api {delete} /users/:id Remove User
@@ -117,22 +100,17 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiParam {String} :id The ID of the user.
 	 */
-	router.delete('/users/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		User.findOne({ _id: req.params.id }, (err, user) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else if (!user) {
-				res.status(400).json({ error: "User not found." });
-			} else {
-				user.remove((err, user) => {
-					if (err) {
-						res.status(400).json({ error: err.message });
-					} else {
-						res.json({ message: "User removed successfully." });
-					}
-				});
-			}
-		});
-	});
+	router.delete('/users/:id', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        let user = await User.findOne({ _id: req.params.id });
+
+        if (!user) {
+            res.status(400).json({ error: "User not found" });
+            return;
+        }
+
+        user = await user.remove();
+
+        res.json({ message: "User removed successfully." });
+	}));
 
 };

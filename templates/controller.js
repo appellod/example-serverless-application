@@ -38,21 +38,17 @@ module.exports = function(app, mongoose, passport, router) {
 	 *
 	 * @apiSuccess {Array} ${nameCamelPlural} Array of ${nameFormalPlural} matching the criteria.
 	 */
-	router.get('/${nameCamelPlural}', passport.authenticate('bearer', { session: false }), (req, res) => {
-		${name}
-			.find(req.query.where)
-			.sort(req.query.sort)
-			.skip(req.query.skip)
-			.limit(req.query.limit)
-			.select(req.query.select)
-			.exec((err, ${nameCamelPlural}) => {
-				if (err) {
-					res.status(400).json({ error: err.message });
-				} else {
-					res.json({ ${nameCamelPlural}: ${nameCamelPlural} });
-				}
-			});
-	});
+    router.get('/${nameCamelPlural}', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+ 		const ${nameCamelPlural} = await ${nameFormal}
+ 			.find(req.query.where)
+ 			.sort(req.query.sort)
+ 			.skip(req.query.skip)
+ 			.limit(req.query.limit)
+ 			.select(req.query.select)
+ 			.exec();
+
+        res.json({ ${nameCamelPlural} });
+ 	}));
 
 	/**
 	 * @api {post} /${nameCamelPlural} Create ${nameFormal}
@@ -64,15 +60,11 @@ ${attributesDocumentation}
 	 *
 	 * @apiSuccess {Object} ${nameCamel} The new ${nameFormal}.
 	 */
-	router.post('/${nameCamelPlural}', passport.authenticate('bearer', { session: false }), (req, res) => {
-		${name}.create(req.body, (err, ${nameCamel}) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else {
-				res.json({ ${nameCamel}: ${nameCamel} });
-			}
-		});
-	});
+    router.post('/${nameCamelPlural}', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        const ${nameCamel} = await ${nameFormal}.create(req.body);
+
+        res.json({ ${nameCamel} });
+ 	}));
 
 	/**
 	 * @api {get} /${nameCamelPlural}/:id Get ${nameFormal}
@@ -84,15 +76,11 @@ ${attributesDocumentation}
 	 *
 	 * @apiSuccess {Object} ${nameCamel} The ${nameFormal} matching the given ID.
 	 */
-	router.get('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		${name}.findOne({ _id: req.params.id }, (err, ${nameCamel}) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else {
-				res.json({ ${nameCamel}: ${nameCamel} });
-			}
-		});
-	});
+    router.get('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        const ${nameCamel} = await ${nameFormal}.findOne({ _id: req.params.id });
+
+        res.json({ ${nameCamel} });
+ 	}));
 
 	/**
 	 * @api {put} /${nameCamelPlural}/:id Update ${nameFormal}
@@ -105,27 +93,22 @@ ${attributesDocumentation}
 	 *
 	 * @apiSuccess {Object} ${nameCamel} The updated ${nameFormal}.
 	 */
-	router.put('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		${name}.findOne({ _id: req.params.id }, (err, ${nameCamel}) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else if (!${nameCamel}) {
-				res.status(400).json({ error: "${name} not found." });
-			} else {
-				for (let key in req.body) {
-					${nameCamel}[key] = req.body[key];
-				}
+    router.put('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        let ${nameCamel} = await ${nameFormal}.findOne({ _id: req.params.id });
 
-				${nameCamel}.save((err, ${nameCamel}) => {
-					if (err) {
-						res.status(400).json({ error: err.message });
-					} else {
-						res.json({ ${nameCamel}: ${nameCamel} });
-					}
-				});
-			}
-		});
-	});
+        if (!${nameCamel}) {
+            res.status(400).json({ error: "${nameFormal} not found" });
+            return;
+        }
+
+        for (let key in req.body) {
+            ${nameCamel}[key] = req.body[key];
+        }
+
+        ${nameCamel} = await ${nameCamel}.save();
+
+        res.json({ ${nameCamel} });
+ 	}));
 
 	/**
 	 * @api {delete} /${nameCamelPlural}/:id Remove ${nameFormal}
@@ -135,23 +118,18 @@ ${attributesDocumentation}
 	 *
 	 * @apiParam {String} :id The ID of the ${nameFormal}.
 	 */
-	router.delete('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), (req, res) => {
-		${name}.findOne({ _id: req.params.id }, (err, ${nameCamel}) => {
-			if (err) {
-				res.status(400).json({ error: err.message });
-			} else if (!${nameCamel}) {
-				res.status(400).json({ error: "${name} not found." });
-			} else {
-				${nameCamel}.remove((err, ${nameCamel}) => {
-					if (err) {
-						res.status(400).json({ error: err.message });
-					} else {
-						res.json({ message: "${name} removed successfully." });
-					}
-				});
-			}
-		});
-	});
+     router.delete('/${nameCamelPlural}/:id', passport.authenticate('bearer', { session: false }), router.catchErrors(async (req, res) => {
+        let ${nameCamel} = await ${nameFormal}.findOne({ _id: req.params.id });
+
+        if (!${nameCamel}) {
+            res.status(400).json({ error: "${nameFormal} not found" });
+            return;
+        }
+
+        ${nameCamel} = await ${nameCamel}.remove();
+
+        res.json({ message: "${nameFormal} removed successfully." });
+ 	}));
 };`;
 
 	return data;

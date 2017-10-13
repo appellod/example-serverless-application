@@ -14,122 +14,93 @@ const api = require("../helpers/api")(bs.config, bs.mongoose);
 
 describe("controllers/users.js", function() {
 	describe("GET /users", function() {
-		beforeEach(function(done) {
-			User.mock({}, (err, _user) => {
-				return done();
-			});
+		beforeEach(async function() {
+            await User.mock({});
 		});
 
-		it("returns all users", function(done) {
-			let method = "get";
-			let path = "/users";
-			let params = null;
+		it("returns all users", async function() {
+			const method = "get";
+			const path = "/users";
+			const params = null;
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+			const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				expect(res.body.users.length).to.be.above(0);
-
-				done();
-			});
+			expect(res.body.users.length).to.be.above(0);
 		});
 	});
 
 	describe("POST /users", function() {
-		it("creates a new user", function(done) {
-			let method = "post";
-			let path = "/users";
-			let params = {
-    		email: chance.email(),
-				password: chance.hash()
-  		};
+		it("creates a new user", async function() {
+			const method = "post";
+			const path = "/users";
+			const params = {
+        		email: chance.email(),
+    			password: chance.hash()
+      		};
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				expect(res.body.user.email).to.eq(params.email);
-				expect(res.body.user.password).to.not.eq(params.password);
-
-				done();
-			});
+			expect(res.body.user.email).to.eq(params.email);
+			expect(res.body.user.password).to.not.eq(params.password);
 		});
 	});
 
 	describe("GET /users/:id", function() {
 		let user;
 
-		beforeEach(function(done) {
-			User.mock({}, (err, _user) => {
-				user = _user;
-
-				return done();
-			});
+		beforeEach(async function() {
+            user = await User.mock({});
 		});
 
-		it("returns the user", function(done) {
-			let method = "get";
-			let path = "/users/" + user._id;
-			let params = null;
+		it("returns the user", async function() {
+			const method = "get";
+			const path = "/users/" + user._id;
+			const params = null;
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				expect(res.body.user._id).to.eq(user._id.toString());
-
-				done();
-			});
+			expect(res.body.user._id).to.eq(user._id.toString());
 		});
 	});
 
 	describe("PUT /users/:id", function() {
 		let user;
 
-		beforeEach(function(done) {
-			User.mock({}, (err, _user) => {
-				user = _user;
-
-				return done();
-			});
+		beforeEach(async function() {
+            user = await User.mock({});
 		});
 
-		it("updates and returns the user", function(done) {
-			let method = "put";
-			let path = "/users/" + user._id;
-			let params = {
+		it("updates and returns the user", async function() {
+			const method = "put";
+			const path = "/users/" + user._id;
+			const params = {
 				email: chance.email(),
 			};
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				expect(res.body.user.email).to.eq(params.email);
-
-				done();
-			});
+			expect(res.body.user.email).to.eq(params.email);
 		});
 	});
 
 	describe("DELETE /users/:id", function() {
 		let user;
 
-		beforeEach(function(done) {
-			User.mock({}, (err, _user) => {
-				user = _user;
-
-				return done();
-			});
+		beforeEach(async function() {
+            user = await User.mock({});
 		});
 
-		it("returns a 200 status", function(done) {
-			let method = "delete";
-			let path = "/users/" + user._id;
-			let params = null;
+		it("returns a 200 status", async function() {
+			const method = "delete";
+			const path = "/users/" + user._id;
+			const params = null;
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
-
-				done();
-			});
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 		});
 	});
 });

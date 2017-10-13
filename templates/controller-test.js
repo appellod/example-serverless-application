@@ -54,123 +54,96 @@ const api = require("../helpers/api")(bs.config, bs.mongoose);
 
 describe("controllers/${nameCamelPlural}.js", function() {
 	describe("GET /${nameCamelPlural}", function() {
-		beforeEach(function(done) {
-			${name}.mock({}, (err, _${nameCamel}) => {
-				return done();
-			});
+		beforeEach(async function() {
+            await ${name}.mock({});
 		});
 
-		it("returns all ${nameCamelPlural}", function(done) {
-			let method = "get";
-			let path = "/${nameCamelPlural}";
-			let params = null;
+		it("returns all ${nameCamelPlural}", async function() {
+			const method = "get";
+			const path = "/${nameCamelPlural}";
+			const params = null;
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+			const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				expect(res.body.${nameCamelPlural}.length).to.be.above(0);
-
-				done();
-			});
+			expect(res.body.${nameCamelPlural}.length).to.be.above(0);
 		});
 	});
 
 	describe("POST /${nameCamelPlural}", function() {
-		it("creates a new ${nameCamel}", function(done) {
-			let method = "post";
-			let path = "/${nameCamelPlural}";
-			let params = {
-    		${attributeParams}
-  		};
+		it("creates a new ${nameCamel}", async function() {
+			const method = "post";
+			const path = "/${nameCamelPlural}";
+			const params = {
+        		email: chance.email(),
+    			password: chance.hash()
+      		};
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				${attributeAssertions}
-
-				done();
-			});
+			${attributeAssertions}
 		});
 	});
 
 	describe("GET /${nameCamelPlural}/:id", function() {
 		let ${nameCamel};
 
-		beforeEach(function(done) {
-			${name}.mock({}, (err, _${nameCamel}) => {
-				${nameCamel} = _${nameCamel};
-
-				return done();
-			});
+		beforeEach(async function() {
+            ${nameCamel} = await ${name}.mock({});
 		});
 
-		it("returns the ${nameCamel}", function(done) {
-			let method = "get";
-			let path = "/${nameCamelPlural}/" + ${nameCamel}._id;
-			let params = null;
+		it("returns the ${nameCamel}", async function() {
+			const method = "get";
+			const path = "/${nameCamelPlural}/" + ${nameCamel}._id;
+			const params = null;
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				expect(res.body.${nameCamel}._id).to.eq(${nameCamel}._id.toString());
-
-				done();
-			});
+			expect(res.body.${nameCamel}._id).to.eq(${nameCamel}._id.toString());
 		});
 	});
 
 	describe("PUT /${nameCamelPlural}/:id", function() {
 		let ${nameCamel};
 
-		beforeEach(function(done) {
-			${name}.mock({}, (err, _${nameCamel}) => {
-				${nameCamel} = _${nameCamel};
-
-				return done();
-			});
+		beforeEach(async function() {
+            ${nameCamel} = await ${name}.mock({});
 		});
 
-		it("updates and returns the ${nameCamel}", function(done) {
-			let method = "put";
-			let path = "/${nameCamelPlural}/" + ${nameCamel}._id;
-			let params = {
-				${attributeParams}
+		it("updates and returns the ${nameCamel}", async function() {
+			const method = "put";
+			const path = "/${nameCamelPlural}/" + ${nameCamel}._id;
+			const params = {
+				email: chance.email(),
 			};
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 
-				${attributeAssertions}
-
-				done();
-			});
+			${attributeAssertions}
 		});
 	});
 
 	describe("DELETE /${nameCamelPlural}/:id", function() {
 		let ${nameCamel};
 
-		beforeEach(function(done) {
-			${name}.mock({}, (err, _${nameCamel}) => {
-				${nameCamel} = _${nameCamel};
-
-				return done();
-			});
+		beforeEach(async function() {
+            ${nameCamel} = await ${name}.mock({});
 		});
 
-		it("returns a 200 status", function(done) {
-			let method = "delete";
-			let path = "/${nameCamelPlural}/" + ${nameCamel}._id;
-			let params = null;
+		it("returns a 200 status", async function() {
+			const method = "delete";
+			const path = "/${nameCamelPlural}/" + ${nameCamel}._id;
+			const params = null;
 
-			api.request(method, path, params, "test@example.com", (err, res) => {
-				expect(res.status).to.eq(200);
-
-				done();
-			});
+            const res = await api.request(method, path, params, "test@example.com");
+            expect(res.status).to.eq(200);
 		});
 	});
-});`;
+});
+`;
 
 	return data;
 };
