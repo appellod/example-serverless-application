@@ -18,7 +18,7 @@ export interface IConfig {
     host: string,
     port: string
   };
-};
+}
 
 export class Config {
   public environment: string;
@@ -52,7 +52,7 @@ export class Config {
   }
 
   private getConfiguration(env: string): IConfig {
-    const configurations = {
+    const configurations: { [s: string]: IConfig } = {
       test: {
         environment: "test",
         mongo: {
@@ -162,4 +162,4 @@ export class Config {
 
     return configurations[env];
   }
-};
+}

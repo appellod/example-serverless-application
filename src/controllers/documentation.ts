@@ -10,9 +10,9 @@ export class DocumentationController {
      */
     app.get("/", (req, res) => {
       if (req.session.isLoggedIn) {
-        res.redirect('/apidoc/index.html');
+        res.redirect("/apidoc/index.html");
       } else {
-        res.redirect('/login.html');
+        res.redirect("/login.html");
       }
     });
 
@@ -24,7 +24,7 @@ export class DocumentationController {
         const file = req.originalUrl.split("?")[0];
         res.sendFile(path.resolve(__dirname + "/../public" + file));
       } else {
-        res.redirect('/login.html');
+        res.redirect("/login.html");
       }
     });
 
@@ -32,7 +32,7 @@ export class DocumentationController {
      * Logs the user in if the username and password are correct and redirects
      * them to documentation page.
      */
-    app.post('/login', async (req, res) => {
+    app.post("/login", async (req, res) => {
       try {
         const user = await Mongoose.User.findOne({ email: req.body.email });
 
@@ -48,4 +48,4 @@ export class DocumentationController {
       }
     });
   }
-};
+}

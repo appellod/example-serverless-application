@@ -111,31 +111,6 @@ environment, or at the very least, the test and local environments.
 
 ## Working on the API
 
-**Generating a New Model**  
-A new data model can be generated using the following script:
-```
-npm run generate-model -- [ModelName]
-```
-This will generate a new model file within the models/ directory and a test file
-within the test/models/ directory. Data modeling is done using [Mongoose](http://mongoosejs.com/). Add any attributes, indexes, hooks or
-methods that you need.
-
-Note that a *mock()* function is generated with each model to make testing
-easier. Any required attributes should be set using [Chance](https://github.com/chancejs/chancejs) if they are not supplied as
-parameters to the *mock()* function. Refer to the User model to see an example.
-
-**Generating a Controller for a Model**  
-Basic CRUD endpoints can be generated for any model. Simply run:
-```
-npm run generate-controller -- [fileName]
-```
-The file name should be the model's file name without any path information. For
-example, a User model defined in user.js would use the command:
-```
-npm run generate-controller -- user.js
-```
-This will generate the controller file in controllers/ and a test file in test/controllers/.
-
 **Running the Test Suite**  
 Try running the test suite to make sure everything is working correctly with:
 ```

@@ -20,7 +20,7 @@ export class UsersController {
      *
      * @apiSuccess {Array} users Array of users matching the criteria.
      */
-    router.get('/users', passport.authenticate('bearer', { session: false }), async (req, res) => {
+    router.get("/users", passport.authenticate("bearer", { session: false }), async (req, res) => {
       const users = await Mongoose.User
         .find(req.query.where)
         .sort(req.query.sort)
@@ -44,7 +44,7 @@ export class UsersController {
      *
      * @apiSuccess {Object} user The new user.
      */
-    router.post('/users', passport.authenticate('bearer', { session: false }), async (req, res) => {
+    router.post("/users", passport.authenticate("bearer", { session: false }), async (req, res) => {
       const user = await Mongoose.User.create(req.body);
 
       res.json({ user });
@@ -60,7 +60,7 @@ export class UsersController {
      *
      * @apiSuccess {Object} user The user matching the given ID.
      */
-    router.get('/users/:id', passport.authenticate('bearer', { session: false }), async (req, res) => {
+    router.get("/users/:id", passport.authenticate("bearer", { session: false }), async (req, res) => {
       const user = await Mongoose.User.findOne({ _id: req.params.id });
 
       res.json({ user });
@@ -78,7 +78,7 @@ export class UsersController {
      *
      * @apiSuccess {Object} user The updated user.
      */
-    router.put('/users/:id', passport.authenticate('bearer', { session: false }), async (req, res) => {
+    router.put("/users/:id", passport.authenticate("bearer", { session: false }), async (req, res) => {
       let user = await Mongoose.User.findOne({ _id: req.params.id });
 
       if (!user) {
@@ -101,7 +101,7 @@ export class UsersController {
      *
      * @apiParam {String} :id The ID of the user.
      */
-    router.delete('/users/:id', passport.authenticate('bearer', { session: false }), async (req, res) => {
+    router.delete("/users/:id", passport.authenticate("bearer", { session: false }), async (req, res) => {
       let user = await Mongoose.User.findOne({ _id: req.params.id });
 
       if (!user) {
@@ -114,4 +114,4 @@ export class UsersController {
       res.json({ message: "User removed successfully." });
     });
   }
-};
+}

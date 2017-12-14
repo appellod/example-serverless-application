@@ -16,14 +16,14 @@ export class AuthenticationController {
      *
      * @apiSuccess {Boolean} isAvailable True if the email is available, false otherwise.
      */
-    router.get('/authentication/availability', async (req, res) => {
+    router.get("/authentication/availability", async (req, res) => {
       if (!req.query.email) {
         res.json({ isAvailable: false });
         return;
       }
 
       const user = await Mongoose.User.findOne({ email: req.query.email });
-      res.json({ isAvailable: !user })
+      res.json({ isAvailable: !user });
     });
 
     /**
@@ -38,13 +38,13 @@ export class AuthenticationController {
      * @apiSuccess {Object} user The created user.
      * @apiSuccess {String} token The user's access token.
      */
-    router.post('/authentication/signup', async (req, res) => {
+    router.post("/authentication/signup", async (req, res) => {
       if (!req.body.email || !req.body.password) {
         res.status(400).json({ error: "Please provide an email address and password." });
         return;
       }
 
-      let user = await Mongoose.User.create({
+      const user = await Mongoose.User.create({
           email: req.body.email,
           password: req.body.password
       });
@@ -65,13 +65,13 @@ export class AuthenticationController {
      * @apiSuccess {Object} user The user.
      * @apiSuccess {String} token The user's access token.
      */
-    router.post('/authentication/login', async (req, res) => {
+    router.post("/authentication/login", async (req, res) => {
       if (!req.body.email || !req.body.password) {
         res.status(400).json({ error: "Please provide an email address and password." });
         return;
       }
 
-      let user = await Mongoose.User.findOne({ email: req.body.email });
+      const user = await Mongoose.User.findOne({ email: req.body.email });
 
       if (!user || !user.isValidPassword(req.body.password)) {
         res.status(400).json({ error: "Incorrect username or password." });
@@ -89,9 +89,8 @@ export class AuthenticationController {
      * @apiGroup Authentication
      * @apiDescription Logs a user out.
      */
-    router.delete('/authentication/logout', passport.authenticate('bearer', { session: false }), async (req, res) => {
-      let token = req.get('authorization').replace("Bearer ", "");
-
+    router.delete("/authentication/logout", passport.authenticate("bearer", { session: false }), async (req, res) => {
+      const token = req.get("authorization").replace("Bearer ", "");
       await req.user.logout(token);
 
       res.send({ message: "Logout successful." });
@@ -105,7 +104,7 @@ export class AuthenticationController {
      *
      * @apiParam {String} email The user's email address.
      */
-    router.post('/authentication/request-password-reset', async (req, res) => {
+    router.post("/authentication/request-password-reset", async (req, res) => {
       let user = await Mongoose.User.findOne({ email: req.body.email });
 
       if (!user) {
@@ -127,7 +126,7 @@ export class AuthenticationController {
      * @apiParam {String} resetHash The reset password hash.
      * @apiParam {String} password The new password.
      */
-    router.post('/authentication/reset-password', async (req, res) => {
+    router.post("/authentication/reset-password", async (req, res) => {
       const user = await Mongoose.User.resetPassword(req.body.resetHash, req.body.password);
 
       if (!user) {
@@ -138,4 +137,4 @@ export class AuthenticationController {
       res.json({ message: "Password reset successfully." });
     });
   }
-};
+}

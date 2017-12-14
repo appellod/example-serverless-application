@@ -8,7 +8,8 @@ WORKDIR ${HOME}
 ADD . $HOME
 
 # install pm2 and npm packages
+RUN npm run grunt
 RUN npm install -g pm2 && npm install
 
 # run crawler using pm2's Docker integration
-CMD ["pm2-docker", "index.js"]
+CMD ["pm2-docker", "dist/index.js"]

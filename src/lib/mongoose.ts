@@ -12,11 +12,11 @@ export class Mongoose {
     const database = config.mongo.database;
     const url = `mongodb://${host}:${port}/${database}`;
 
-    (<any>mongoose).Promise = global.Promise;
-    mongoose.connect(url, err => {
+    (mongoose as any).Promise = global.Promise;
+    mongoose.connect(url, (err) => {
       if (err) throw err;
 
-      if (config.environment != "test") console.log("Mongoose connection successful.");
+      if (config.environment !== "test") console.log("Mongoose connection successful.");
     });
 
     Mongoose.User = new User(config).model;
@@ -25,4 +25,4 @@ export class Mongoose {
   public static async clear() {
     await Mongoose.User.remove({});
   }
-};
+}

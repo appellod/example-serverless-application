@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "tslint:recommended"   
+  ],
+  "jsRules": {},
+  "rules": {
+    "curly": false,
+    "max-line-length": false,
+    "member-ordering": false,
+    "no-angle-bracket-type-assertion": false,
+    "no-console": false,
+    "no-unused-expression": false,
+    "no-var-requires": false,
+    "only-arrow-functions": false,
+    "ordered-imports": false,
+    "trailing-comma": false
+  },
+  "rulesDirectory": []
+}

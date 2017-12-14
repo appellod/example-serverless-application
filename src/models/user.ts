@@ -4,11 +4,12 @@ import * as mongoose from "mongoose";
 import * as request from "request";
 
 import { Config } from "../config/config";
+import { Mongoose } from "../lib/mongoose";
 
 export interface IAuthToken {
   _id: mongoose.Schema.Types.ObjectId;
   expiresAt: Date;
-};
+}
 
 export interface IUserDocument extends mongoose.Document {
   email?: string;
@@ -22,14 +23,14 @@ export interface IUserDocument extends mongoose.Document {
   logout(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument>;
   refreshToken(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument>;
   requestPasswordReset(): Promise<IUserDocument>;
-};
+}
 
 export interface IUserModel extends mongoose.Model<IUserDocument> {
   getPasswordHash(password: string): string;
   getTokenExpirationDate(): Date;
   mock(params: any): Promise<IUserDocument>;
   resetPassword(resetHash: string, newPassword: string): Promise<IUserDocument>;
-};
+}
 
 export class User {
   public model: IUserModel;
@@ -79,20 +80,18 @@ export class User {
      */
     this.schema.methods.isValidPassword = function(password: string): boolean {
       return bcrypt.compareSync(password, this.password);
-    }
+    };
 
     /**
      * Logs a user in.
      */
     this.schema.methods.login = async function(): Promise<{ token: IAuthToken, user: IUserDocument }> {
-      let User = this.constructor;
-
-      const user = await User.findOneAndUpdate({
+      const user = await Mongoose.User.findOneAndUpdate({
         _id: this._id
       }, {
         $push: {
-          "tokens": {
-            expiresAt: User.getTokenExpirationDate()
+          tokens: {
+            expiresAt: Mongoose.User.getTokenExpirationDate()
           }
         }
       }, {
@@ -102,20 +101,18 @@ export class User {
       const token = user.tokens[user.tokens.length - 1];
 
       return { token, user };
-    }
+    };
 
     /**
      * Logs the user out.
      * @param {String} token The access token to be cleared.
      */
     this.schema.methods.logout = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument> {
-      let User = this.constructor;
-
       if (!token) {
         throw new Error("A valid access token must be used for logout.");
       }
 
-      const user = await User.findOneAndUpdate({
+      const user = await Mongoose.User.findOneAndUpdate({
         _id: this._id
       }, {
         $pull: {
@@ -128,17 +125,15 @@ export class User {
       });
 
       return user;
-    }
+    };
 
     /**
      * Refreshes the given token"s expiration date.
      * @param {String} token The token"s ID.
      */
     this.schema.methods.refreshToken = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument> {
-      let User = this.constructor;
-
-      const user = await User.findOneAndUpdate({
-        _id: this._id,
+      const user = await Mongoose.User.findOneAndUpdate({
+        "_id": this._id,
         "tokens._id": token
       }, {
         "tokens.$.expiresAt": User.getTokenExpirationDate()
@@ -147,7 +142,7 @@ export class User {
       });
 
       return user;
-    }
+    };
 
     /**
      * Generates a resetHash and sends the user a Reset Password email.
@@ -161,27 +156,27 @@ export class User {
       this.resetHash = chance.hash();
       const user = await this.save();
 
-      let resetUrl = config.passwordReset.url + "?resetHash=" + user.resetHash;
+      const resetUrl = config.passwordReset.url + "?resetHash=" + user.resetHash;
 
       let html = "You have requested to reset your password. Please click the link below to create a new password:";
       html += "<br><br>";
       html += "<a href=" + resetUrl + ">" + resetUrl + "</a>";
       html += "<br><br>";
       html += "Thank you,";
-      html += "<br>"
+      html += "<br>";
       html += config.passwordReset.company;
 
-      let url = "https://api:key-" + config.mailgun.key + "@api.mailgun.net/v3/" + config.mailgun.domain + "/messages";
+      const url = "https://api:key-" + config.mailgun.key + "@api.mailgun.net/v3/" + config.mailgun.domain + "/messages";
 
       try {
-        const body = await new Promise((res, rej) => {
+        await new Promise((res, rej) => {
           request.post({
-            url: url,
+            url,
             form: {
               from: config.passwordReset.from,
               to: user.email,
               subject: "Reset Password",
-              html: html
+              html
             }
           }, function(err, response, body) {
             return err ? rej(err) : res(body);
@@ -195,7 +190,7 @@ export class User {
 
           throw new Error("An error occured sending the password reset email.");
       }
-    }
+    };
   }
 
   private setupSchemaMiddleware(config: Config) {
@@ -203,11 +198,11 @@ export class User {
       if (this.isModified("email")) {
         this.email = this.email.toLowerCase();
       }
-  
+
       if (this.isModified("password")) {
         this.password = this.constructor.getPasswordHash(this.password);
       }
-  
+
       return next();
     });
   }
@@ -219,7 +214,7 @@ export class User {
      */
     this.schema.statics.getPasswordHash = function(password: string): string {
       return bcrypt.hashSync(password, bcrypt.genSaltSync(8));
-    }
+    };
 
     /**
      * Gets the expiration date for access tokens.
@@ -229,7 +224,7 @@ export class User {
       expiration.setDate(expiration.getDate() + 30);
 
       return expiration;
-    }
+    };
 
     /**
      * Creates a record with randomized required parameters if not specified.
@@ -242,7 +237,7 @@ export class User {
       if (!params.password) params.password = chance.hash();
 
       return this.create(params);
-    }
+    };
 
     /**
      * Resets a user"s password.
@@ -250,16 +245,14 @@ export class User {
      * @param {String} newPassword The user"s new password.
      */
     this.schema.statics.resetPassword = async function(resetHash: string, newPassword: string): Promise<IUserDocument> {
-      let User = this;
-
       if (!resetHash || !newPassword) {
         throw new Error("Please provide a resetHash and newPassword.");
       }
 
-      const user = await User.findOneAndUpdate({
-        resetHash: resetHash
+      const user = await Mongoose.User.findOneAndUpdate({
+        resetHash
       }, {
-        password: User.getPasswordHash(newPassword),
+        password: Mongoose.User.getPasswordHash(newPassword),
         tokens: [],
         $unset: {
           resetHash: true
@@ -269,6 +262,6 @@ export class User {
       });
 
       return user;
-    }
+    };
   }
-};
+}
