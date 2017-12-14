@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 
-import { Config } from "../config/config";
-import { IUserModel, User } from "../models/user";
+import { Config } from "../config";
+import { IUserModel, User } from "./user";
 
 export class Mongoose {
   public static User: IUserModel;

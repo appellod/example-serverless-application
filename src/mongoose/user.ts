@@ -3,8 +3,8 @@ import { Chance } from "chance";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
-import { Config } from "../config/config";
-import { Mongoose } from "../lib/mongoose";
+import { Config } from "../config";
+import { Mongoose } from "../mongoose";
 
 export interface IAuthToken {
   _id: mongoose.Schema.Types.ObjectId;
@@ -136,7 +136,7 @@ export class User {
         "_id": this._id,
         "tokens._id": token
       }, {
-        "tokens.$.expiresAt": User.getTokenExpirationDate()
+        "tokens.$.expiresAt": Mongoose.User.getTokenExpirationDate()
       }, {
         new: true
       });

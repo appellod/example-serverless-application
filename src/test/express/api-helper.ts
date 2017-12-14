@@ -1,8 +1,8 @@
 import * as chai from "chai";
 
-import { Config } from "../../config/config";
-import { Mongoose } from "../../lib/mongoose";
-import { IUserDocument, IAuthToken } from "../../models/user";
+import { Config } from "../../config";
+import { Mongoose } from "../../mongoose";
+import { IUserDocument, IAuthToken } from "../../mongoose/user";
 
 const chaiHttp = require("chai-http");
 

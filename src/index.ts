@@ -1,9 +1,9 @@
 import * as bluebird from "bluebird";
 
-import { Config } from "./config/config";
-import { Express } from "./lib/express";
-import { Mongoose } from "./lib/mongoose";
-import { Passport } from "./lib/passport";
+import { Config } from "./config";
+import { Express } from "./express";
+import { Mongoose } from "./mongoose";
+import { Passport } from "./passport";
 
 global.Promise = bluebird;
 

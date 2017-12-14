@@ -9,10 +9,10 @@ import * as mongoose from "mongoose";
 import * as morgan from "morgan";
 import * as path from "path";
 
-import { Config } from "../config/config";
-import { AuthenticationController } from "../controllers/authentication";
-import { DocumentationController } from "../controllers/documentation";
-import { UsersController } from "../controllers/users";
+import { Config } from "../config";
+import { AuthenticationController } from "../express/authentication";
+import { DocumentationController } from "../express/documentation";
+import { UsersController } from "../express/users";
 
 export class Express {
   public app: express.Application;

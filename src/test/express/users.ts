@@ -1,9 +1,9 @@
 import * as chai from "chai";
 import { Chance } from "chance";
 
-import { Mongoose } from "../../lib/mongoose";
-import { IUserDocument, IAuthToken } from "../../models/user";
-import { ApiHelper } from "../helpers/api-helper";
+import { Mongoose } from "../../mongoose";
+import { IUserDocument, IAuthToken } from "../../mongoose/user";
+import { ApiHelper } from "./api-helper";
 
 const index = require("../");
 
@@ -11,7 +11,7 @@ const apiHelper = new ApiHelper(index.config);
 const chance = new Chance();
 const expect = chai.expect;
 
-describe("controllers/users.js", function() {
+describe("express/users.js", function() {
   describe("GET /users", function() {
     beforeEach(async function() {
       await Mongoose.User.mock({});

@@ -2,7 +2,7 @@ import * as express from "express";
 import * as passport from "passport";
 import * as request from "request";
 
-import { Mongoose } from "../lib/mongoose";
+import { Mongoose } from "../mongoose";
 
 export class AuthenticationController {
   constructor(router: express.Router) {

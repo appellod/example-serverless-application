@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as path from "path";
 
-import { Mongoose } from "../lib/mongoose";
+import { Mongoose } from "../mongoose";
 
 export class DocumentationController {
   constructor(app: express.Application) {

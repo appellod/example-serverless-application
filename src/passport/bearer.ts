@@ -1,8 +1,8 @@
 import * as passport from "passport";
 import { Strategy } from "passport-http-bearer";
 
-import { Config } from "../config/config";
-import { Mongoose } from "../lib/mongoose";
+import { Config } from "../config";
+import { Mongoose } from "../mongoose";
 
 export class BearerStrategy {
   constructor(config: Config) {
