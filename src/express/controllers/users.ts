@@ -1,34 +1,36 @@
 import * as express from "express";
 
-import { Mongoose } from "@src/mongoose";
+import { Mongoose } from "../../mongoose";
+import { UserDocument } from "../../mongoose/models/user";
+import { UserPermissions } from "../../mongoose/permissions/user";
 
 export class UsersController {
-  public async create(req: express.Request, res: express.Response) {
-    const user = await Mongoose.User.create(req.body);
+  public async create(req: express.Request, res: express.Response): Promise<any> {
+    const createPermissions = await UserPermissions.create(req.user);
 
-    res.json({ user });
-  }
-
-  public async remove(req: express.Request, res: express.Response) {
-    let user = await Mongoose.User.findOne({ _id: req.params.id });
-
-    if (!user) {
-      res.status(400).json({ error: "User not found" });
-      return;
+    if (createPermissions.length === 0) {
+      throw new Error("You do not have permission to perform this action.");
     }
 
-    user = await user.remove();
+    Object.keys(req.body).forEach((key) => {
+      if (createPermissions.indexOf(key) < 0) {
+        delete req.body[key];
+      }
+    });
 
-    res.json({ message: "User removed successfully." });
+    const user = await Mongoose.User.create(req.body as object);
+
+    const readPermissions = await UserPermissions.read(user, req.user);
+    Object.keys(user._doc).forEach((key) => {
+      if (readPermissions.indexOf(key) < 0) {
+        user[key] = undefined;
+      }
+    });
+
+    return { user };
   }
 
-  public async findOne(req: express.Request, res: express.Response) {
-    const user = await Mongoose.User.findOne({ _id: req.params.id });
-
-    res.json({ user });
-  }
-
-  public async find(req: express.Request, res: express.Response) {
+  public async find(req: express.Request, res: express.Response): Promise<any> {
     const users = await Mongoose.User
       .find(req.query.where)
       .sort(req.query.sort)
@@ -37,20 +39,77 @@ export class UsersController {
       .select(req.query.select)
       .exec();
 
-    res.json({ users });
+    for (const user of users) {
+      const readPermissions = await UserPermissions.read(user, req.user);
+      Object.keys(user._doc).forEach((key) => {
+        if (readPermissions.indexOf(key) < 0) {
+          user[key] = undefined;
+        }
+      });
+    }
+
+    return { users };
   }
 
-  public async update(req: express.Request, res: express.Response) {
+  public async findOne(req: express.Request, res: express.Response): Promise<any> {
+    const user = await Mongoose.User.findOne({ _id: req.params.id });
+
+    const readPermissions = await UserPermissions.read(user, req.user);
+    Object.keys(user._doc).forEach((key) => {
+      if (readPermissions.indexOf(key) < 0) {
+        user[key] = undefined;
+      }
+    });
+
+    return { user };
+  }
+
+  public async remove(req: express.Request, res: express.Response): Promise<any> {
     let user = await Mongoose.User.findOne({ _id: req.params.id });
 
     if (!user) {
-      res.status(400).json({ error: "User not found" });
-      return;
+      throw new Error("User not found.");
     }
+
+    const removePermissions = await UserPermissions.remove(user, req.user);
+    if (!removePermissions) {
+      throw new Error("You do not have permission to perform this action.");
+    }
+
+    user = await user.remove();
+
+    return { message: "User removed successfully." };
+  }
+
+  public async update(req: express.Request, res: express.Response): Promise<any> {
+    let user = await Mongoose.User.findOne({ _id: req.params.id });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const updatePermissions = await UserPermissions.update(user, req.user);
+
+    if (updatePermissions.length === 0) {
+      throw new Error("You do not have permission to perform this action.");
+    }
+
+    Object.keys(req.body).forEach((key) => {
+      if (updatePermissions.indexOf(key) < 0) {
+        delete req.body[key];
+      }
+    });
 
     Object.assign(user, req.body);
     user = await user.save();
 
-    res.json({ user });
+    const readPermissions = await UserPermissions.read(user, req.user);
+    Object.keys(user._doc).forEach((key) => {
+      if (readPermissions.indexOf(key) < 0) {
+        user[key] = undefined;
+      }
+    });
+
+    return { user };
   }
 }

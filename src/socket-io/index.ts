@@ -2,21 +2,21 @@ import * as express from "express";
 import * as http from "http";
 import * as socketIo from "socket.io";
 
-import { UserDocument } from "@src/mongoose/models/user";
+import { UserDocument } from "../mongoose/models/user";
 import { AuthenticationController } from "./controllers/authentication";
 
-export interface ISocket extends SocketIO.Socket {
+export interface Socket extends SocketIO.Socket {
   user: UserDocument;
 }
 
 export class SocketIO {
   private io: SocketIO.Server;
-  private sockets: ISocket[] = [];
+  private sockets: Socket[] = [];
 
   constructor(server: http.Server) {
     this.io = socketIo(server);
 
-    this.io.on("connection", (socket: ISocket) => {
+    this.io.on("connection", (socket: Socket) => {
       this.sockets.push(socket);
 
       const authenticationController = new AuthenticationController(this, socket);

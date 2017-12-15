@@ -1,8 +1,8 @@
 import * as chai from "chai";
 import { Chance } from "chance";
 
-import { Mongoose } from "@src/mongoose";
-import { UserDocument, AuthToken } from "@src/mongoose/models/user";
+import { Mongoose } from "../../mongoose";
+import { UserDocument, AuthToken } from "../../mongoose/models/user";
 import { ApiHelper } from "./api-helper";
 
 const index = require("../");
@@ -12,37 +12,66 @@ const chance = new Chance();
 const expect = chai.expect;
 
 describe("express/users.ts", function() {
-  describe("GET /users", function() {
+  describe.only("GET /users", function() {
     beforeEach(async function() {
       await Mongoose.User.mock({});
     });
 
-    it("returns all users", async function() {
-      const method = "get";
-      const path = "/users";
-      const params: any = null;
+    context("when the user is an admin", function() {
+      it("returns all users", async function() {
+        const method = "get";
+        const path = "/users";
+        const params: any = null;
 
-      const res = await apiHelper.request(method, path, params, "test@example.com");
-      expect(res.status).to.eq(200);
+        const res = await apiHelper.request(method, path, params, "test@example.com");
 
-      expect(res.body.users.length).to.be.above(0);
+        expect(res.status).to.eq(200);
+        expect(res.body.users.length).to.eql(3);
+      });
+    });
+
+    context("when the user is not an admin", function() {
+      it("returns all users", async function() {
+        const method = "get";
+        const path = "/users";
+        const params: any = null;
+
+        const res = await apiHelper.request(method, path, params, "test@example.com");
+
+        expect(res.status).to.eq(200);
+        expect(res.body.users.length).to.eql(3);
+      });
     });
   });
 
   describe("POST /users", function() {
-    it("creates a new user", async function() {
-      const method = "post";
-      const path = "/users";
-      const params = {
-        email: chance.email(),
-        password: chance.hash()
-      };
+    const method = "post";
+    const path = "/users";
+    const params = {
+      email: chance.email(),
+      password: chance.hash()
+    };
 
-      const res = await apiHelper.request(method, path, params, "test@example.com");
-      expect(res.status).to.eq(200);
+    context("when user is an admin", function() {
+      it("creates a new user", async function() {
+        const res = await apiHelper.request(method, path, params, "admin@example.com");
 
-      expect(res.body.user.email).to.eq(params.email);
-      expect(res.body.user.password).to.not.eq(params.password);
+        expect(res.status).to.eq(200);
+        expect(res.body.user.email).to.eq(params.email);
+        expect(res.body.user.level).to.eq(0);
+        expect(res.body.user.password).to.not.eq(params.password);
+        expect(res.body.user.resetHash).to.be.undefined;
+        expect(res.body.user.tokens).to.be.undefined;
+      });
+    });
+
+    context("when user is not an admin", function() {
+      it("returns an error", async function() {
+        const res = await apiHelper.request(method, path, params, "test@example.com");
+
+        expect(res.status).to.eq(400);
+        expect(res.body.error).to.eq("You do not have permission to perform this action.");
+      });
     });
   });
 
@@ -53,15 +82,60 @@ describe("express/users.ts", function() {
       user = await Mongoose.User.mock({});
     });
 
-    it("returns the user", async function() {
-      const method = "get";
-      const path = "/users/" + user._id;
-      const params: any = null;
+    context("when user is an admin", function() {
+      it ("returns the record", async function() {
+        const method = "get";
+        const path = "/users/" + user._id;
+        const params: any = null;
 
-      const res = await apiHelper.request(method, path, params, "test@example.com");
-      expect(res.status).to.eq(200);
+        const res = await apiHelper.request(method, path, params, "admin@example.com");
 
-      expect(res.body.user._id).to.eq(user._id.toString());
+        expect(res.status).to.eq(200);
+        expect(res.body.user._id).to.eq(user._id.toString());
+        expect(res.body.user.email).to.eq(user.email);
+        expect(res.body.user.level).to.eq(user.level);
+        expect(res.body.user.password).to.be.undefined;
+        expect(res.body.user.resetHash).to.be.undefined;
+        expect(res.body.user.tokens).to.be.undefined;
+      });
+    });
+
+    context("when user is not an admin", function() {
+      context("when user is accessing their own record", function() {
+        it ("returns the record", async function() {
+          const method = "get";
+          const path = "/users/" + user._id;
+          const params: any = null;
+
+          const res = await apiHelper.request(method, path, params, user.email);
+
+          expect(res.status).to.eq(200);
+          expect(res.body.user._id).to.eq(user._id.toString());
+          expect(res.body.user.email).to.eq(user.email);
+          expect(res.body.user.level).to.eq(user.level);
+          expect(res.body.user.password).to.be.undefined;
+          expect(res.body.user.resetHash).to.be.undefined;
+          expect(res.body.user.tokens).to.be.undefined;
+        });
+      });
+
+      context("when user is accessing another user's record", function() {
+        it ("returns the record", async function() {
+          const method = "get";
+          const path = "/users/" + user._id;
+          const params: any = null;
+
+          const res = await apiHelper.request(method, path, params, "test@example.com");
+
+          expect(res.status).to.eq(200);
+          expect(res.body.user._id).to.eq(user._id.toString());
+          expect(res.body.user.email).to.eq(user.email);
+          expect(res.body.user.level).to.be.undefined;
+          expect(res.body.user.password).to.be.undefined;
+          expect(res.body.user.resetHash).to.be.undefined;
+          expect(res.body.user.tokens).to.be.undefined;
+        });
+      });
     });
   });
 
@@ -72,17 +146,63 @@ describe("express/users.ts", function() {
       user = await Mongoose.User.mock({});
     });
 
-    it("updates and returns the user", async function() {
-      const method = "put";
-      const path = "/users/" + user._id;
-      const params = {
-        email: chance.email(),
-      };
+    context("when the user is an admin", function() {
+      it("updates and returns the user", async function() {
+        const method = "put";
+        const path = "/users/" + user._id;
+        const params = {
+          email: chance.email(),
+          level: user.level + 1
+        };
 
-      const res = await apiHelper.request(method, path, params, "test@example.com");
-      expect(res.status).to.eq(200);
+        const res = await apiHelper.request(method, path, params, "admin@example.com");
 
-      expect(res.body.user.email).to.eq(params.email);
+        expect(res.status).to.eq(200);
+        expect(res.body.user._id).to.eq(user._id.toString());
+        expect(res.body.user.email).to.eq(params.email);
+        expect(res.body.user.level).to.eq(params.level);
+        expect(res.body.user.password).to.be.undefined;
+        expect(res.body.user.resetHash).to.be.undefined;
+        expect(res.body.user.tokens).to.be.undefined;
+      });
+    });
+
+    context("when the user is not an admin", function() {
+      context("when user is updating their own record", function() {
+        it("updates and returns the user", async function() {
+          const method = "put";
+          const path = "/users/" + user._id;
+          const params = {
+            email: chance.email(),
+            level: user.level + 1
+          };
+
+          const res = await apiHelper.request(method, path, params, user.email);
+
+          expect(res.status).to.eq(200);
+          expect(res.body.user._id).to.eq(user._id.toString());
+          expect(res.body.user.email).to.eq(params.email);
+          expect(res.body.user.level).to.eq(user.level);
+          expect(res.body.user.password).to.be.undefined;
+          expect(res.body.user.resetHash).to.be.undefined;
+          expect(res.body.user.tokens).to.be.undefined;
+        });
+      });
+
+      context("when user is updating another user's record", function() {
+        it ("returns a 400 status", async function() {
+          const method = "put";
+          const path = "/users/" + user._id;
+          const params = {
+            email: chance.email(),
+            level: user.level + 1
+          };
+
+          const res = await apiHelper.request(method, path, params, "test@example.com");
+
+          expect(res.status).to.eq(400);
+        });
+      });
     });
   });
 
@@ -93,13 +213,42 @@ describe("express/users.ts", function() {
       user = await Mongoose.User.mock({});
     });
 
-    it("returns a 200 status", async function() {
-      const method = "delete";
-      const path = "/users/" + user._id;
-      const params: any = null;
+    context("when the user is an admin", function() {
+      it("returns a 200 status", async function() {
+        const method = "delete";
+        const path = "/users/" + user._id;
+        const params: any = null;
 
-      const res = await apiHelper.request(method, path, params, "test@example.com");
-      expect(res.status).to.eq(200);
+        const res = await apiHelper.request(method, path, params, "admin@example.com");
+
+        expect(res.status).to.eq(200);
+      });
+    });
+
+    context("when the user is not an admin", function() {
+      context("when user is removing their own record", function() {
+        it ("returns a 200 status", async function() {
+          const method = "delete";
+          const path = "/users/" + user._id;
+          const params: any = null;
+
+          const res = await apiHelper.request(method, path, params, user.email);
+
+          expect(res.status).to.eq(200);
+        });
+      });
+
+      context("when user is removing another user's record", function() {
+        it ("returns a 400 status", async function() {
+          const method = "delete";
+          const path = "/users/" + user._id;
+          const params: any = null;
+
+          const res = await apiHelper.request(method, path, params, "test@example.com");
+
+          expect(res.status).to.eq(400);
+        });
+      });
     });
   });
 });

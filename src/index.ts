@@ -22,7 +22,7 @@ const socketIo = new SocketIO(express.server);
 export = { config, express, mongoose, passport, socketIo };
 
 // Create admin user if user doesn't exit, but only when running locally
-if (config.environment !== "local") {
+if (config.environment === "local") {
   Mongoose.User.update({
     email: "test@example.com"
   }, {

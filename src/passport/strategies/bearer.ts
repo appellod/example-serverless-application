@@ -1,9 +1,9 @@
 import * as passport from "passport";
 import { Strategy } from "passport-http-bearer";
 
-import { Config } from "@src/config";
-import { Mongoose } from "@src/mongoose";
-import { UserDocument } from "@src/mongoose/models/user";
+import { Config } from "../../config";
+import { Mongoose } from "../../mongoose";
+import { UserDocument } from "../../mongoose/models/user";
 
 export class BearerStrategy {
   constructor(config: Config) {

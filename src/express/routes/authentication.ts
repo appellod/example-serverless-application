@@ -18,7 +18,7 @@ export class AuthenticationRoutes {
      *
      * @apiSuccess {Boolean} isAvailable True if the email is available, false otherwise.
      */
-    router.get("/authentication/availability", Express.catchErrors(controller.checkAvailability));
+    router.get("/authentication/availability", Express.handler(controller.checkAvailability));
 
     /**
      * @api {post} /authentication/signup Sign Up
@@ -32,7 +32,7 @@ export class AuthenticationRoutes {
      * @apiSuccess {Object} user The created user.
      * @apiSuccess {String} token The user's access token.
      */
-    router.post("/authentication/signup", Express.catchErrors(controller.signup));
+    router.post("/authentication/signup", Express.handler(controller.signup));
 
     /**
      * @api {post} /authentication/login Log In
@@ -46,7 +46,7 @@ export class AuthenticationRoutes {
      * @apiSuccess {Object} user The user.
      * @apiSuccess {String} token The user's access token.
      */
-    router.post("/authentication/login", Express.catchErrors(controller.login));
+    router.post("/authentication/login", Express.handler(controller.login));
 
     /**
      * @api {delete} /authentication/logout Log Out
@@ -54,7 +54,7 @@ export class AuthenticationRoutes {
      * @apiGroup Authentication
      * @apiDescription Logs a user out.
      */
-    router.delete("/authentication/logout", passport.authenticate("bearer", { session: false }), Express.catchErrors(controller.logout));
+    router.delete("/authentication/logout", passport.authenticate("bearer", { session: false }), Express.handler(controller.logout));
 
     /**
      * @api {post} /authentication/request-password-reset Request Password Reset
@@ -64,7 +64,7 @@ export class AuthenticationRoutes {
      *
      * @apiParam {String} email The user's email address.
      */
-    router.post("/authentication/request-password-reset", Express.catchErrors(controller.requestPasswordReset));
+    router.post("/authentication/request-password-reset", Express.handler(controller.requestPasswordReset));
 
     /**
      * @api {post} /authentication/reset-password Reset Password
@@ -75,6 +75,6 @@ export class AuthenticationRoutes {
      * @apiParam {String} resetHash The reset password hash.
      * @apiParam {String} password The new password.
      */
-    router.post("/authentication/reset-password", Express.catchErrors(controller.resetPassword));
+    router.post("/authentication/reset-password", Express.handler(controller.resetPassword));
   }
 }

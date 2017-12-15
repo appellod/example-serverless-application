@@ -1,10 +1,10 @@
-import { SocketIO, ISocket } from "../";
+import { SocketIO, Socket } from "../";
 
 export abstract class Controller {
-  protected socket: ISocket;
+  protected socket: Socket;
   protected socketIo: SocketIO;
 
-  constructor(socketIo: SocketIO, socket: ISocket) {
+  constructor(socketIo: SocketIO, socket: Socket) {
     this.socket = socket;
     this.socketIo = socketIo;
   }

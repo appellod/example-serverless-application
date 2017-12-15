@@ -8,7 +8,6 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "@src/*": ["src/*"],
             "*": [
                 "node_modules/*",
                 "src/types/*"

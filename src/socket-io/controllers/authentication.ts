@@ -1,9 +1,9 @@
-import { BearerStrategy } from "@src/passport/strategies/bearer";
-import { SocketIO, ISocket } from "../";
+import { BearerStrategy } from "../../passport/strategies/bearer";
+import { SocketIO, Socket } from "../";
 import { Controller } from "./controller";
 
 export class AuthenticationController extends Controller {
-  constructor(socketIo: SocketIO, socket: ISocket) {
+  constructor(socketIo: SocketIO, socket: Socket) {
     super(socketIo, socket);
 
     this.on("authenticate", this.authenticate.bind(this));

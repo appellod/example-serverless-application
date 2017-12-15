@@ -11,7 +11,7 @@ import * as mongoose from "mongoose";
 import * as morgan from "morgan";
 import * as path from "path";
 
-import { Config } from "@src/config";
+import { Config } from "../config";
 import { AuthenticationRoutes } from "./routes/authentication";
 import { DocumentationController } from "./documentation";
 import { UsersRoutes } from "./routes/users";
@@ -47,15 +47,16 @@ export class Express {
    * Catches any errors thrown within Promises (async/await blocks).
    * @param fn The route function to guard.
    */
-  public static catchErrors(fn: ((req: express.Request, res: express.Response) => any)): RequestHandlerParams {
+  public static handler(fn: (req: express.Request, res: express.Response) => Promise<RequestHandlerParams>): RequestHandlerParams {
     return (req: express.Request, res: express.Response) => {
-      const routePromise = <Promise<RequestHandlerParams>> fn(req, res);
-      if (routePromise.catch) {
-        routePromise.catch((err: Error) => {
+      fn(req, res)
+        .then((results: any) => {
+          res.json(results);
+        })
+        .catch((err: Error) => {
           res.status(400).json({ error: err.message });
         });
-      }
-    }
+    };
   }
 
   /**

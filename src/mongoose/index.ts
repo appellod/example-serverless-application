@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 
-import { Config } from "@src/config";
+import { Config } from "../config";
 import { UserModel, User } from "./models/user";
 
 export class Mongoose {

@@ -1,7 +1,7 @@
 import * as chai from "chai";
 
-import { Mongoose } from "@src/mongoose";
-import { UserDocument, AuthToken } from "@src/mongoose/models/user";
+import { Mongoose } from "../../mongoose";
+import { UserDocument, AuthToken } from "../../mongoose/models/user";
 import { ApiHelper } from "./api-helper";
 
 const index = require("../");

@@ -1,12 +1,21 @@
 import * as express from "express";
 import * as passport from "passport";
 
-import { Express } from "@src/express";
-import { UsersController } from "@src/express/controllers/users";
+import { Express } from "../";
+import { UsersController } from "../controllers/users";
 
 export class UsersRoutes {
   constructor(router: express.Router) {
     const controller = new UsersController();
+
+    /**
+     * @api {Object} User User
+     * @apiName User
+     * @apiGroup Models
+     * @apiParam {String} email The user's email address.
+     * @apiParam {Number} level The authorization level of the user.
+     * @apiParam {String} password The user's password. It will be hashed on save.
+     */
 
     /**
      * @api {get} /users Get Users
@@ -22,7 +31,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)[]} users Array of users matching the criteria.
      */
-    router.get("/users", passport.authenticate("bearer", { session: false }), Express.catchErrors(controller.find));
+    router.get("/users", passport.authenticate("bearer", { session: false }), Express.handler(controller.find));
 
     /**
      * @api {post} /users Create User
@@ -34,7 +43,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)} user The new user.
      */
-    router.post("/users", passport.authenticate("bearer", { session: false }),Express.catchErrors(controller.create));
+    router.post("/users", passport.authenticate("bearer", { session: false }),Express.handler(controller.create));
 
     /**
      * @api {get} /users/:id Get User
@@ -46,7 +55,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)} user The user matching the given ID.
      */
-    router.get("/users/:id", passport.authenticate("bearer", { session: false }), Express.catchErrors(controller.findOne));
+    router.get("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler(controller.findOne));
 
     /**
      * @api {put} /users/:id Update User
@@ -58,7 +67,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)} user The updated user.
      */
-    router.put("/users/:id", passport.authenticate("bearer", { session: false }), Express.catchErrors(controller.update));
+    router.put("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler(controller.update));
 
     /**
      * @api {delete} /users/:id Remove User
@@ -68,6 +77,6 @@ export class UsersRoutes {
      *
      * @apiParam {String} :id The ID of the user.
      */
-    router.delete("/users/:id", passport.authenticate("bearer", { session: false }), Express.catchErrors(controller.remove));
+    router.delete("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler(controller.remove));
   }
 }

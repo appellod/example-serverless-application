@@ -3,7 +3,7 @@ import { Chance } from "chance";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
-import { Config } from "@src/config";
+import { Config } from "../../config";
 import { Mongoose } from "../";
 
 export interface AuthToken {
@@ -12,6 +12,8 @@ export interface AuthToken {
 }
 
 export interface UserDocument extends mongoose.Document {
+  [key: string]: any;
+
   email?: string;
   level?: number;
   password?: string;
@@ -44,19 +46,19 @@ export class User {
   private setupSchema(config: Config) {
     this.schema = new mongoose.Schema({
       email: {
-        type: String,
-        validate: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}/,
         required: true,
+        type: String,
         unique: true,
-        uniqueCaseInsensitive: true
+        uniqueCaseInsensitive: true,
+        validate: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}/,
       },
       level: {
-        type: Number,
-        default: 0
+        default: 0,
+        type: Number
       },
       password: {
-        type: String,
-        required: true
+        required: true,
+        type: String
       },
       resetHash: String,
       tokens: [{

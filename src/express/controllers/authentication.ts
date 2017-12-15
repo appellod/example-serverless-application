@@ -1,71 +1,68 @@
 import * as express from "express";
 
-import { Mongoose } from "@src/mongoose";
+import { Mongoose } from "../../mongoose";
 
 export class AuthenticationController {
-  public async checkAvailability(req: express.Request, res: express.Response) {
+  /**
+   * Checks the given email address to see if it's available.
+   */
+  public async checkAvailability(req: express.Request, res: express.Response): Promise<any> {
     if (!req.query.email) {
-      res.json({ isAvailable: false });
-      return;
+      return { isAvailable: false };
     }
 
     const user = await Mongoose.User.findOne({ email: req.query.email });
-    res.json({ isAvailable: !user });
+    return { isAvailable: !user };
   }
 
-  public async login(req: express.Request, res: express.Response) {
+  public async login(req: express.Request, res: express.Response): Promise<any> {
     if (!req.body.email || !req.body.password) {
-      res.status(400).json({ error: "Please provide an email address and password." });
-      return;
+      throw new Error("Please provide an email address and password.");
     }
 
     const user = await Mongoose.User.findOne({ email: req.body.email });
 
     if (!user || !user.isValidPassword(req.body.password)) {
-      res.status(400).json({ error: "Incorrect username or password." });
-      return;
+      throw new Error("Incorrect username or password.");
     }
 
     const results = await user.login();
 
-    res.json({ token: results.token._id, user: results.user });
+    return { token: results.token._id, user: results.user };
   }
 
-  public async logout(req: express.Request, res: express.Response) {
+  public async logout(req: express.Request, res: express.Response): Promise<any> {
     const token = req.get("authorization").replace("Bearer ", "");
     await req.user.logout(token);
 
-    res.send({ message: "Logout successful." });
+    return { message: "Logout successful." };
   }
 
-  public async requestPasswordReset(req: express.Request, res: express.Response) {
+  public async requestPasswordReset(req: express.Request, res: express.Response): Promise<any> {
     let user = await Mongoose.User.findOne({ email: req.body.email });
 
     if (!user) {
-      res.status(400).json({ error: "User with email " + req.body.email + " not found." });
-      return;
+      throw new Error("User with email " + req.body.email + " not found.");
     }
 
     user = await user.requestPasswordReset();
 
-    res.json({ message: "Password reset email sent successfully." });
+    return { message: "Password reset email sent successfully." };
   }
 
-  public async resetPassword(req: express.Request, res: express.Response) {
+  public async resetPassword(req: express.Request, res: express.Response): Promise<any> {
     const user = await Mongoose.User.resetPassword(req.body.resetHash, req.body.password);
 
     if (!user) {
-      res.status(400).json({ error: "No users matching given resetHash." });
-      return;
+      throw new Error("No users matching given resetHash.");
     }
 
-    res.json({ message: "Password reset successfully." });
+    return { message: "Password reset successfully." };
   }
 
-  public async signup(req: express.Request, res: express.Response) {
+  public async signup(req: express.Request, res: express.Response): Promise<any> {
     if (!req.body.email || !req.body.password) {
-      res.status(400).json({ error: "Please provide an email address and password." });
-      return;
+      throw new Error("Please provide an email address and password.");
     }
 
     const user = await Mongoose.User.create({
@@ -74,6 +71,6 @@ export class AuthenticationController {
     });
     const results = await user.login();
 
-    res.json({ token: results.token._id, user: results.user });
+    return { token: results.token._id, user: results.user };
   }
 }

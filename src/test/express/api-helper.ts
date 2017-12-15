@@ -1,8 +1,8 @@
 import * as chai from "chai";
 
-import { Config } from "@src/config";
-import { Mongoose } from "@src/mongoose";
-import { UserDocument, AuthToken } from "@src/mongoose/models/user";
+import { Config } from "../../config";
+import { Mongoose } from "../../mongoose";
+import { UserDocument, AuthToken } from "../../mongoose/models/user";
 
 const chaiHttp = require("chai-http");
 
@@ -15,6 +15,15 @@ export class ApiHelper {
 
     this.host = config.server.host;
     this.port = config.server.port;
+  }
+
+  /**
+   * Finds the admin user and returns it.
+   */
+  public async getAdminUser(): Promise<UserDocument> {
+    const user = await Mongoose.User.findOne({ email: "admin@example.com" });
+
+    return user;
   }
 
   /**
@@ -37,8 +46,13 @@ export class ApiHelper {
     let token: AuthToken;
 
     if (email) {
-      const user = await Mongoose.User.findOne({ email });
-      token = user.tokens[0];
+      let user = await Mongoose.User.findOne({ email });
+
+      if (user.tokens.length === 0) {
+        ({ token, user } = await user.login());
+      } else {
+        token = user.tokens[0];
+      }
     }
 
     // if using GET, add params to query string and return proper HTTP function
