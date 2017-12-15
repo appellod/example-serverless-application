@@ -1,4 +1,4 @@
-import { BearerStrategy } from "../../passport/strategies/bearer";
+import { BearerStrategy } from "@src/passport/strategies/bearer";
 import { SocketIO, ISocket } from "../";
 import { Controller } from "./controller";
 

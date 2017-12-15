@@ -11,7 +11,7 @@ import * as mongoose from "mongoose";
 import * as morgan from "morgan";
 import * as path from "path";
 
-import { Config } from "../config";
+import { Config } from "@src/config";
 import { AuthenticationRoutes } from "./routes/authentication";
 import { DocumentationController } from "./documentation";
 import { UsersRoutes } from "./routes/users";

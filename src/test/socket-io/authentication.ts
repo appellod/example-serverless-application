@@ -1,8 +1,8 @@
 import * as chai from "chai";
 import * as io from "socket.io-client";
 
-import { Mongoose } from "../../mongoose";
-import { IUserDocument, IAuthToken } from "../../mongoose/models/user";
+import { Mongoose } from "@src/mongoose";
+import { UserDocument, AuthToken } from "@src/mongoose/models/user";
 
 const index = require("../");
 const config = index.config;

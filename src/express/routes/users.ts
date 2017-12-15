@@ -1,8 +1,8 @@
 import * as express from "express";
 import * as passport from "passport";
 
-import { Express } from "../";
-import { UsersController } from "../controllers/users";
+import { Express } from "@src/express";
+import { UsersController } from "@src/express/controllers/users";
 
 export class UsersRoutes {
   constructor(router: express.Router) {

@@ -2,11 +2,11 @@ import * as express from "express";
 import * as http from "http";
 import * as socketIo from "socket.io";
 
-import { IUserDocument } from "../mongoose/models/user";
+import { UserDocument } from "@src/mongoose/models/user";
 import { AuthenticationController } from "./controllers/authentication";
 
 export interface ISocket extends SocketIO.Socket {
-  user: IUserDocument;
+  user: UserDocument;
 }
 
 export class SocketIO {

@@ -1,4 +1,4 @@
-import { Mongoose } from "../mongoose";
+import { Mongoose } from "@src/mongoose";
 
 process.env.NODE_ENV = "test";
 

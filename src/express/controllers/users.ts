@@ -1,6 +1,6 @@
 import * as express from "express";
 
-import { Mongoose } from "../../mongoose";
+import { Mongoose } from "@src/mongoose";
 
 export class UsersController {
   public async create(req: express.Request, res: express.Response) {

@@ -1,8 +1,8 @@
 import * as chai from "chai";
 
-import { Config } from "../../config";
-import { Mongoose } from "../../mongoose";
-import { IUserDocument, IAuthToken } from "../../mongoose/models/user";
+import { Config } from "@src/config";
+import { Mongoose } from "@src/mongoose";
+import { UserDocument, AuthToken } from "@src/mongoose/models/user";
 
 const chaiHttp = require("chai-http");
 
@@ -20,7 +20,7 @@ export class ApiHelper {
   /**
    * Finds the test user and returns it.
    */
-  public async getTestUser(): Promise<IUserDocument> {
+  public async getTestUser(): Promise<UserDocument> {
     const user = await Mongoose.User.findOne({ email: "test@example.com" });
 
     return user;
@@ -34,7 +34,7 @@ export class ApiHelper {
    * @param email The user's email address to send request with. Pass null to not supply token in header.
    */
   public async request(method: string, path: string, params: any, email?: string): Promise<ChaiHttp.Response> {
-    let token: IAuthToken;
+    let token: AuthToken;
 
     if (email) {
       const user = await Mongoose.User.findOne({ email });

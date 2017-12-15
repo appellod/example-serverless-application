@@ -3,42 +3,42 @@ import { Chance } from "chance";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
-import { Config } from "../../config";
-import { Mongoose } from "../../mongoose";
+import { Config } from "@src/config";
+import { Mongoose } from "../";
 
-export interface IAuthToken {
+export interface AuthToken {
   _id: mongoose.Schema.Types.ObjectId;
   expiresAt: Date;
 }
 
-export interface IUserDocument extends mongoose.Document {
+export interface UserDocument extends mongoose.Document {
   email?: string;
   level?: number;
   password?: string;
   resetHash?: string;
-  tokens?: IAuthToken[];
+  tokens?: AuthToken[];
 
   isValidPassword(password: string): boolean;
-  login(): Promise<{ token: IAuthToken, user: IUserDocument }>;
-  logout(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument>;
-  refreshToken(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument>;
-  requestPasswordReset(): Promise<IUserDocument>;
+  login(): Promise<{ token: AuthToken, user: UserDocument }>;
+  logout(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument>;
+  refreshToken(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument>;
+  requestPasswordReset(): Promise<UserDocument>;
 }
 
-export interface IUserModel extends mongoose.Model<IUserDocument> {
+export interface UserModel extends mongoose.Model<UserDocument> {
   getPasswordHash(password: string): string;
   getTokenExpirationDate(): Date;
-  mock(params: any): Promise<IUserDocument>;
-  resetPassword(resetHash: string, newPassword: string): Promise<IUserDocument>;
+  mock(params: any): Promise<UserDocument>;
+  resetPassword(resetHash: string, newPassword: string): Promise<UserDocument>;
 }
 
 export class User {
-  public model: IUserModel;
+  public model: UserModel;
   private schema: mongoose.Schema;
 
   constructor(config: Config) {
     this.setupSchema(config);
-    this.model = mongoose.model<IUserDocument, IUserModel>("User", this.schema);
+    this.model = mongoose.model<UserDocument, UserModel>("User", this.schema);
   }
 
   private setupSchema(config: Config) {
@@ -85,7 +85,7 @@ export class User {
     /**
      * Logs a user in.
      */
-    this.schema.methods.login = async function(): Promise<{ token: IAuthToken, user: IUserDocument }> {
+    this.schema.methods.login = async function(): Promise<{ token: AuthToken, user: UserDocument }> {
       const user = await Mongoose.User.findOneAndUpdate({
         _id: this._id
       }, {
@@ -107,7 +107,7 @@ export class User {
      * Logs the user out.
      * @param {String} token The access token to be cleared.
      */
-    this.schema.methods.logout = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument> {
+    this.schema.methods.logout = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument> {
       if (!token) {
         throw new Error("A valid access token must be used for logout.");
       }
@@ -131,7 +131,7 @@ export class User {
      * Refreshes the given token"s expiration date.
      * @param {String} token The token"s ID.
      */
-    this.schema.methods.refreshToken = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<IUserDocument> {
+    this.schema.methods.refreshToken = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument> {
       const user = await Mongoose.User.findOneAndUpdate({
         "_id": this._id,
         "tokens._id": token
@@ -147,7 +147,7 @@ export class User {
     /**
      * Generates a resetHash and sends the user a Reset Password email.
      */
-    this.schema.methods.requestPasswordReset = async function(): Promise<IUserDocument> {
+    this.schema.methods.requestPasswordReset = async function(): Promise<UserDocument> {
       if (!config.mailgun || !config.passwordReset) {
         throw new Error("Mailgun and/or password reset settings not specified in configuration file.");
       }
@@ -230,7 +230,7 @@ export class User {
      * Creates a record with randomized required parameters if not specified.
      * @param {Object} params The parameters to initialize the record with.
      */
-    this.schema.statics.mock = async function(params: any): Promise<IUserDocument> {
+    this.schema.statics.mock = async function(params: any): Promise<UserDocument> {
       const chance = new Chance();
 
       if (!params.email) params.email = chance.email();
@@ -244,7 +244,7 @@ export class User {
      * @param {String} resetHash The user"s resetHash.
      * @param {String} newPassword The user"s new password.
      */
-    this.schema.statics.resetPassword = async function(resetHash: string, newPassword: string): Promise<IUserDocument> {
+    this.schema.statics.resetPassword = async function(resetHash: string, newPassword: string): Promise<UserDocument> {
       if (!resetHash || !newPassword) {
         throw new Error("Please provide a resetHash and newPassword.");
       }

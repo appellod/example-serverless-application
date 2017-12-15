@@ -1,9 +1,9 @@
 import * as passport from "passport";
 import { Strategy } from "passport-http-bearer";
 
-import { Config } from "../../config";
-import { Mongoose } from "../../mongoose";
-import { IUserDocument } from "../../mongoose/models/user";
+import { Config } from "@src/config";
+import { Mongoose } from "@src/mongoose";
+import { UserDocument } from "@src/mongoose/models/user";
 
 export class BearerStrategy {
   constructor(config: Config) {
@@ -13,7 +13,7 @@ export class BearerStrategy {
     }));
   }
 
-  public static async authenticate(token: string): Promise<IUserDocument> {
+  public static async authenticate(token: string): Promise<UserDocument> {
     // Dind user with matching access token.
     let user = await Mongoose.User.findOne({ "tokens._id" : token }, { "tokens.$": 1 });
 

@@ -1,7 +1,7 @@
 import * as chai from "chai";
 
-import { Mongoose } from "../../mongoose";
-import { IUserDocument, IAuthToken } from "../../mongoose/models/user";
+import { Mongoose } from "@src/mongoose";
+import { UserDocument, AuthToken } from "@src/mongoose/models/user";
 import { ApiHelper } from "./api-helper";
 
 const index = require("../");
@@ -59,7 +59,7 @@ describe("express/authentication.ts", function() {
   });
 
   describe("POST /authentication/login", function() {
-    let user: IUserDocument;
+    let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({ password: "password" });
@@ -99,8 +99,8 @@ describe("express/authentication.ts", function() {
   });
 
   describe("DELETE /authentication/logout", function() {
-    let token: IAuthToken;
-    let user: IUserDocument;
+    let token: AuthToken;
+    let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({});
@@ -119,8 +119,8 @@ describe("express/authentication.ts", function() {
   });
 
   describe("POST /authentication/request-password-reset", function() {
-    let token: IAuthToken;
-    let user: IUserDocument;
+    let token: AuthToken;
+    let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({});
@@ -141,8 +141,8 @@ describe("express/authentication.ts", function() {
   });
 
   describe("POST /authentication/reset-password", function() {
-    let token: IAuthToken;
-    let user: IUserDocument;
+    let token: AuthToken;
+    let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({});

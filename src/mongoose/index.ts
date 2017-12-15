@@ -1,10 +1,10 @@
 import * as mongoose from "mongoose";
 
-import { Config } from "../config";
-import { IUserModel, User } from "./models/user";
+import { Config } from "@src/config";
+import { UserModel, User } from "./models/user";
 
 export class Mongoose {
-  public static User: IUserModel;
+  public static User: UserModel;
 
   constructor(config: Config) {
     (mongoose as any).Promise = global.Promise;

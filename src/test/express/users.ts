@@ -1,8 +1,8 @@
 import * as chai from "chai";
 import { Chance } from "chance";
 
-import { Mongoose } from "../../mongoose";
-import { IUserDocument, IAuthToken } from "../../mongoose/models/user";
+import { Mongoose } from "@src/mongoose";
+import { UserDocument, AuthToken } from "@src/mongoose/models/user";
 import { ApiHelper } from "./api-helper";
 
 const index = require("../");
@@ -47,7 +47,7 @@ describe("express/users.ts", function() {
   });
 
   describe("GET /users/:id", function() {
-    let user: IUserDocument;
+    let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({});
@@ -66,7 +66,7 @@ describe("express/users.ts", function() {
   });
 
   describe("PUT /users/:id", function() {
-    let user: IUserDocument;
+    let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({});
@@ -87,7 +87,7 @@ describe("express/users.ts", function() {
   });
 
   describe("DELETE /users/:id", function() {
-    let user: IUserDocument;
+    let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({});
