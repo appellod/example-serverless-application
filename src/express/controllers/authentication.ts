@@ -1,6 +1,7 @@
 import * as express from "express";
 
 import { Mongoose } from "../../mongoose";
+import { UserPermissions } from "../../mongoose/permissions/user";
 
 export class AuthenticationController {
   /**
@@ -27,6 +28,13 @@ export class AuthenticationController {
     }
 
     const results = await user.login();
+
+    const readPermissions = await UserPermissions.read(results.user, results.user);
+    Object.keys(results.user._doc).forEach((key) => {
+      if (readPermissions.indexOf(key) < 0) {
+        results.user[key] = undefined;
+      }
+    });
 
     return { token: results.token._id, user: results.user };
   }
@@ -70,6 +78,13 @@ export class AuthenticationController {
         password: req.body.password
     });
     const results = await user.login();
+
+    const readPermissions = await UserPermissions.read(results.user, results.user);
+    Object.keys(results.user._doc).forEach((key) => {
+      if (readPermissions.indexOf(key) < 0) {
+        results.user[key] = undefined;
+      }
+    });
 
     return { token: results.token._id, user: results.user };
   }

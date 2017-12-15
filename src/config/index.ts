@@ -86,8 +86,8 @@ export class Config {
           port: "3000"
         },
         mailgun: {
-          domain: "sandboxf70278866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb",
+          domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
+          key: "b4bf483017fc43b2e1146a4c866932eb",
         },
         passwordReset: {
           company: "Example Team",

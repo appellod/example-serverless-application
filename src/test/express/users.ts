@@ -12,7 +12,7 @@ const chance = new Chance();
 const expect = chai.expect;
 
 describe("express/users.ts", function() {
-  describe.only("GET /users", function() {
+  describe("GET /users", function() {
     beforeEach(async function() {
       await Mongoose.User.mock({});
     });

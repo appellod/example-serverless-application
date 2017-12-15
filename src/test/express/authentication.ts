@@ -53,8 +53,13 @@ describe("express/authentication.ts", function() {
 
       const res = await apiHelper.request(method, path, params, null);
 
-      expect(res.body.user).to.exist;
       expect(res.body.token).to.exist;
+      expect(res.body.user).to.exist;
+      expect(res.body.user.email).to.exist;
+      expect(res.body.user.level).to.exist;
+      expect(res.body.user.password).to.be.undefined;
+      expect(res.body.user.resetHash).to.be.undefined;
+      expect(res.body.user.tokens).to.be.undefined;
     });
   });
 
@@ -76,8 +81,13 @@ describe("express/authentication.ts", function() {
 
         const res = await apiHelper.request(method, path, params, null);
 
-        expect(res.body.user).to.exist;
         expect(res.body.token).to.exist;
+        expect(res.body.user).to.exist;
+        expect(res.body.user.email).to.exist;
+        expect(res.body.user.level).to.exist;
+        expect(res.body.user.password).to.be.undefined;
+        expect(res.body.user.resetHash).to.be.undefined;
+        expect(res.body.user.tokens).to.be.undefined;
       });
     });
 
