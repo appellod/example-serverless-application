@@ -160,7 +160,7 @@ Contains the Passport strategies for the application's authentication.
 By default only the Bearer strategy is included. The Bearer strategy allows
 basic token-based authentication to any API endpoint.
 
-**socket-io/**
+**socket-io/**  
 Contains the logic for Socket.IO. Includes an authentication controller so users
 can associate their socket with their identity, allowing identity-based push messages.
 
