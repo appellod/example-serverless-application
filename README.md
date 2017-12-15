@@ -37,6 +37,10 @@ endpoints such as signup, login and logout. Documentation is easily updated
 using a single command. Documentation also requires that a user logs in to
 view the documentation, providing security for sensitive information.
 
+**Socket.IO Authentication and User-based Broadcasting**
+Users can connect to Socket.IO and authenticate their connection. This allows us to send
+them push notifications based on their identity. Supports multiple connection from a single user. 
+
 **Easy Test Suite**  
 Included test suite is ready to test any model or controller in your application.
 Tests are performed using Mocha. All database collections are cleared before
@@ -146,7 +150,7 @@ An example for running the API in production mode on Linux-based machines is:
 NODE_ENV=prod npm start
 ```
 **express/**  
-Contains all the API's routes.
+Contains all the API's routes. Also contains API documentation.
 
 **mongoose/**  
 Contains the Mongoose models. By default only a User model is included.
@@ -156,9 +160,9 @@ Contains the Passport strategies for the application's authentication.
 By default only the Bearer strategy is included. The Bearer strategy allows
 basic token-based authentication to any API endpoint.
 
-**public/**  
-Contains the files for the API documentation. Includes a login view so users
-can authenticate themselves before viewing the documentation.
+**socket-io/**
+Contains the logic for Socket.IO. Includes an authentication controller so users
+can associate their socket with their identity, allowing identity-based push messages.
 
 **test/**  
 All tests are included here. The test suite uses Mocha and Chai.
