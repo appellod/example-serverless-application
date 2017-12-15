@@ -3,19 +3,22 @@ import * as connectMongo from "connect-mongo";
 import * as cors from "cors";
 import * as ejs from "ejs";
 import * as express from "express";
+import { RequestHandlerParams } from "express-serve-static-core";
 import * as session from "express-session";
 import * as fs from "fs";
+import * as http from "http";
 import * as mongoose from "mongoose";
 import * as morgan from "morgan";
 import * as path from "path";
 
 import { Config } from "../config";
-import { AuthenticationController } from "../express/authentication";
-import { DocumentationController } from "../express/documentation";
-import { UsersController } from "../express/users";
+import { AuthenticationRoutes } from "./routes/authentication";
+import { DocumentationController } from "./documentation";
+import { UsersRoutes } from "./routes/users";
 
 export class Express {
   public app: express.Application;
+  public server: http.Server;
 
   constructor(config: Config) {
     this.app = express();
@@ -33,11 +36,26 @@ export class Express {
     this.setupDocumentation();
     this.setupRoutes();
 
-    this.app.listen(config.server.port, (err: any) => {
+    this.server = this.app.listen(config.server.port, (err: any) => {
       if (err) console.error(err);
 
       if (config.environment !== "test") console.log("Express server running on port " + config.server.port + ".");
     });
+  }
+
+  /**
+   * Catches any errors thrown within Promises (async/await blocks).
+   * @param fn The route function to guard.
+   */
+  public static catchErrors(fn: ((req: express.Request, res: express.Response) => any)): RequestHandlerParams {
+    return (req: express.Request, res: express.Response) => {
+      const routePromise = <Promise<RequestHandlerParams>> fn(req, res);
+      if (routePromise.catch) {
+        routePromise.catch((err: Error) => {
+          res.status(400).json({ error: err.message });
+        });
+      }
+    }
   }
 
   /**
@@ -48,13 +66,19 @@ export class Express {
     this.app.use(bodyParser.json({limit: "50mb"}));
   }
 
+  /**
+   * Sets up documentation static files.
+   */
   private setupDocumentation() {
-    this.app.use(express.static("public"));
-    this.app.set("views", path.resolve(__dirname + "/public"));
+    this.app.use(express.static(path.resolve(__dirname, "public")));
+    this.app.set("views", path.resolve(__dirname, "public"));
     this.app.set("view engine", "html");
     this.app.engine("html", ejs.renderFile);
   }
 
+  /**
+   * Sets up Mongo to be used as a session store for API documentation.
+   */
   private setupMongoSessionMiddleware() {
     const MongoStore = connectMongo(session);
     const sessionMiddleware = session({
@@ -87,12 +111,16 @@ export class Express {
     });
   }
 
+  /**
+   * Loads route files and registers them with Express.
+   */
   private setupRoutes() {
     const router = express.Router();
     this.app.use("/v1", router);
 
-    const authenticationController = new AuthenticationController(router);
     const documentationController = new DocumentationController(this.app);
-    const usersController = new UsersController(router);
+
+    const authenticationRoutes = new AuthenticationRoutes(router);
+    const usersRoutes = new UsersRoutes(router);
   }
 }

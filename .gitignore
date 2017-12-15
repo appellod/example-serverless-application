@@ -1,3 +1,4 @@
 .tscache/
 dist/
 node_modules/
+src/express/public/apidoc/

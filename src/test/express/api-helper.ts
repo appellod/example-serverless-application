@@ -2,7 +2,7 @@ import * as chai from "chai";
 
 import { Config } from "../../config";
 import { Mongoose } from "../../mongoose";
-import { IUserDocument, IAuthToken } from "../../mongoose/user";
+import { IUserDocument, IAuthToken } from "../../mongoose/models/user";
 
 const chaiHttp = require("chai-http");
 

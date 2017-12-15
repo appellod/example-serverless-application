@@ -4,6 +4,7 @@ import { Config } from "./config";
 import { Express } from "./express";
 import { Mongoose } from "./mongoose";
 import { Passport } from "./passport";
+import { SocketIO } from "./socket-io";
 
 global.Promise = bluebird;
 
@@ -16,8 +17,9 @@ if (config.environment !== "test") console.log("Using Environment: " + config.en
 const express = new Express(config);
 const mongoose = new Mongoose(config);
 const passport = new Passport(config, express.app);
+const socketIo = new SocketIO(express.server);
 
-export = { config, express, mongoose, passport };
+export = { config, express, mongoose, passport, socketIo };
 
 // Create admin user if user doesn't exit, but only when running locally
 if (config.environment !== "local") {

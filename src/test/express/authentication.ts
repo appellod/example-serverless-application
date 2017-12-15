@@ -1,17 +1,15 @@
 import * as chai from "chai";
-import { Chance } from "chance";
 
 import { Mongoose } from "../../mongoose";
-import { IUserDocument, IAuthToken } from "../../mongoose/user";
+import { IUserDocument, IAuthToken } from "../../mongoose/models/user";
 import { ApiHelper } from "./api-helper";
 
 const index = require("../");
 
 const apiHelper = new ApiHelper(index.config);
-const chance = new Chance();
 const expect = chai.expect;
 
-describe("express/authentication.js", function() {
+describe("express/authentication.ts", function() {
   describe("GET /authentication/availability", function() {
     context("when email is available", function() {
       it("returns isAvailable set to true", async function() {

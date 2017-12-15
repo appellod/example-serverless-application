@@ -16,7 +16,7 @@
     "url": "https://api.example.com/v1",
     "header": {
       "title": "Using the API",
-      "filename": "src/public/apidoc/header.md"
+      "filename": "src/express/public/apidoc/header.md"
     }
   },
   "dependencies": {
@@ -35,7 +35,8 @@
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",
     "request": "^2.74.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "@types/bcrypt-nodejs": "0.0.30",
@@ -58,14 +59,18 @@
     "@types/passport-http-bearer": "^1.0.31",
     "@types/request": "^2.0.9",
     "@types/request-promise": "^4.1.39",
+    "@types/socket.io": "^1.4.31",
+    "@types/socket.io-client": "^1.4.32",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-ts": "^6.0.0-beta.17",
+    "mocha": "^4.0.1",
     "nock": "^9.0.13",
     "pluralize": "^4.0.0",
+    "socket.io-client": "^2.0.4",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2"
   },
@@ -74,7 +79,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "start": "node dist/index.js",
     "test": "mocha dist/test --opts dist/test/mocha.opts",
-    "update-docs": "apidoc -i src/controllers/ -o src/public/apidoc/",
+    "update-docs": "apidoc -i src/express/ -o src/express/public/apidoc/",
     "watch": "grunt watch"
   }
 }

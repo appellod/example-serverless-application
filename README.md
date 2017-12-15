@@ -1,5 +1,5 @@
 # Simple RESTful API
-This is an open-source RESTful API designed to give NodeJS developers a solid
+This is an open-source RESTful API designed to give Typescript developers a solid
 starting point for creating backend applications.
 
 ## Features
@@ -43,17 +43,8 @@ Tests are performed using Mocha. All database collections are cleared before
 each test to make sure that every test uses fresh data. Helper method is
 included for easily testing both secured and unsecured API endpoints.
 
-**Model and Controller Generators**  
-Controllers can easily be generated from Mongoose models using a built-in generator
-script. Generator will create a controller file with basic CRUD endpoints and
-documentation for each of the model's attributes. A test file offering basic
-test coverage will also be generated for the controller. Templates are easily
-accessible and can be changed to fit your needs.
-
-**ES6 Support**  
-Most of the code is written with ES6 ensuring that coding conventions are
-up-to-date. The "use-strict" directive is included in every file to catch
-developer errors and enforce good coding practices.
+**End-to-End API Tests**  
+Included test suite performs end-to-end testing on all API routes.
 
 **Docker Ready**  
 A Dockerfile is included and is ready to run the application out-of-the-box.
@@ -63,7 +54,7 @@ A Dockerfile is included and is ready to run the application out-of-the-box.
 
 **Clone**  
 ```
-git clone https://github.com/appellod/simple-restful-api.git
+git clone https://github.com/appellod/simple-restful-api
 ```
 
 **Install NPM Modules**  
@@ -71,16 +62,29 @@ git clone https://github.com/appellod/simple-restful-api.git
 npm install
 ```
 
-**Download and Run MongoDB**  
-The API requires a local MongoDB instance to be running. [Download MongoDB here](https://www.mongodb.com/). The default port for MongoDB is 27017 which
-is already declared in the API's configuration file.
+**Run MongoDB: Download MongoDB or Run with Docker Compose**
+
+**Download MongoDB**  
+The API requires a local MongoDB instance to be running. [Download MongoDB here](https://www.mongodb.com/). 
+The default port for MongoDB is 27017 which is already declared in the API's configuration file.
+
+**Run with Docker Compose**  
+If you prefer to run dependencies through Docker, you can simply run:
+```
+docker-compose up
+```
+This will start up any dependencies you need for development such as MongoDB.
+
+**Compile Typescript with Grunt**  
+The Typescript included within the src/ directory needs to be compiled before being run. To do this, we will
+run the following command:
+```
+npm run grunt
+```
+This will compile all the Typescript within the src/ directory into a dist/ directory. 
 
 **Run Test Suite**  
-The test suite uses [Mocha](https://mochajs.org/). Install mocha globally using:
-```
-npm install -g mocha
-```
-After Mocha is installed, make sure a local MongoDB instance is running and run
+The test suite uses [Mocha](https://mochajs.org/). Make sure a local MongoDB instance is running and run
 the test suite using:
 ```
 npm test
@@ -111,25 +115,8 @@ environment, or at the very least, the test and local environments.
 
 ## Working on the API
 
-**Running the Test Suite**  
-Try running the test suite to make sure everything is working correctly with:
-```
-npm test
-```
-Sometimes tests will fail due to validations on the model's attributes. If tests
-fail, check to make sure all required fields are set in the model's *mock()*
-function.
-
 **Updating the API Documentation**  
-In the newly generated controller file, documentation will be automatically included
-above each endpoint. The only thing that should need to be modified is the
-model's attribute descriptions. Replace any instance of the following text with
-proper descriptions:
-```
-<i>Awaiting Documentation</i>
-```
-Once everything is ready to go, make sure [ApiDoc](http://apidocjs.com/) is
-installed globally with:
+Install [ApiDoc](http://apidocjs.com/) globally withwith:
 ```
 npm install -g apidoc
 ```
@@ -137,8 +124,10 @@ Once ApiDoc is installed, run:
 ```
 npm run update-docs
 ```
-Your API documentation should now be updated to include all the new routes!
 Your application may need to be restarted to see the updates.
+Documentation can be versioned so developers can see the changes between versions. For this reason,
+documentation is included with Git commits. If versioning is not desired or Pull Requests need to be cleaned up,
+add the dist/public/apidoc directory to your .gitignore file.
 
 ## File Structure
 
@@ -154,13 +143,15 @@ configurations are available here. Five environments are included by default:
 Environment can be selected by setting the NODE_ENV system environment variable.
 An example for running the API in production mode on Linux-based machines is:
 ```
-NODE_ENV=prod node index.js
+NODE_ENV=prod npm start
 ```
+**express/**  
+Contains all the API's routes.
 
-**models/**  
-Contains the Mongoose models. By default only the User model is included.
+**mongoose/**  
+Contains the Mongoose models. By default only a User model is included.
 
-**passport-strategies/**  
+**passport/**  
 Contains the Passport strategies for the application's authentication.
 By default only the Bearer strategy is included. The Bearer strategy allows
 basic token-based authentication to any API endpoint.
@@ -169,18 +160,8 @@ basic token-based authentication to any API endpoint.
 Contains the files for the API documentation. Includes a login view so users
 can authenticate themselves before viewing the documentation.
 
-**controllers/**  
-All controllers for the API are defined here.
-
-**scripts/**  
-Scripts such as the Model and Controller generator scripts are included here.
-
-**templates/**  
-Templates for the Model and Controller generator scripts are defined here.
-
 **test/**  
-All tests are included here. Mocha must be installed globally before the test
-suite can be run.
+All tests are included here. The test suite uses Mocha and Chai.
 
 ## Support
 Any questions or concerns, please feel free to email me at appellod@gmail.com.

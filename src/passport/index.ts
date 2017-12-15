@@ -1,7 +1,7 @@
 import { Application } from "express";
 import * as passport from "passport";
 
-import { BearerStrategy } from "./bearer";
+import { BearerStrategy } from "./strategies/bearer";
 import { Config } from "../config";
 
 export class Passport {
