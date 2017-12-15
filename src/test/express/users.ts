@@ -23,10 +23,16 @@ describe("express/users.ts", function() {
         const path = "/users";
         const params: any = null;
 
-        const res = await apiHelper.request(method, path, params, "test@example.com");
+        const res = await apiHelper.request(method, path, params, "admin@example.com");
 
         expect(res.status).to.eq(200);
         expect(res.body.users.length).to.eql(3);
+
+        expect(res.body.users[0].email).to.exist;
+        expect(res.body.users[0].level).to.exist;
+        expect(res.body.users[0].password).to.be.undefined;
+        expect(res.body.users[0].resetHash).to.be.undefined;
+        expect(res.body.users[0].tokens).to.be.undefined;
       });
     });
 
@@ -40,6 +46,20 @@ describe("express/users.ts", function() {
 
         expect(res.status).to.eq(200);
         expect(res.body.users.length).to.eql(3);
+
+        // their own record
+        expect(res.body.users[0].email).to.exist;
+        expect(res.body.users[0].level).to.exist;
+        expect(res.body.users[0].password).to.be.undefined;
+        expect(res.body.users[0].resetHash).to.be.undefined;
+        expect(res.body.users[0].tokens).to.be.undefined;
+
+        // another record
+        expect(res.body.users[1].email).to.exist;
+        expect(res.body.users[1].level).to.be.undefined;
+        expect(res.body.users[1].password).to.be.undefined;
+        expect(res.body.users[1].resetHash).to.be.undefined;
+        expect(res.body.users[1].tokens).to.be.undefined;
       });
     });
   });
