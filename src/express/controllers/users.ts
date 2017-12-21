@@ -31,6 +31,24 @@ export class UsersController {
   }
 
   public async find(req: express.Request, res: express.Response): Promise<any> {
+    const query = await UserPermissions.query(req.user);
+    Object.keys(req.body).forEach((key) => {
+      if (key === "$and" && query.$and) {
+        query.$and = query.$and.concat(req.body.$and);
+      } else if (key === "$or" && query.$or) {
+        query.$or = query.$or.concat(req.body.$or);
+      } else if (query[key]) {
+        if (!query.$and) {
+          query.$and = [];
+        }
+
+        query.$and.push(query[key]);
+        query.$and.push(req.body[key]);
+      } else {
+        query[key] = req.body[key];
+      }
+    });
+
     const users = await Mongoose.User
       .find(req.query.where)
       .sort(req.query.sort)

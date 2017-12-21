@@ -16,6 +16,12 @@ export class UserPermissions {
     return attributes;
   }
 
+  public static async query(user: UserDocument): Promise<any> {
+    const query: any = {};
+
+    return query;
+  }
+
   public static async read(record: UserDocument, user: UserDocument): Promise<string[]> {
     const attributes: string[] = [
       "_id",
