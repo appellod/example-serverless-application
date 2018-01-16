@@ -1,10 +1,10 @@
 import * as chai from "chai";
 
-import { Mongoose } from "../../mongoose";
-import { UserDocument, AuthToken } from "../../mongoose/models/user";
-import { ApiHelper } from "./api-helper";
+import { Mongoose } from "../../../mongoose";
+import { UserDocument, AuthToken } from "../../../mongoose/models/user";
+import { ApiHelper } from "../apiHelper";
 
-const index = require("../");
+const index = require("../../");
 
 const apiHelper = new ApiHelper(index.config);
 const expect = chai.expect;
@@ -164,8 +164,8 @@ describe("express/authentication.ts", function() {
       const method = "post";
       const path = "/authentication/reset-password";
       const params = {
-        resetHash: user.resetHash,
-        password: "newpassword"
+        password: "newpassword",
+        resetHash: user.resetHash
       };
 
       const res = await apiHelper.request(method, path, params, user.email);

@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import { Chance } from "chance";
 
-import { Mongoose } from "../../mongoose";
-import { UserDocument, AuthToken } from "../../mongoose/models/user";
-import { ApiHelper } from "./api-helper";
+import { Mongoose } from "../../../mongoose";
+import { UserDocument, AuthToken } from "../../../mongoose/models/user";
+import { ApiHelper } from "../apiHelper";
 
-const index = require("../");
+const index = require("../../");
 
 const apiHelper = new ApiHelper(index.config);
 const chance = new Chance();
@@ -17,13 +17,14 @@ describe("express/users.ts", function() {
       await Mongoose.User.mock({});
     });
 
-    context("when the user is an admin", function() {
+    context.only("when the user is an admin", function() {
       it("returns all users", async function() {
         const method = "get";
         const path = "/users";
         const params: any = null;
 
         const res = await apiHelper.request(method, path, params, "admin@example.com");
+        console.log(res.body);
 
         expect(res.status).to.eq(200);
         expect(res.body.users.length).to.eql(3);

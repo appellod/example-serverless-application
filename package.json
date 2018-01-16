@@ -16,7 +16,7 @@
     "url": "https://api.example.com/v1",
     "header": {
       "title": "Using the API",
-      "filename": "src/express/public/apidoc/header.md"
+      "filename": "src/express/documentation/public/apidoc/header.md"
     }
   },
   "dependencies": {
@@ -79,7 +79,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "start": "node dist/index.js",
     "test": "mocha dist/test --opts dist/test/mocha.opts",
-    "update-docs": "apidoc -i src/express/ -o src/express/public/apidoc/",
+    "update-docs": "apidoc -i src/express/ -o src/express/documentation/public/apidoc/",
     "watch": "grunt watch"
   }
 }

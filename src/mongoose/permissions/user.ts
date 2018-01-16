@@ -1,7 +1,16 @@
+import { Mongoose } from "../";
 import { UserDocument } from "../models/user";
+import { Permissions } from "./";
 
-export class UserPermissions {
-  public static async create(user: UserDocument): Promise<string[]> {
+export class UserPermissions extends Permissions {
+
+  constructor() {
+    super();
+
+    this.Model = Mongoose.User;
+  }
+
+  public async createPermissions(user: UserDocument): Promise<string[]> {
     const attributes: string[] = [];
 
     // If the user is an admin
@@ -16,13 +25,17 @@ export class UserPermissions {
     return attributes;
   }
 
-  public static async query(user: UserDocument): Promise<any> {
+  public async findPermissions(user: UserDocument): Promise<any> {
     const query: any = {};
+
+    if (user.level === 0) {
+      query.level = 0;
+    }
 
     return query;
   }
 
-  public static async read(record: UserDocument, user: UserDocument): Promise<string[]> {
+  public async readPermissions(record: UserDocument, user: UserDocument): Promise<string[]> {
     const attributes: string[] = [
       "_id",
       "email"
@@ -47,7 +60,7 @@ export class UserPermissions {
     return attributes;
   }
 
-  public static async remove(record: UserDocument, user: UserDocument): Promise<boolean> {
+  public async removePermissions(record: UserDocument, user: UserDocument): Promise<boolean> {
     // If user is removing their own record
     if (record.id === user.id) {
       return true;
@@ -61,7 +74,7 @@ export class UserPermissions {
     return false;
   }
 
-  public static async update(record: UserDocument, user: UserDocument): Promise<string[]> {
+  public async updatePermissions(record: UserDocument, user: UserDocument): Promise<string[]> {
     const attributes: string[] = [];
 
     // If user is modifying their own record
@@ -83,4 +96,5 @@ export class UserPermissions {
 
     return attributes;
   }
+
 }

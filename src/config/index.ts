@@ -41,7 +41,8 @@ export class Config {
     port: string
   };
 
-  constructor(env: string) {
+  constructor(env?: string) {
+    env = env || process.env.NODE_ENV;
     const config: IConfig = this.getConfiguration(env);
 
     this.environment = config.environment;

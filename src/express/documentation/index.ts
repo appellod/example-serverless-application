@@ -25,7 +25,7 @@ export class DocumentationController {
       }
 
       const file = req.originalUrl.split("?")[0];
-      res.sendFile(path.resolve(__dirname + "/../public" + file));
+      res.sendFile(path.resolve(__dirname + "/../documentation/public" + file));
     });
 
     /**

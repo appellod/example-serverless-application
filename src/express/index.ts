@@ -71,8 +71,8 @@ export class Express {
    * Sets up documentation static files.
    */
   private setupDocumentation() {
-    this.app.use(express.static(path.resolve(__dirname, "public")));
-    this.app.set("views", path.resolve(__dirname, "public"));
+    this.app.use(express.static(path.resolve(__dirname, "documentation", "public")));
+    this.app.set("views", path.resolve(__dirname, "documentation", "public"));
     this.app.set("view engine", "html");
     this.app.engine("html", ejs.renderFile);
   }

@@ -1,13 +1,13 @@
 import * as chai from "chai";
 import * as nock from "nock";
 
-import { Mongoose } from "../../mongoose";
-import { UserDocument, AuthToken } from "../../mongoose/models/user";
+import { Mongoose } from "../../../mongoose";
+import { UserDocument, AuthToken } from "../../../mongoose/models/user";
 
-const index = require("../");
+const index = require("../../");
 const expect = chai.expect;
 
-describe("mongoose/user.ts", function() {
+describe("mongoose/models/user.ts", function() {
   describe("schema.statics.resetPassword()", function() {
     let user: UserDocument;
 

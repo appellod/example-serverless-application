@@ -16,9 +16,7 @@ describe("socket-io/authentication.ts", function() {
         const socket = await io.connect("http://" + config.server.host + ":" + config.server.port);
 
         socket.emit("authenticate");
-        const res: any = await new Promise((resolve) => {
-          socket.on("authenticate", resolve);
-        });
+        const res: any = await new Promise((resolve) => socket.on("authenticate", resolve));
 
         expect(res.error).to.eql("Please provide your access token.");
       });
@@ -29,9 +27,7 @@ describe("socket-io/authentication.ts", function() {
         const socket = await io.connect("http://" + config.server.host + ":" + config.server.port);
 
         socket.emit("authenticate", { token: "invalid" });
-        const res: any = await new Promise((resolve) => {
-          socket.on("authenticate", resolve);
-        });
+        const res: any = await new Promise((resolve) => socket.on("authenticate", resolve));
 
         expect(res.error).to.eql("Invalid access token.");
       });
@@ -45,9 +41,7 @@ describe("socket-io/authentication.ts", function() {
         const { token } = await user.login();
 
         socket.emit("authenticate", { token: token._id });
-        const res: any = await new Promise((resolve) => {
-          socket.on("authenticate", resolve);
-        });
+        const res: any = await new Promise((resolve) => socket.on("authenticate", resolve));
 
         expect(res).to.eql(null);
       });
