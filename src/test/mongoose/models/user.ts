@@ -82,7 +82,7 @@ describe("mongoose/models/user.ts", function() {
     beforeEach(async function() {
       user = await Mongoose.User.mock({});
 
-      const scope = nock(/mailgun\.net/)
+      nock(/mailgun\.net/)
         .post(/.*/)
         .reply(200, {
           id: "<20170422765241.92160.12345.951E2345@sandboxf70783234584b198234561d8029e646.mailgun.org>",

@@ -133,7 +133,7 @@ describe("mongoose/permissions/user.ts", function() {
 
     context("when the user is not an admin", function() {
       context("when user is removing their own record", function() {
-        it ("returns the record", async function() { 
+        it ("returns the record", async function() {
           record = <UserDocument> await permissions.remove(record, record);
 
           expect(record).to.exist;

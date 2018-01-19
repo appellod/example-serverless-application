@@ -11,6 +11,11 @@ export interface AuthToken {
   expiresAt: Date;
 }
 
+export enum UserLevel {
+  Default,
+  Admin
+}
+
 export interface UserDocument extends mongoose.Document {
   [key: string]: any;
 
@@ -30,7 +35,7 @@ export interface UserDocument extends mongoose.Document {
 export interface UserModel extends mongoose.Model<UserDocument> {
   getPasswordHash(password: string): string;
   getTokenExpirationDate(): Date;
-  mock(params: any): Promise<UserDocument>;
+  mock(params?: any): Promise<UserDocument>;
   resetPassword(resetHash: string, newPassword: string): Promise<UserDocument>;
 }
 
@@ -232,9 +237,10 @@ export class User {
      * Creates a record with randomized required parameters if not specified.
      * @param {Object} params The parameters to initialize the record with.
      */
-    this.schema.statics.mock = async function(params: any): Promise<UserDocument> {
+    this.schema.statics.mock = async function(params?: any): Promise<UserDocument> {
       const chance = new Chance();
 
+      params = params || {};
       if (!params.email) params.email = chance.email();
       if (!params.password) params.password = chance.hash();
 

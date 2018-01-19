@@ -43,7 +43,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)} user The new user.
      */
-    router.post("/users", passport.authenticate("bearer", { session: false }),Express.handler(controller.create));
+    router.post("/users", passport.authenticate("bearer", { session: false }), Express.handler(controller.create));
 
     /**
      * @api {get} /users/:id Get User

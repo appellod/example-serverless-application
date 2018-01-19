@@ -47,15 +47,14 @@ export class Express {
    * Catches any errors thrown within Promises (async/await blocks).
    * @param fn The route function to guard.
    */
-  public static handler(fn: (req: express.Request, res: express.Response) => Promise<RequestHandlerParams>): RequestHandlerParams {
-    return (req: express.Request, res: express.Response) => {
-      fn(req, res)
-        .then((results: any) => {
-          res.json(results);
-        })
-        .catch((err: Error) => {
-          res.status(400).json({ error: err.message });
-        });
+  public static handler(fn: (req: express.Request, res: express.Response) => Promise<any>): any {
+    return async (req: express.Request, res: express.Response) => {
+      try {
+        const results = await fn(req, res);
+        res.json(results);
+      } catch (e) {
+        res.status(400).json({ error: e.message });
+      }
     };
   }
 

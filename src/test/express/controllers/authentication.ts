@@ -1,5 +1,6 @@
 import * as chai from "chai";
 import * as express from "express";
+import * as nock from "nock";
 
 import { AuthenticationController } from "../../../express/controllers/authentication";
 import { Mongoose } from "../../../mongoose";
@@ -124,10 +125,11 @@ describe("express/controllers/authentication.ts", function() {
       ({ token, user } = await user.login());
     });
 
-    it("logs the user out", async function() {
+    it("returns a success message", async function() {
       const req = {} as express.Request;
       req.headers = {};
-      req.headers.authorization = token.toString();
+      req.headers.authorization = "Bearer " + token._id;
+      req.user = user;
 
       const res = await authenticationController.logout(req);
 
@@ -135,49 +137,64 @@ describe("express/controllers/authentication.ts", function() {
     });
   });
 
-  // describe("POST /authentication/request-password-reset", function() {
-  //   let token: AuthToken;
-  //   let user: UserDocument;
+  describe("requestPasswordReset()", function() {
+    let token: AuthToken;
+    let user: UserDocument;
 
-  //   beforeEach(async function() {
-  //     user = await Mongoose.User.mock({});
-  //     ({ token, user } = await user.login());
-  //   });
+    beforeEach(async function() {
+      user = await Mongoose.User.mock({});
+      ({ token, user } = await user.login());
 
-  //   it("returns a 200 status", async function() {
-  //     const method = "post";
-  //     const path = "/authentication/request-password-reset";
-  //     const params = {
-  //       email: user.email
-  //     };
+      nock(/mailgun\.net/)
+        .post(/.*/)
+        .reply(200, {
+          id: "<20170422765241.92160.12345.951E2345@sandboxf70783234584b198234561d8029e646.mailgun.org>",
+          message: "Queued. Thank you."
+        });
+    });
 
-  //     const res = await apiHelper.request(method, path, params, null);
+    it("returns a success message", async function() {
+      const req = {
+        body: {
+          email: user.email
+        }
+      } as express.Request;
 
-  //     expect(res.status).to.eq(200);
-  //   });
-  // });
+      const res = await authenticationController.requestPasswordReset(req);
 
-  // describe("POST /authentication/reset-password", function() {
-  //   let token: AuthToken;
-  //   let user: UserDocument;
+      expect(res.message).to.exist;
+    });
+  });
 
-  //   beforeEach(async function() {
-  //     user = await Mongoose.User.mock({});
-  //     ({ token, user } = await user.login());
-  //     user = await user.requestPasswordReset();
-  //   });
+  describe("resetPassword()", function() {
+    let token: AuthToken;
+    let user: UserDocument;
 
-  //   it("returns a 200 status", async function() {
-  //     const method = "post";
-  //     const path = "/authentication/reset-password";
-  //     const params = {
-  //       password: "newpassword",
-  //       resetHash: user.resetHash
-  //     };
+    beforeEach(async function() {
+      user = await Mongoose.User.mock({});
+      ({ token, user } = await user.login());
 
-  //     const res = await apiHelper.request(method, path, params, user.email);
+      nock(/mailgun\.net/)
+        .post(/.*/)
+        .reply(200, {
+          id: "<20170422765241.92160.12345.951E2345@sandboxf70783234584b198234561d8029e646.mailgun.org>",
+          message: "Queued. Thank you."
+        });
 
-  //     expect(res.status).to.eq(200);
-  //   });
-  // });
+      user = await user.requestPasswordReset();
+    });
+
+    it("returns a success message", async function() {
+      const req = {
+        body: {
+          password: "newpassword",
+          resetHash: user.resetHash
+        }
+      } as express.Request;
+
+      const res = await authenticationController.resetPassword(req);
+
+      expect(res.message).to.exist;
+    });
+  });
 });

@@ -37,7 +37,8 @@ export class AuthenticationController {
   }
 
   public async logout(req: express.Request, res?: express.Response): Promise<any> {
-    const token = req.get("authorization").replace("Bearer ", "");
+    const authorizationHeader = <string> req.headers.authorization;
+    const token = authorizationHeader.replace("Bearer ", "");
     await req.user.logout(token);
 
     return { message: "Logout successful." };

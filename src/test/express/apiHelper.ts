@@ -40,14 +40,12 @@ export class ApiHelper {
    * @param method The HTTP method. (ex: "get", "post", "put", "delete")
    * @param path The relative path of the API endpoint. (ex: "/users")
    * @param params An object of all the key-value pairs to send as the query or body parameters.
-   * @param email The user's email address to send request with. Pass null to not supply token in header.
+   * @param user The user to send request with. Pass null to not supply token in header.
    */
-  public async request(method: string, path: string, params: any, email?: string): Promise<ChaiHttp.Response> {
+  public async request(method: string, path: string, params: any, user?: UserDocument): Promise<ChaiHttp.Response> {
     let token: AuthToken;
 
-    if (email) {
-      let user = await Mongoose.User.findOne({ email });
-
+    if (user) {
       if (user.tokens.length === 0) {
         ({ token, user } = await user.login());
       } else {

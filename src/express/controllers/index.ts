@@ -8,13 +8,13 @@ export abstract class RestController {
   protected Model: mongoose.Model<mongoose.Document>;
   protected permissions: Permissions;
 
-  public async create(req: express.Request, res: express.Response): Promise<any> {
-    const record = this.permissions.create(req.body, req.user);
+  public async create(req: express.Request, res?: express.Response): Promise<any> {
+    const record = await this.permissions.create(req.body, req.user);
     return { record };
   }
 
-  public async find(req: express.Request, res: express.Response): Promise<any> {
-    const where = this.permissions.where(req.body.where, req.user);
+  public async find(req: express.Request, res?: express.Response): Promise<any> {
+    const where = await this.permissions.where(req.query.where, req.user);
 
     const records = await this.Model
       .find(where)
@@ -24,15 +24,15 @@ export abstract class RestController {
       .select(req.query.select)
       .exec();
 
-    Promise.all(records.map((record) => {
-      return this.permissions.read(record, req.user);
+    Promise.all(records.map(async (record) => {
+      return await this.permissions.read(record, req.user);
     }));
 
     return { records };
   }
 
-  public async findOne(req: express.Request, res: express.Response): Promise<any> {
-    const where = this.permissions.where({ _id: req.params.id }, req.user);
+  public async findOne(req: express.Request, res?: express.Response): Promise<any> {
+    const where = await this.permissions.where({ _id: req.params.id }, req.user);
     let record = await this.Model.findOne(where);
 
     if (!record) {
@@ -44,7 +44,7 @@ export abstract class RestController {
     return { record };
   }
 
-  public async remove(req: express.Request, res: express.Response): Promise<any> {
+  public async remove(req: express.Request, res?: express.Response): Promise<any> {
     const record = await this.Model.findOne({ _id: req.params.id });
 
     if (!record) {
@@ -56,7 +56,7 @@ export abstract class RestController {
     return { message: "Record removed successfully." };
   }
 
-  public async update(req: express.Request, res: express.Response): Promise<any> {
+  public async update(req: express.Request, res?: express.Response): Promise<any> {
     let record = await this.Model.findOne({ _id: req.params.id });
 
     if (!record) {

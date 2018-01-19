@@ -1,7 +1,8 @@
 import * as chai from "chai";
+import * as nock from "nock";
 
 import { Mongoose } from "../../../mongoose";
-import { UserDocument, AuthToken } from "../../../mongoose/models/user";
+import { UserDocument } from "../../../mongoose/models/user";
 import { ApiHelper } from "../apiHelper";
 
 const index = require("../../");
@@ -9,41 +10,29 @@ const index = require("../../");
 const apiHelper = new ApiHelper(index.config);
 const expect = chai.expect;
 
-describe("express/authentication.ts", function() {
+describe("express/routes/authentication.ts", function() {
+  let user: UserDocument;
+
+  beforeEach(async function() {
+    user = await Mongoose.User.mock();
+  });
+
   describe("GET /authentication/availability", function() {
-    context("when email is available", function() {
-      it("returns isAvailable set to true", async function() {
-        const method = "get";
-        const path = "/authentication/availability";
-        const params = {
-          email: "available@example.com"
-        };
+    it("returns a success response", async function() {
+      const method = "get";
+      const path = "/authentication/availability";
+      const params = {
+        email: "available@example.com"
+      };
 
-        const res = await apiHelper.request(method, path, params, null);
-        expect(res.body.isAvailable).to.be.true;
-      });
-    });
+      const res = await apiHelper.request(method, path, params, null);
 
-    context("when email is unavailable", function() {
-      beforeEach(async function() {
-        await Mongoose.User.mock({ email: "taken@example.com" });
-      });
-
-      it("returns isAvailable set to false", async function() {
-        const method = "get";
-        const path = "/authentication/availability";
-        const params = {
-          email: "taken@example.com"
-        };
-
-        const res = await apiHelper.request(method, path, params, null);
-        expect(res.body.isAvailable).to.be.false;
-      });
+      expect(res.status).to.eql(200);
     });
   });
 
   describe("POST /authentication/signup", function() {
-    it("returns the user and access token", async function() {
+    it("returns a success response", async function() {
       const method = "post";
       const path = "/authentication/signup";
       const params = {
@@ -53,13 +42,7 @@ describe("express/authentication.ts", function() {
 
       const res = await apiHelper.request(method, path, params, null);
 
-      expect(res.body.token).to.exist;
-      expect(res.body.user).to.exist;
-      expect(res.body.user.email).to.exist;
-      expect(res.body.user.level).to.exist;
-      expect(res.body.user.password).to.be.undefined;
-      expect(res.body.user.resetHash).to.be.undefined;
-      expect(res.body.user.tokens).to.be.undefined;
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -70,74 +53,43 @@ describe("express/authentication.ts", function() {
       user = await Mongoose.User.mock({ password: "password" });
     });
 
-    context("when credentials are correct", function() {
-      it("returns the user and access token", async function() {
-        const method = "post";
-        const path = "/authentication/login";
-        const params = {
-          email: user.email,
-          password: "password"
-        };
+    it("returns a success response", async function() {
+      const method = "post";
+      const path = "/authentication/login";
+      const params = {
+        email: user.email,
+        password: "password"
+      };
 
-        const res = await apiHelper.request(method, path, params, null);
+      const res = await apiHelper.request(method, path, params, null);
 
-        expect(res.body.token).to.exist;
-        expect(res.body.user).to.exist;
-        expect(res.body.user.email).to.exist;
-        expect(res.body.user.level).to.exist;
-        expect(res.body.user.password).to.be.undefined;
-        expect(res.body.user.resetHash).to.be.undefined;
-        expect(res.body.user.tokens).to.be.undefined;
-      });
-    });
-
-    context("when credentials are incorrect", function() {
-      it("returns an error message", async function() {
-        const method = "post";
-        const path = "/authentication/login";
-        const params = {
-          email: user.email,
-          password: "wrong"
-        };
-
-        const res = await apiHelper.request(method, path, params, null);
-
-        expect(res.status).to.eq(400);
-        expect(res.body.error).to.exist;
-      });
+      expect(res.status).to.eql(200);
     });
   });
 
   describe("DELETE /authentication/logout", function() {
-    let token: AuthToken;
-    let user: UserDocument;
-
-    beforeEach(async function() {
-      user = await Mongoose.User.mock({});
-      ({ token, user } = await user.login());
-    });
-
-    it("returns a 200 status", async function() {
+    it("returns a success response", async function() {
       const method = "delete";
       const path = "/authentication/logout";
       const params: any = null;
 
-      const res = await apiHelper.request(method, path, params, user.email);
+      const res = await apiHelper.request(method, path, params, user);
 
       expect(res.status).to.eq(200);
     });
   });
 
   describe("POST /authentication/request-password-reset", function() {
-    let token: AuthToken;
-    let user: UserDocument;
-
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
-      ({ token, user } = await user.login());
+      nock(/mailgun\.net/)
+        .post(/.*/)
+        .reply(200, {
+          id: "<20170422765241.92160.12345.951E2345@sandboxf70783234584b198234561d8029e646.mailgun.org>",
+          message: "Queued. Thank you."
+        });
     });
 
-    it("returns a 200 status", async function() {
+    it("returns a success response", async function() {
       const method = "post";
       const path = "/authentication/request-password-reset";
       const params = {
@@ -151,16 +103,18 @@ describe("express/authentication.ts", function() {
   });
 
   describe("POST /authentication/reset-password", function() {
-    let token: AuthToken;
-    let user: UserDocument;
-
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
-      ({ token, user } = await user.login());
+      nock(/mailgun\.net/)
+        .post(/.*/)
+        .reply(200, {
+          id: "<20170422765241.92160.12345.951E2345@sandboxf70783234584b198234561d8029e646.mailgun.org>",
+          message: "Queued. Thank you."
+        });
+
       user = await user.requestPasswordReset();
     });
 
-    it("returns a 200 status", async function() {
+    it("returns a success response", async function() {
       const method = "post";
       const path = "/authentication/reset-password";
       const params = {
@@ -168,7 +122,7 @@ describe("express/authentication.ts", function() {
         resetHash: user.resetHash
       };
 
-      const res = await apiHelper.request(method, path, params, user.email);
+      const res = await apiHelper.request(method, path, params, user);
 
       expect(res.status).to.eq(200);
     });
