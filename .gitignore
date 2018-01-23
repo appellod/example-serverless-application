@@ -2,4 +2,4 @@
 dist/
 node_modules/
 src/documentation/public/apidoc/*
-!src/documenation/public/apidoc/header.md
+!src/documentation/public/apidoc/header.md
