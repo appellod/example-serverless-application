@@ -37,7 +37,7 @@ endpoints such as signup, login and logout. Documentation is easily updated
 using a single command. Documentation also requires that a user logs in to
 view the documentation, providing security for sensitive information.
 
-**Socket.IO Authentication and User-based Broadcasting**
+**Socket.IO Authentication and User-based Broadcasting**  
 Users can connect to Socket.IO and authenticate their connection. This allows us to send
 them push notifications based on their identity. Supports multiple connection from a single user. 
 
@@ -58,7 +58,7 @@ A Dockerfile is included and is ready to run the application out-of-the-box.
 
 **Clone**  
 ```
-git clone https://github.com/appellod/simple-restful-api
+git clone https://github.com/appellod/restful-api
 ```
 
 **Install NPM Modules**  
@@ -100,17 +100,7 @@ All tests should pass with a fresh install of the API.
 npm start
 ```
 
-**Access the Documentation**  
-The default location for the API documentation is at
-[http://localhost:3000](http://localhost:3000). The default credentials for the
-documentation are:
-```
-email: test@example.com  
-password: password
-```
-Entering the above credentials should allow you access to the documentation.
-
-**Register for Mailgun**  
+**Setup Mailgun**  
 In order for the password reset process to work, you need to create a free
 account at [Mailgun](https://www.mailgun.com/). Mailgun is a very easy-to-use
 email service that is free up to 10,000 emails per month. Once you registered,
@@ -120,18 +110,31 @@ environment, or at the very least, the test and local environments.
 ## Working on the API
 
 **Updating the API Documentation**  
-Run the following script to update API documentation:
+API documentation is generated from in-line comments within the source code with [apidoc](http://apidocjs.com/).  
+
+To generate or update your API documentation, run:
 ```
 npm run update-docs
 ```
 Your application may need to be restarted to see the updates.
+
 Documentation can be versioned so developers can see the changes between versions. For this reason,
-documentation is included with Git commits. If versioning is not desired or Pull Requests need to be cleaned up,
-add the dist/public/apidoc directory to your .gitignore file.
+documentation can be included with Git commits by removing the `src/documentation/public/apidoc*` entry in the 
+.gitignore file.
+
+**Accessing the Documentation**  
+The default location for the API documentation is at
+[http://localhost:3000](http://localhost:3000). The default credentials for the
+documentation are:
+```
+email: test@example.com  
+password: password
+```
+Entering the above credentials should allow you access to the documentation.
 
 **MongoDB Migrations**  
-Migrations are performed with the mongodb-migrations npm module. Any configurations you need to make can be done in
-the `mm-config.js` file.
+Migrations are performed with the [mongodb-migrations](https://github.com/emirotin/mongodb-migrations) NPM module. 
+Any configurations you need to make can be done in the `mm-config.js` file.
 
 To create a migration file, run:
 ```
@@ -170,7 +173,8 @@ microservice. This can also be moved into a separate Git repository to allow doc
 up PRs and commit diffs.
 
 **express/**  
-Contains all the API's routes.
+Contains all the controllers and routes for the API. Logic is defined in the controllers and the routers map the logic
+to endpoints.
 
 **mongoose/**  
 Contains the Mongoose models. By default only a User model is included.
@@ -180,7 +184,7 @@ Contains the Passport strategies for the application's authentication.
 By default only the Bearer strategy is included. The Bearer strategy allows
 basic token-based authentication to any API endpoint.
 
-**socket-io/**  
+**socketIo/**  
 Contains the logic for Socket.IO. Includes an authentication controller so users
 can associate their socket with their identity, allowing identity-based push messages.
 
