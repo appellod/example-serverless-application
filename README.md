@@ -120,11 +120,7 @@ environment, or at the very least, the test and local environments.
 ## Working on the API
 
 **Updating the API Documentation**  
-Install [ApiDoc](http://apidocjs.com/) globally withwith:
-```
-npm install -g apidoc
-```
-Once ApiDoc is installed, run:
+Run the following script to update API documentation:
 ```
 npm run update-docs
 ```
@@ -132,6 +128,24 @@ Your application may need to be restarted to see the updates.
 Documentation can be versioned so developers can see the changes between versions. For this reason,
 documentation is included with Git commits. If versioning is not desired or Pull Requests need to be cleaned up,
 add the dist/public/apidoc directory to your .gitignore file.
+
+**MongoDB Migrations**  
+Migrations are performed with the mongodb-migrations npm module. Any configurations you need to make can be done in
+the `mm-config.js` file.
+
+To create a migration file, run:
+```
+npm run create-migration -- [migration-name]
+```
+This will create a migration file in the mongodb-migration directory. These migrations should be used for renaming
+field keys or adding or removing indexes.
+
+Migrations can be run with:
+```
+NODE_ENV=local npm run run-migrations
+```
+This will run all migrations on the environment specified by NODE_ENV (local in this example). Migrations will be saved 
+to the schemaMigrations collection within MongoDB.
 
 ## File Structure
 

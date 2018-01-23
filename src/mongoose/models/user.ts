@@ -70,6 +70,7 @@ export class User {
         expiresAt: Date
       }]
     }, {
+      autoIndex: false,
       timestamps: true
     });
 

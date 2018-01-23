@@ -69,6 +69,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-ts": "^6.0.0-beta.17",
     "mocha": "^4.0.1",
+    "mongodb-migrations": "^0.8.5",
     "nock": "^9.0.13",
     "pluralize": "^4.0.0",
     "socket.io-client": "^2.0.4",
@@ -76,8 +77,10 @@
     "typescript": "^2.6.2"
   },
   "scripts": {
+    "create-migration": "mm create",
     "grunt": "grunt",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "run-migrations": "mm",
     "start": "node dist/index.js",
     "test": "mocha dist/test --opts dist/test/mocha.opts",
     "update-docs": "apidoc -i src/express/ -o src/documentation/public/apidoc/",
