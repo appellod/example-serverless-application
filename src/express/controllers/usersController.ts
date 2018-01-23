@@ -1,8 +1,6 @@
 import * as express from "express";
 
-import { Mongoose } from "../../mongoose";
-import { UserModel, UserDocument } from "../../mongoose/models/user";
-import { UserPermissions } from "../../mongoose/permissions/user";
+import { Mongoose, UserDocument, UserModel, UserPermissions } from "../../mongoose";
 import { RestController } from "./";
 
 export class UsersController extends RestController {

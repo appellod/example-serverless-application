@@ -1,8 +1,6 @@
 import * as express from "express";
 
-import { Mongoose } from "../../mongoose";
-import { UserPermissions } from "../../mongoose/permissions/user";
-import { UserDocument } from "../../mongoose/models/user";
+import { Mongoose, UserDocument, UserPermissions } from "../../mongoose";
 
 export class AuthenticationController {
   /**

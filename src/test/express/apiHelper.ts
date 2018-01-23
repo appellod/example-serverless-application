@@ -1,8 +1,7 @@
 import * as chai from "chai";
 
 import { Config } from "../../config";
-import { Mongoose } from "../../mongoose";
-import { UserDocument, AuthToken } from "../../mongoose/models/user";
+import { UserDocument, AuthToken } from "../../mongoose";
 
 const chaiHttp = require("chai-http");
 
@@ -15,24 +14,6 @@ export class ApiHelper {
 
     this.host = config.server.host;
     this.port = config.server.port;
-  }
-
-  /**
-   * Finds the admin user and returns it.
-   */
-  public async getAdminUser(): Promise<UserDocument> {
-    const user = await Mongoose.User.findOne({ email: "admin@example.com" });
-
-    return user;
-  }
-
-  /**
-   * Finds the test user and returns it.
-   */
-  public async getTestUser(): Promise<UserDocument> {
-    const user = await Mongoose.User.findOne({ email: "test@example.com" });
-
-    return user;
   }
 
   /**

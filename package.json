@@ -16,7 +16,7 @@
     "url": "https://api.example.com/v1",
     "header": {
       "title": "Using the API",
-      "filename": "src/express/documentation/public/apidoc/header.md"
+      "filename": "src/documentation/public/apidoc/header.md"
     }
   },
   "dependencies": {
@@ -61,6 +61,7 @@
     "@types/request-promise": "^4.1.39",
     "@types/socket.io": "^1.4.31",
     "@types/socket.io-client": "^1.4.32",
+    "apidoc": "^0.17.6",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "grunt": "^1.0.1",
@@ -79,7 +80,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "start": "node dist/index.js",
     "test": "mocha dist/test --opts dist/test/mocha.opts",
-    "update-docs": "apidoc -i src/express/ -o src/express/documentation/public/apidoc/",
+    "update-docs": "apidoc -i src/express/ -o src/documentation/public/apidoc/",
     "watch": "grunt watch"
   }
 }

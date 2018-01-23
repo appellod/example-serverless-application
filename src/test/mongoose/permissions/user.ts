@@ -2,16 +2,14 @@ import * as chai from "chai";
 import { Chance } from "chance";
 import * as nock from "nock";
 
-import { Mongoose } from "../../../mongoose";
-import { UserPermissions } from "../../../mongoose/permissions/user";
-import { UserDocument, AuthToken } from "../../../mongoose/models/user";
+import { AuthToken, Mongoose, UserPermissions, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
 const expect = chai.expect;
 const index = require("../../");
 const permissions = new UserPermissions();
 
-describe("mongoose/permissions/user.ts", function() {
+describe("mongoose/permissions/userPermissions.ts", function() {
   describe("create()", function() {
     context("when user is an admin", function() {
       it("creates a new record", async function() {

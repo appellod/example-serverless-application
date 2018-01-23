@@ -6,14 +6,14 @@ import * as request from "request";
 import { Config } from "../../config";
 import { Mongoose } from "../";
 
-export interface AuthToken {
-  _id: mongoose.Schema.Types.ObjectId;
-  expiresAt: Date;
-}
-
 export enum UserLevel {
   Default,
   Admin
+}
+
+export interface AuthToken {
+  _id: mongoose.Schema.Types.ObjectId;
+  expiresAt: Date;
 }
 
 export interface UserDocument extends mongoose.Document {

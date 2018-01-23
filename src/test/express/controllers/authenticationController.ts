@@ -2,16 +2,15 @@ import * as chai from "chai";
 import * as express from "express";
 import * as nock from "nock";
 
-import { AuthenticationController } from "../../../express/controllers/authentication";
-import { Mongoose } from "../../../mongoose";
-import { UserDocument, AuthToken } from "../../../mongoose/models/user";
+import { AuthenticationController } from "../../../express";
+import { AuthToken, Mongoose, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 
 const authenticationController = new AuthenticationController();
 const expect = chai.expect;
 
-describe("express/controllers/authentication.ts", function() {
+describe("express/controllers/authenticationController.ts", function() {
   describe("checkAvailability()", function() {
     context("when email is available", function() {
       it("returns isAvailable set to true", async function() {

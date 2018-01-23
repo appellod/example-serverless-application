@@ -1,8 +1,7 @@
 import * as chai from "chai";
 import * as nock from "nock";
 
-import { Mongoose } from "../../../mongoose";
-import { UserDocument, AuthToken } from "../../../mongoose/models/user";
+import { AuthToken, Mongoose, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 const expect = chai.expect;
@@ -13,6 +12,14 @@ describe("mongoose/models/user.ts", function() {
 
     beforeEach(async function() {
       user = await Mongoose.User.mock({});
+
+      nock(/mailgun\.net/)
+        .post(/.*/)
+        .reply(200, {
+          id: "<20170422765241.92160.12345.951E2345@sandboxf70783234584b198234561d8029e646.mailgun.org>",
+          message: "Queued. Thank you."
+        });
+
       user = await user.requestPasswordReset();
     });
 

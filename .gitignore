@@ -1,5 +1,5 @@
 .tscache/
 dist/
 node_modules/
-src/express/documentation/public/apidoc/*
-!src/express/documenation/public/apidoc/header.md
+src/documentation/public/apidoc/*
+!src/documenation/public/apidoc/header.md

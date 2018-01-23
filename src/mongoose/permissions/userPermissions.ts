@@ -1,6 +1,5 @@
-import { Mongoose } from "../";
-import { UserDocument } from "../models/user";
-import { Permissions } from "./";
+import { Mongoose, UserDocument } from "../index";
+import { Permissions } from "./permissions";
 
 export class UserPermissions extends Permissions {
 

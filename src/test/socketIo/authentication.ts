@@ -1,15 +1,14 @@
 import * as chai from "chai";
 import * as io from "socket.io-client";
 
-import { Mongoose } from "../../mongoose";
-import { UserDocument, AuthToken } from "../../mongoose/models/user";
+import { AuthToken, Mongoose, UserDocument } from "../../mongoose";
 
 const index = require("../");
 const config = index.config;
 
 const expect = chai.expect;
 
-describe("socket-io/authentication.ts", function() {
+describe("socketIo/authentication.ts", function() {
   describe("authenticate", function() {
     context("when token is not provided", function() {
       it("returns an error", async function() {

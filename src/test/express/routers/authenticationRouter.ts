@@ -1,8 +1,7 @@
 import * as chai from "chai";
 import * as nock from "nock";
 
-import { Mongoose } from "../../../mongoose";
-import { UserDocument } from "../../../mongoose/models/user";
+import { Mongoose, UserDocument } from "../../../mongoose";
 import { ApiHelper } from "../apiHelper";
 
 const index = require("../../");
@@ -10,7 +9,7 @@ const index = require("../../");
 const apiHelper = new ApiHelper(index.config);
 const expect = chai.expect;
 
-describe("express/routes/authentication.ts", function() {
+describe("express/routes/authenticationRouter.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {

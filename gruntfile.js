@@ -7,9 +7,9 @@ module.exports = function(grunt) {
         files: [
           {
             expand: true,
-            cwd: "./src/express/documentation/public",
+            cwd: "./src/documentation/public",
             src: ["**"],
-            dest: "./dist/express/documentation/public"
+            dest: "./dist/documentation/public"
           },
           {
             expand: true,

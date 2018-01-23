@@ -1,10 +1,11 @@
 import * as bluebird from "bluebird";
 
 import { Config } from "./config";
+import { Documentation } from "./documentation";
 import { Express } from "./express";
 import { Mongoose } from "./mongoose";
 import { Passport } from "./passport";
-import { SocketIO } from "./socket-io";
+import { SocketIo } from "./socketIo";
 
 global.Promise = bluebird;
 
@@ -14,12 +15,13 @@ const config = new Config(environment);
 if (config.environment !== "test") console.log("Using Environment: " + config.environment);
 
 // Setup components
-const express = new Express(config);
 const mongoose = new Mongoose(config);
+const express = new Express(config);
+const documentation = new Documentation(express.app);
 const passport = new Passport(config, express.app);
-const socketIo = new SocketIO(express.server);
+const socketIo = new SocketIo(express.server);
 
-export = { config, express, mongoose, passport, socketIo };
+export = { config, documentation, express, mongoose, passport, socketIo };
 
 // Create admin user if user doesn't exit, but only when running locally
 if (config.environment === "local") {

@@ -1,8 +1,7 @@
 import * as chai from "chai";
 import { Chance } from "chance";
 
-import { Mongoose } from "../../../mongoose";
-import { UserDocument } from "../../../mongoose/models/user";
+import { Mongoose, UserDocument } from "../../../mongoose";
 import { ApiHelper } from "../apiHelper";
 
 const index = require("../../");
@@ -11,11 +10,11 @@ const apiHelper = new ApiHelper(index.config);
 const chance = new Chance();
 const expect = chai.expect;
 
-describe("express/routes/users.ts", function() {
+describe("express/routes/usersRouter.ts", function() {
   let admin: UserDocument;
 
   beforeEach(async function() {
-    admin = await Mongoose.User.mock();
+    admin = await Mongoose.User.mock({ level: 1 });
   });
 
   describe("GET /users", function() {

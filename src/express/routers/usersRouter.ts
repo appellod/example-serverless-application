@@ -2,9 +2,9 @@ import * as express from "express";
 import * as passport from "passport";
 
 import { Express } from "../";
-import { UsersController } from "../controllers/users";
+import { UsersController } from "../";
 
-export class UsersRoutes {
+export class UsersRouter {
   constructor(router: express.Router) {
     const controller = new UsersController();
 
@@ -31,7 +31,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)[]} users Array of users matching the criteria.
      */
-    router.get("/users", passport.authenticate("bearer", { session: false }), Express.handler(controller.find));
+    router.get("/users", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.find));
 
     /**
      * @api {post} /users Create User
@@ -43,7 +43,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)} user The new user.
      */
-    router.post("/users", passport.authenticate("bearer", { session: false }), Express.handler(controller.create));
+    router.post("/users", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.create));
 
     /**
      * @api {get} /users/:id Get User
@@ -55,7 +55,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)} user The user matching the given ID.
      */
-    router.get("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler(controller.findOne));
+    router.get("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.findOne));
 
     /**
      * @api {put} /users/:id Update User
@@ -67,7 +67,7 @@ export class UsersRoutes {
      *
      * @apiSuccess {[User](#api-Models-User)} user The updated user.
      */
-    router.put("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler(controller.update));
+    router.put("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.update));
 
     /**
      * @api {delete} /users/:id Remove User
@@ -77,6 +77,6 @@ export class UsersRoutes {
      *
      * @apiParam {String} :id The ID of the user.
      */
-    router.delete("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler(controller.remove));
+    router.delete("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.remove));
   }
 }

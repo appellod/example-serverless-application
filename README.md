@@ -149,8 +149,14 @@ An example for running the API in production mode on Linux-based machines is:
 ```
 NODE_ENV=prod npm start
 ```
+
+**documentation/**  
+Contains the documentation for the API. This is separate from the API controllers so it can be ran as an individual
+microservice. This can also be moved into a separate Git repository to allow documentation to be commited without messing
+up PRs and commit diffs.
+
 **express/**  
-Contains all the API's routes. Also contains API documentation.
+Contains all the API's routes.
 
 **mongoose/**  
 Contains the Mongoose models. By default only a User model is included.

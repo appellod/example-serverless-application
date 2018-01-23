@@ -2,14 +2,14 @@ import * as express from "express";
 import * as http from "http";
 import * as socketIo from "socket.io";
 
-import { UserDocument } from "../mongoose/models/user";
-import { AuthenticationController } from "./controllers/authentication";
+import { UserDocument } from "../mongoose/";
+import { AuthenticationController } from "./";
 
 export interface Socket extends SocketIO.Socket {
   user: UserDocument;
 }
 
-export class SocketIO {
+export class SocketIo {
   private io: SocketIO.Server;
   private sockets: Socket[] = [];
 

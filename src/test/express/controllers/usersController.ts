@@ -2,9 +2,8 @@ import * as chai from "chai";
 import { Chance } from "chance";
 import * as express from "express";
 
-import { UsersController } from "../../../express/controllers/users";
-import { Mongoose } from "../../../mongoose";
-import { UserDocument } from "../../../mongoose/models/user";
+import { UsersController } from "../../../express";
+import { Mongoose, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 
@@ -12,7 +11,7 @@ const chance = new Chance();
 const expect = chai.expect;
 const usersController = new UsersController();
 
-describe("express/controllers/users.ts", function() {
+describe("express/controllers/usersController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
