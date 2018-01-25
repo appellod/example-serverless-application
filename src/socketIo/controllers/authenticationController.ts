@@ -1,19 +1,8 @@
 import { BearerStrategy } from "../../passport";
-import { SocketIo, Socket } from "../";
-import { Controller } from "./controller";
+import { Controller } from "./";
 
 export class AuthenticationController extends Controller {
-  constructor(socketIo: SocketIo, socket: Socket) {
-    super(socketIo, socket);
-
-    this.on("authenticate", this.authenticate.bind(this));
-  }
-
-  /**
-   * Associates a user with the current socket.
-   * @param data The data from the client.
-   */
-  private async authenticate(data: any) {
+  public async authenticate(data: any) {
     const token: string = data.token;
     if (!token) {
       throw new Error("Please provide your access token.");

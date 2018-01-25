@@ -1,9 +1,9 @@
 import * as chai from "chai";
 import * as io from "socket.io-client";
 
-import { AuthToken, Mongoose, UserDocument } from "../../mongoose";
+import { AuthToken, Mongoose, UserDocument } from "../../../mongoose";
 
-const index = require("../");
+const index = require("../../");
 const config = index.config;
 
 const expect = chai.expect;
@@ -36,7 +36,7 @@ describe("socketIo/authentication.ts", function() {
       it("does not return an error", async function() {
         const socket = await io.connect("http://" + config.server.host + ":" + config.server.port);
 
-        const user = await Mongoose.User.findOne({ email: "test@example.com" });
+        const user = await Mongoose.User.mock({});
         const { token } = await user.login();
 
         socket.emit("authenticate", { token: token._id });
