@@ -51,7 +51,7 @@ describe("socketIo/controllers/authenticationController.ts", function() {
 
     context("when a valid token is provided", function() {
       it("does not return an error", async function() {
-        const user = await Mongoose.User.mock({});
+        const user = await Mongoose.User.mock();
         const { token } = await user.login();
 
         const data = {

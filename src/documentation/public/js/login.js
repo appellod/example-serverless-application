@@ -1,32 +1,33 @@
 /**
  * Handle form submission.
  */
-var form = document.querySelector("form");
-form.onsubmit = function(e) {
+const form = document.querySelector("form");
+form.onsubmit = async function(e) {
 	e.preventDefault();
 
-	var email = document.querySelector("input[name=email]").value;
-	var password = document.querySelector("input[name=password]").value;
-	var data = {
-		email: email,
-		password: password
-	};
+	const email = document.querySelector("input[name=email]").value;
+	const password = document.querySelector("input[name=password]").value;
+  const data = { email, password };
+  
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  
+  const res = await fetch("/login", {
+    body: JSON.stringify(data),
+    credentials: "same-origin",
+    headers: headers,
+    method: "POST",
+  });
 
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4) {
-			if (this.status == 200) {
-				window.location = "/apidoc/index.html";
-			} else {
-				// show error message
-				var error = document.querySelector("#form-error");
-				error.innerHTML = "Incorrect email address or password.";
-				error.style.display = "block";
-			}
-		}
-	};
+	if (res.status === 200) {
+    window.location = "/apidoc/index.html";
+  } else {
+    showError("Incorrect email address or password.");
+  }
+}
 
-	xhttp.open("POST", "/login", true);
-	xhttp.setRequestHeader("Content-Type", "application/json");
-	xhttp.send(JSON.stringify(data));
+function showError(message) {
+  const error = document.querySelector("#form-error");
+  error.innerHTML = message;
+  error.style.display = "block";
 }

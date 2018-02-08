@@ -1,3 +1,5 @@
+tscommand*.tmp.txt
+
 .tscache/
 dist/
 node_modules/

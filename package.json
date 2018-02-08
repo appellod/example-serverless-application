@@ -67,6 +67,7 @@
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-express-server": "^0.5.3",
     "grunt-ts": "^6.0.0-beta.17",
     "mocha": "^4.0.1",
     "mongodb-migrations": "^0.8.5",
@@ -77,13 +78,14 @@
     "typescript": "^2.6.2"
   },
   "scripts": {
-    "create-migration": "mm create",
     "grunt": "grunt",
+    "grunt:serve": "grunt serve",
+    "grunt:watch": "grunt watch",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "run-migrations": "mm",
-    "start": "node dist/index.js",
-    "test": "mocha dist/test --opts dist/test/mocha.opts",
-    "update-docs": "apidoc -i src/express/ -o src/documentation/public/apidoc/",
-    "watch": "grunt watch"
+    "migrations:create": "mm create",
+    "migrations:run": "mm",
+    "start": "grunt && node dist/index.js",
+    "test": "grunt && mocha dist/test --opts dist/test/mocha.opts --exit",
+    "update-docs": "apidoc -i src/express/ -o src/documentation/public/apidoc/"
   }
 }

@@ -57,7 +57,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
     let record: UserDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.User.mock({});
+      record = await Mongoose.User.mock();
     });
 
     context("when user is an admin", function() {
@@ -114,7 +114,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
     let record: UserDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.User.mock({});
+      record = await Mongoose.User.mock();
     });
 
     context("when the user is an admin", function() {
@@ -161,7 +161,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
     let record: UserDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.User.mock({});
+      record = await Mongoose.User.mock();
     });
 
     context("when the user is an admin", function() {

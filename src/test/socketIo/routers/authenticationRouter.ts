@@ -36,7 +36,7 @@ describe("socketIo/authentication.ts", function() {
       it("does not return an error", async function() {
         const socket = await io.connect("http://" + config.server.host + ":" + config.server.port);
 
-        const user = await Mongoose.User.mock({});
+        const user = await Mongoose.User.mock();
         const { token } = await user.login();
 
         socket.emit("authenticate", { token: token._id });

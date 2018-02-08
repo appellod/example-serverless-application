@@ -11,7 +11,7 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -40,7 +40,7 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
     });
 
     it("adds an access token to the user's tokens array", async function() {
@@ -56,7 +56,7 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
       ({ token, user } = await user.login());
     });
 
@@ -71,7 +71,7 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
       ({ token, user } = await user.login());
     });
 
@@ -87,7 +87,7 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
 
       nock(/mailgun\.net/)
         .post(/.*/)

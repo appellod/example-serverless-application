@@ -40,7 +40,7 @@ export class Documentation {
     /**
      * Loads login resources without requiring the user to be logged in.
      */
-    this.app.get(["/login.html", "/css/form.css", "/js/login.js"], (req, res) => {
+    this.app.get(["/login.html", "/css/login.css", "/js/login.js"], (req, res) => {
       const file = req.originalUrl.split("?")[0].replace("/", "");
       res.sendFile(path.resolve(__dirname, "public", file));
     });

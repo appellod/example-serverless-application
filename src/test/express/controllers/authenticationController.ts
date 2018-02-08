@@ -120,7 +120,7 @@ describe("express/controllers/authenticationController.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
       ({ token, user } = await user.login());
     });
 
@@ -141,7 +141,7 @@ describe("express/controllers/authenticationController.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
       ({ token, user } = await user.login());
 
       nock(/mailgun\.net/)
@@ -170,7 +170,7 @@ describe("express/controllers/authenticationController.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({});
+      user = await Mongoose.User.mock();
       ({ token, user } = await user.login());
 
       nock(/mailgun\.net/)

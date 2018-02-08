@@ -1,17 +1,15 @@
 import * as bodyParser from "body-parser";
-import * as connectMongo from "connect-mongo";
 import * as cors from "cors";
 import * as express from "express";
 import { RequestHandlerParams } from "express-serve-static-core";
-import * as session from "express-session";
 import * as fs from "fs";
 import * as http from "http";
-import * as mongoose from "mongoose";
 import * as morgan from "morgan";
 import * as path from "path";
 
 import { Config } from "../config";
 import { AuthenticationRouter, UsersRouter } from "./";
+import { mongoSessionStoreMiddleware, queryStringJsonParserMiddleware } from "./";
 
 export class Express {
   public app: express.Application;
@@ -24,12 +22,23 @@ export class Express {
       this.app.use(morgan("dev"));
     }
 
+    // Allow CORS requests
     this.app.use(cors());
+
+    // Disables the "x-powered-by" response header so users don't know we use Express
     this.app.disable("x-powered-by");
 
-    this.setupBodyParser();
-    this.setupMongoSessionMiddleware();
-    this.setupQueryStringJsonParser();
+    // Sets up body parser so we can access req.body in controllers
+    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(bodyParser.json({ limit: "50mb" }));
+
+    // Sets up Mongo to store our user web sessions
+    this.app.use(mongoSessionStoreMiddleware);
+
+    // Parses the query string's "query" value into an object from JSON
+    this.app.use(queryStringJsonParserMiddleware);
+
+    this.app.use(express.static(path.resolve(__dirname, "views")));
     this.setupRoutes();
 
     this.server = this.app.listen(config.server.port, (err: any) => {
@@ -52,49 +61,6 @@ export class Express {
         res.status(400).json({ error: e.message });
       }
     };
-  }
-
-  /**
-   * Sets up body parser so we can access req.body in controllers
-   */
-  private setupBodyParser() {
-    this.app.use(bodyParser.urlencoded({ extended: true }));
-    this.app.use(bodyParser.json({ limit: "50mb" }));
-  }
-
-  /**
-   * Sets up Mongo to be used as a session store for API documentation.
-   */
-  private setupMongoSessionMiddleware() {
-    const MongoStore = connectMongo(session);
-    const sessionMiddleware = session({
-      secret: "youll never guess this teehee",
-      saveUninitialized: true,
-      resave: true,
-      store: new MongoStore({
-        collection: "sessions",
-        mongooseConnection: mongoose.connection
-      })
-    });
-    this.app.use(sessionMiddleware);
-  }
-
-  /**
-   * Parses the query string"s "query" value into JSON
-   */
-  private setupQueryStringJsonParser() {
-    this.app.use((req, res, next) => {
-      if (req.query && req.query.query) {
-        try {
-          req.query = JSON.parse(req.query.query);
-          return next();
-        } catch (err) {
-          res.status(400).json({ error: err.message });
-        }
-      } else {
-        return next();
-      }
-    });
   }
 
   /**
