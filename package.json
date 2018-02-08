@@ -36,7 +36,8 @@
     "passport-http-bearer": "^1.0.1",
     "request": "^2.74.0",
     "request-promise": "^4.2.2",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "source-map-support": "^0.5.3"
   },
   "devDependencies": {
     "@types/bcrypt-nodejs": "0.0.30",
@@ -80,12 +81,13 @@
   "scripts": {
     "grunt": "grunt",
     "grunt:serve": "grunt serve",
+    "grunt:test": "grunt && npm test",
     "grunt:watch": "grunt watch",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "migrations:create": "mm create",
     "migrations:run": "mm",
-    "start": "grunt && node dist/index.js",
-    "test": "grunt && mocha dist/test --opts dist/test/mocha.opts --exit",
+    "start": "node dist/index.js",
+    "test": "mocha dist/test --opts dist/test/mocha.opts --exit",
     "update-docs": "apidoc -i src/express/ -o src/documentation/public/apidoc/"
   }
 }

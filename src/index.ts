@@ -1,3 +1,5 @@
+require("source-map-support").install();
+
 import * as bluebird from "bluebird";
 
 import { Config } from "./config";
