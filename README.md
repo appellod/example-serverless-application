@@ -107,6 +107,10 @@ email service that is free up to 10,000 emails per month. Once you registered,
 enter your credentials in the application's configuration file for each
 environment, or at the very least, the test and local environments.
 
+**Setup Loggly**  
+The API comes complete with [Loggly](https://www.loggly.com) support. Simply create an account and enter your
+customer token, subdomain, and tags in the environment configurations you want supported.
+
 ## Working on the API
 
 **Updating the API Documentation**  

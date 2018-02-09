@@ -5,6 +5,7 @@ import * as bluebird from "bluebird";
 import { Config } from "./config";
 import { Documentation } from "./documentation";
 import { Express } from "./express";
+import { Loggly } from "./loggly";
 import { Mongoose } from "./mongoose";
 import { Passport } from "./passport";
 import { SocketIo } from "./socketIo";
@@ -17,6 +18,7 @@ const config = new Config(environment);
 if (config.environment !== "test") console.log("Using Environment: " + config.environment);
 
 // Setup components
+const loggly = new Loggly(config);
 const mongoose = new Mongoose(config);
 const express = new Express(config);
 const documentation = new Documentation(express.app);

@@ -1,5 +1,11 @@
 export interface IConfig {
   environment: string;
+  loggly?: {
+    inputToken: string,
+    level?: string,
+    subdomain: string,
+    tags: string[]
+  };
   mailgun: {
     domain: string,
     key: string
@@ -22,6 +28,12 @@ export interface IConfig {
 
 export class Config {
   public environment: string;
+  public loggly: {
+    inputToken: string,
+    level?: string,
+    subdomain: string,
+    tags: string[]
+  };
   public mailgun: {
     domain: string,
     key: string
@@ -46,6 +58,7 @@ export class Config {
     const config: IConfig = this.getConfiguration(env);
 
     this.environment = config.environment;
+    this.loggly = config.loggly;
     this.mailgun = config.mailgun;
     this.mongo = config.mongo;
     this.passwordReset = config.passwordReset;
@@ -56,107 +69,107 @@ export class Config {
     const configurations: { [s: string]: IConfig } = {
       test: {
         environment: "test",
-        mongo: {
-          host: "127.0.0.1",
-          port: "27017",
-          database: "api_test",
-        },
-        server: {
-          host: "127.0.0.1",
-          port: "3001"
-        },
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb",
+          key: "b4bf483017fc43b2e1146d76a66932eb"
+        },
+        mongo: {
+          database: "api_test",
+          host: "127.0.0.1",
+          port: "27017"
         },
         passwordReset: {
           company: "Example Team",
           from: "no-reply@example.com",
           url: "http://127.0.0.1:3001/reset-password.html"
+        },
+        server: {
+          host: "127.0.0.1",
+          port: "3001"
         }
       },
       local: {
         environment: "local",
-        mongo: {
-          host: "127.0.0.1",
-          port: "27017",
-          database: "api_local",
-        },
-        server: {
-          host: "127.0.0.1",
-          port: "3000"
-        },
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
           key: "b4bf483017fc43b2e1146a4c866932eb",
         },
+        mongo: {
+          database: "api_local",
+          host: "127.0.0.1",
+          port: "27017"
+        },
         passwordReset: {
           company: "Example Team",
           from: "no-reply@example.com",
           url: "http://127.0.0.1:3000/reset-password.html"
+        },
+        server: {
+          host: "127.0.0.1",
+          port: "3000"
         }
       },
       dev: {
         environment: "dev",
-        mongo: {
-          host: "127.0.0.1",
-          port: "27017",
-          database: "api_dev",
-        },
-        server: {
-          host: "127.0.0.1",
-          port: "3000"
-        },
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb",
+          key: "b4bf483017fc43b2e1146d76a66932eb"
+        },
+        mongo: {
+          database: "api_dev",
+          host: "127.0.0.1",
+          port: "27017"
         },
         passwordReset: {
           company: "Example Team",
           from: "no-reply@example.com",
           url: "http://127.0.0.1:3000/reset-password.html"
+        },
+        server: {
+          host: "127.0.0.1",
+          port: "3000"
         }
       },
       staging: {
         environment: "staging",
-        mongo: {
-          host: "127.0.0.1",
-          port: "27017",
-          database: "api_staging",
-        },
-        server: {
-          host: "127.0.0.1",
-          port: "3000"
-        },
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb",
+          key: "b4bf483017fc43b2e1146d76a66932eb"
+        },
+        mongo: {
+          database: "api_staging",
+          host: "127.0.0.1",
+          port: "27017"
         },
         passwordReset: {
           company: "Example Team",
           from: "no-reply@example.com",
           url: "http://127.0.0.1:3000/reset-password.html"
+        },
+        server: {
+          host: "127.0.0.1",
+          port: "3000"
         }
       },
       prod: {
         environment: "prod",
-        mongo: {
-          host: "127.0.0.1",
-          port: "27017",
-          database: "api_prod",
-        },
-        server: {
-          host: "127.0.0.1",
-          port: "3000"
-        },
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb",
+          key: "b4bf483017fc43b2e1146d76a66932eb"
+        },
+        mongo: {
+          database: "api_prod",
+          host: "127.0.0.1",
+          port: "27017"
         },
         passwordReset: {
           company: "Example Team",
           from: "no-reply@example.com",
           url: "http://127.0.0.1:3000/reset-password.html"
+        },
+        server: {
+          host: "127.0.0.1",
+          port: "3000"
         }
       }
     };
