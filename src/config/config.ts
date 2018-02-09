@@ -1,4 +1,9 @@
 export interface IConfig {
+  aws: {
+    accessKeyId: string,
+    region: string,
+    secretAccessKey: string
+  };
   environment: string;
   loggly?: {
     inputToken: string,
@@ -27,6 +32,11 @@ export interface IConfig {
 }
 
 export class Config {
+  public aws: {
+    accessKeyId: string,
+    region: string,
+    secretAccessKey: string
+  };
   public environment: string;
   public loggly: {
     inputToken: string,
@@ -57,6 +67,7 @@ export class Config {
     env = env || process.env.NODE_ENV;
     const config: IConfig = this.getConfiguration(env);
 
+    this.aws = config.aws;
     this.environment = config.environment;
     this.loggly = config.loggly;
     this.mailgun = config.mailgun;
@@ -68,6 +79,11 @@ export class Config {
   private getConfiguration(env: string): IConfig {
     const configurations: { [s: string]: IConfig } = {
       test: {
+        aws: {
+          accessKeyId: "",
+          region: "",
+          secretAccessKey: ""
+        },
         environment: "test",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
@@ -89,6 +105,11 @@ export class Config {
         }
       },
       local: {
+        aws: {
+          accessKeyId: "",
+          region: "",
+          secretAccessKey: ""
+        },
         environment: "local",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
@@ -110,6 +131,11 @@ export class Config {
         }
       },
       dev: {
+        aws: {
+          accessKeyId: "",
+          region: "",
+          secretAccessKey: ""
+        },
         environment: "dev",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
@@ -131,6 +157,11 @@ export class Config {
         }
       },
       staging: {
+        aws: {
+          accessKeyId: "",
+          region: "",
+          secretAccessKey: ""
+        },
         environment: "staging",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
@@ -152,6 +183,11 @@ export class Config {
         }
       },
       prod: {
+        aws: {
+          accessKeyId: "",
+          region: "",
+          secretAccessKey: ""
+        },
         environment: "prod",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
