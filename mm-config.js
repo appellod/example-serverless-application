@@ -1,6 +1,6 @@
 const path = require("path");
 
-const { Config } = require(__dirname + "/dist/config");
+const { Config } = require(path.resolve(__dirname, "dist/config"));
 
 const env = process.env.NODE_ENV || "local";
 const config = new Config(env);

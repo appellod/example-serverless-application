@@ -40,6 +40,9 @@ npm run update-docs
 # Compile Typescript
 npm run grunt
 
+# Run migrations
+npm run migrations:run
+
 # Symlink the current release
 cd ../../
 rm current || true
