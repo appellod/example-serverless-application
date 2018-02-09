@@ -114,7 +114,7 @@ API documentation is generated from in-line comments within the source code with
 
 To generate or update your API documentation, run:
 ```
-npm run update-docs
+npm run documentation
 ```
 Your application may need to be restarted to see the updates.
 
@@ -138,14 +138,14 @@ Any configurations you need to make can be done in the `mm-config.js` file.
 
 To create a migration file, run:
 ```
-npm run create-migration -- [migration-name]
+npm run migrations:create -- [migration-name]
 ```
 This will create a migration file in the mongodb-migration directory. These migrations should be used for renaming
 field keys or adding or removing indexes.
 
 Migrations can be run with:
 ```
-NODE_ENV=local npm run run-migrations
+NODE_ENV=local npm run migrations:run
 ```
 This will run all migrations on the environment specified by NODE_ENV (local in this example). Migrations will be saved 
 to the schemaMigrations collection within MongoDB.

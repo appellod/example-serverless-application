@@ -1,9 +1,10 @@
 {
-  "name": "API",
-  "description": "API",
+  "name": "api",
+  "description": "Typescript Restful API",
   "main": "index.js",
   "engine": "node 8.1.2",
   "license": "Apache-2.0",
+  "version": "0.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/appellod/simple-restful-api.git"
@@ -79,6 +80,7 @@
     "typescript": "^2.6.2"
   },
   "scripts": {
+    "documentation": "apidoc -i src/express/ -o src/documentation/public/apidoc/",
     "grunt": "grunt",
     "grunt:serve": "grunt serve",
     "grunt:test": "grunt && npm test",
@@ -87,7 +89,6 @@
     "migrations:create": "mm create",
     "migrations:run": "mm",
     "start": "node dist/index.js",
-    "test": "mocha dist/test --opts dist/test/mocha.opts --exit",
-    "update-docs": "apidoc -i src/express/ -o src/documentation/public/apidoc/"
+    "test": "mocha dist/test --opts dist/test/mocha.opts --exit"
   }
 }

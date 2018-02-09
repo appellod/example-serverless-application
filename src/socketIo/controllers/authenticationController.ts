@@ -1,4 +1,5 @@
 import { BearerStrategy } from "../../passport";
+import { SocketIo } from "../";
 import { Controller } from "./";
 
 export class AuthenticationController extends Controller {
@@ -14,7 +15,7 @@ export class AuthenticationController extends Controller {
         throw new Error("Invalid access token.");
       }
 
-      this.socket.user = user;
+      SocketIo.registerSocketToUser(this.socket, user);
     } catch (e) {
       throw new Error("Invalid access token.");
     }
