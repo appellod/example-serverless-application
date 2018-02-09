@@ -174,7 +174,7 @@ export class User {
       html += "<br>";
       html += config.passwordReset.company;
 
-      const url = "https://api:key-" + config.mailgun.key + "@api.mailgun.net/v3/" + config.mailgun.domain + "/messages";
+      const url = "https://api:" + config.mailgun.key + "@api.mailgun.net/v3/" + config.mailgun.domain + "/messages";
 
       try {
         await new Promise((res, rej) => {

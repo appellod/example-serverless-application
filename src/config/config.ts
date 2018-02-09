@@ -71,7 +71,7 @@ export class Config {
         environment: "test",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb"
+          key: "key-b4bf483017fc43b2e1146d76a66932eb"
         },
         mongo: {
           database: "api_test",
@@ -92,7 +92,7 @@ export class Config {
         environment: "local",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146a4c866932eb",
+          key: "key-b4bf483017fc43b2e1146a4c866932eb",
         },
         mongo: {
           database: "api_local",
@@ -113,7 +113,7 @@ export class Config {
         environment: "dev",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb"
+          key: "key-b4bf483017fc43b2e1146d76a66932eb"
         },
         mongo: {
           database: "api_dev",
@@ -134,7 +134,7 @@ export class Config {
         environment: "staging",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb"
+          key: "key-b4bf483017fc43b2e1146d76a66932eb"
         },
         mongo: {
           database: "api_staging",
@@ -155,7 +155,7 @@ export class Config {
         environment: "prod",
         mailgun: {
           domain: "sandboxf70783866c584b1980bc071d8029e646.mailgun.org",
-          key: "b4bf483017fc43b2e1146d76a66932eb"
+          key: "key-b4bf483017fc43b2e1146d76a66932eb"
         },
         mongo: {
           database: "api_prod",

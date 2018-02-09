@@ -34,8 +34,11 @@ cd ${TIMESTAMP}
 ln -s ../../shared/node_modules node_modules
 
 # Install Node modules
-npm install --production
+npm install
 npm run update-docs
+
+# Compile Typescript
+npm run grunt
 
 # Symlink the current release
 cd ../../
@@ -45,5 +48,5 @@ ln -s releases/${TIMESTAMP} current
 # Start PM2
 cd current
 pm2 delete restful-api-${ENV} || true
-NODE_ENV=${ENV} pm2 start index.js --name restful-api-${ENV}
+NODE_ENV=${ENV} pm2 start dist/index.js --name restful-api-${ENV}
 pm2 save
