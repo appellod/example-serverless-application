@@ -10,4 +10,8 @@ beforeEach(async function() {
   await Mongoose.clear();
 });
 
-export = { config: index.config, express: index.express, mongoose: index.mongoose };
+export = {
+  config: index.config,
+  express: index.express,
+  mongoose: index.mongoose
+};

@@ -15,7 +15,7 @@ export class AuthenticationController extends Controller {
         throw new Error("Invalid access token.");
       }
 
-      SocketIo.registerSocketToUser(this.socket, user);
+      SocketIo.socketManager.registerSocketToUser(this.socket, user);
     } catch (e) {
       throw new Error("Invalid access token.");
     }
