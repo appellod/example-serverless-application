@@ -3,7 +3,7 @@ import * as AWS from "aws-sdk";
 import { Config } from "../config";
 
 export class S3 {
-  private s3: AWS.S3;
+  public s3: AWS.S3;
 
   constructor(config: Config) {
     this.s3 = new AWS.S3();
