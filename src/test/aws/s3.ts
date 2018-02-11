@@ -13,7 +13,7 @@ const chance = new Chance();
 const expect = chai.expect;
 const s3 = Aws.s3;
 
-function mockResponse(module: any, method: string, data: any) {
+function mockAwsResponse(module: any, method: string, data: any) {
   return sinon.stub(module, method).callsFake(function() {
     return {
       async promise() {
@@ -24,15 +24,26 @@ function mockResponse(module: any, method: string, data: any) {
 }
 
 describe("aws/s3.ts", function() {
+  let sandbox: sinon.SinonSandbox;
+
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function() {
+    sandbox.restore();
+  });
+
   describe("createBucket()", function() {
-    it.only("creates a bucket on S3", async function() {
+    it("creates a bucket on S3", async function() {
       const bucket = chance.hash();
 
-      const createBucket = mockResponse(s3.s3, "createBucket", {
+      const createBucket = mockAwsResponse(s3.s3, "createBucket", {
         Location: "/" + bucket
       });
       const res = await s3.createBucket(bucket);
 
+      expect(res).to.exist;
       expect(res.Location).to.eql("/" + bucket);
     });
   });
@@ -42,12 +53,13 @@ describe("aws/s3.ts", function() {
       const bucket = chance.hash();
       await s3.createBucket(bucket);
 
-      const filename = chance.hash();
+      const filename = chance.hash() + ".txt";
       const data = chance.hash();
       const base64 = new Buffer(data).toString("base64");
-      const res = await s3.createFile(bucket, filename, base64);
 
-      console.log(res);
+      const etag = chance.hash();
+      const putObject = mockAwsResponse(s3.s3, "putObject", {});
+      const res = await s3.createFile(bucket, filename, base64);
 
       expect(res).to.exist;
     });
@@ -56,8 +68,13 @@ describe("aws/s3.ts", function() {
   describe("deleteBucket()", function() {
     it("deletes a bucket from S3", async function() {
       const bucket = chance.hash();
+
+      const createBucket = mockAwsResponse(s3.s3, "createBucket", {
+        Location: "/" + bucket
+      });
       await s3.createBucket(bucket);
 
+      const deleteBucket = mockAwsResponse(s3.s3, "deleteBucket", {});
       const res = await s3.deleteBucket(bucket);
 
       expect(res).to.exist;
@@ -65,15 +82,22 @@ describe("aws/s3.ts", function() {
   });
 
   describe("deleteFile()", function() {
-    it("deletes a file from S3", async function() {
+    it.only("deletes a file from S3", async function() {
       const bucket = chance.hash();
+
+      const createBucket = mockAwsResponse(s3.s3, "createBucket", {
+        Location: "/" + bucket
+      });
       await s3.createBucket(bucket);
 
       const filename = chance.hash();
       const data = chance.hash();
       const base64 = new Buffer(data).toString("base64");
+
+      const putObject = mockAwsResponse(s3.s3, "putObject", {});
       await s3.createFile(bucket, filename, base64);
 
+      const deleteObject = mockAwsResponse(s3.s3, "deleteObject", {});
       const res = await s3.deleteFile(bucket, filename);
 
       expect(res).to.exist;
@@ -81,17 +105,27 @@ describe("aws/s3.ts", function() {
   });
 
   describe("readFile()", function() {
-    it("gets the data from a file on S3", async function() {
+    it.only("gets the data from a file on S3", async function() {
       const bucket = chance.hash();
+
+      const createBucket = mockAwsResponse(s3.s3, "createBucket", {
+        Location: "/" + bucket
+      });
       await s3.createBucket(bucket);
 
       const filename = chance.hash();
       const data = chance.hash();
-      const base64 = new Buffer(data).toString("base64");
-      await s3.createFile(bucket, filename, base64);
+      const stream = new Buffer(data);
 
+      const putObject = mockAwsResponse(s3.s3, "putObject", {});
+      await s3.createFile(bucket, filename, stream.toString("base64"));
+
+      const getObject = mockAwsResponse(s3.s3, "getObject", {
+        Data: stream
+      });
       const res = await s3.readFile(bucket, filename);
 
+      console.log(res);
       expect(res).to.exist;
     });
   });

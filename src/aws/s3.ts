@@ -56,7 +56,7 @@ export class S3 {
    */
   public async deleteFile(bucket: string, filename: string) {
     const params = {
-      Bucket: name,
+      Bucket: bucket,
       Key: filename
     };
 
