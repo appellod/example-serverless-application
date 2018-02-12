@@ -13,7 +13,7 @@ export class BearerStrategy {
   }
 
   public static async authenticate(token: string): Promise<UserDocument> {
-    // Dind user with matching access token.
+    // Find user with matching access token.
     let user = await Mongoose.User.findOne({ "tokens._id" : token }, { "tokens.$": 1 });
 
     // Make sure token is not expired.

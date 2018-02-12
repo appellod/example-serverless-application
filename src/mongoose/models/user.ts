@@ -249,7 +249,7 @@ export class User {
     };
 
     /**
-     * Resets a user"s password.
+     * Resets a user's password.
      * @param {String} resetHash The user"s resetHash.
      * @param {String} newPassword The user"s new password.
      */
