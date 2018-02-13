@@ -4,13 +4,15 @@ import * as mongoose from "mongoose";
 import * as request from "request";
 
 import { Config } from "../../config";
-import { Mongoose } from "../";
+import { Mongoose, UserDocument } from "../";
 
 export interface FileDocument extends mongoose.Document {
   [key: string]: any;
 
-  contentType?: string;
+  isPublic?: boolean;
   name?: number;
+  userIds?: mongoose.Types.ObjectId[];
+  users?: UserDocument[];
 }
 
 export interface FileModel extends mongoose.Model<FileDocument> {
@@ -28,11 +30,25 @@ export class File {
 
   private setupSchema(config: Config) {
     this.schema = new mongoose.Schema({
-      mime: String,
-      name: String
+      isPublic: {
+        type: Boolean,
+        default: false
+      },
+      name: String,
+      userIds: [{
+        type: mongoose.Types.ObjectId,
+        ref: "User"
+      }]
     }, {
       autoIndex: false,
       timestamps: true
+    });
+
+    this.schema.virtual("users", {
+      ref: "User",
+      localField: "userIds",
+      foreignField: "_id",
+      justOne: false
     });
 
     this.setupSchemaMiddleware(config);
@@ -40,11 +56,9 @@ export class File {
     this.setupSchemaInstanceMethods(config);
   }
 
-  private setupSchemaInstanceMethods(config: Config) {
-  }
+  private setupSchemaInstanceMethods(config: Config) { }
 
-  private setupSchemaMiddleware(config: Config) {
-  }
+  private setupSchemaMiddleware(config: Config) { }
 
   private setupSchemaStaticMethods(config: Config) {
     /**
