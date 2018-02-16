@@ -3,9 +3,6 @@ import * as express from "express";
 import { Mongoose, UserDocument, UserPermissions } from "../../mongoose";
 
 export class AuthenticationController {
-  /**
-   * Checks the given email address to see if it's available.
-   */
   public async checkAvailability(req: express.Request, res?: express.Response): Promise<any> {
     if (!req.query.email) {
       return { isAvailable: false };

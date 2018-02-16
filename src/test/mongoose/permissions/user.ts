@@ -2,7 +2,7 @@ import * as chai from "chai";
 import { Chance } from "chance";
 import * as nock from "nock";
 
-import { AuthToken, Mongoose, UserPermissions, UserDocument } from "../../../mongoose";
+import { Mongoose, UserPermissions, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
 const expect = chai.expect;

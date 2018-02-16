@@ -1,6 +1,6 @@
 import * as chai from "chai";
 
-import { AuthToken, Mongoose, UserDocument } from "../../../mongoose";
+import { Mongoose, UserDocument } from "../../../mongoose";
 import { AuthenticationController, Socket } from "../../../socketIo";
 
 const index = require("../../");
