@@ -13,18 +13,12 @@ const chance = new Chance();
 const expect = chai.expect;
 const s3 = Aws.s3;
 
-function mockAwsResponse(module: any, method: string, data: any) {
-  return sinon.stub(module, method).callsFake(function() {
-    return {
-      async promise() {
-        return data;
-      }
-    };
-  });
-}
-
 describe("aws/s3.ts", function() {
   let sandbox: sinon.SinonSandbox;
+
+  function mockAwsResponse(obj: any, method: string, data: any) {
+    return sandbox.stub(obj, method).callsFake(() => ({ promise: async () => data }));
+  }
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
@@ -51,6 +45,10 @@ describe("aws/s3.ts", function() {
   describe("createFile()", function() {
     it("creates a file on S3", async function() {
       const bucket = chance.hash();
+
+      const createBucket = mockAwsResponse(s3.s3, "createBucket", {
+        Location: "/" + bucket
+      });
       await s3.createBucket(bucket);
 
       const filename = chance.hash() + ".txt";
@@ -82,7 +80,7 @@ describe("aws/s3.ts", function() {
   });
 
   describe("deleteFile()", function() {
-    it.only("deletes a file from S3", async function() {
+    it("deletes a file from S3", async function() {
       const bucket = chance.hash();
 
       const createBucket = mockAwsResponse(s3.s3, "createBucket", {
@@ -105,7 +103,7 @@ describe("aws/s3.ts", function() {
   });
 
   describe("readFile()", function() {
-    it.only("gets the data from a file on S3", async function() {
+    it("gets the data from a file on S3", async function() {
       const bucket = chance.hash();
 
       const createBucket = mockAwsResponse(s3.s3, "createBucket", {
@@ -124,8 +122,6 @@ describe("aws/s3.ts", function() {
         Data: stream
       });
       const res = await s3.readFile(bucket, filename);
-
-      console.log(res);
       expect(res).to.exist;
     });
   });

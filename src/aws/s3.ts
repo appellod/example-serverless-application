@@ -75,6 +75,7 @@ export class S3 {
     };
 
     const res = await this.s3.getObject(params).promise();
-    return res.Body;
+    console.log(JSON.stringify(res));
+    return res.Body.toString();
   }
 }
