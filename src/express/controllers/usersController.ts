@@ -14,6 +14,10 @@ export class UsersController extends RestController {
     this.permissions = new UserPermissions();
   }
 
+  public async count(req: express.Request, res?: express.Response): Promise<{ count: number }> {
+    return await super.count(req, res);
+  }
+
   public async create(req: express.Request, res?: express.Response): Promise<{ user: UserDocument }> {
     const results = await super.create(req, res);
     const user = <UserDocument> results.record;

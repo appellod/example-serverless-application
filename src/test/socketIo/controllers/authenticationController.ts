@@ -64,4 +64,20 @@ describe("socketIo/controllers/authenticationController.ts", function() {
       });
     });
   });
+
+  describe("unauthenticate", function() {
+    it("removes the user from the socket", async function() {
+      const user = await Mongoose.User.mock();
+      const { token } = await user.login();
+
+      const data = {
+        token: token._id
+      };
+      await authenticationController.authenticate(data);
+
+      await authenticationController.unauthenticate(null);
+
+      expect(socket.user).to.been.null;
+    });
+  });
 });

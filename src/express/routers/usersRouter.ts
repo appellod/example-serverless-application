@@ -31,7 +31,11 @@ export class UsersRouter {
      *
      * @apiSuccess {[User](#api-Models-User)[]} users Array of users matching the criteria.
      */
-    router.get("/users", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.find));
+    router.get(
+      "/users",
+      passport.authenticate("bearer", { session: false }),
+      Express.handler.call(controller, controller.find)
+    );
 
     /**
      * @api {post} /users Create User
@@ -43,7 +47,27 @@ export class UsersRouter {
      *
      * @apiSuccess {[User](#api-Models-User)} user The new user.
      */
-    router.post("/users", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.create));
+    router.post(
+      "/users",
+      passport.authenticate("bearer", { session: false }),
+      Express.handler.call(controller, controller.create)
+    );
+
+    /**
+     * @api {get} /users Get Users Count
+     * @apiName GetUsersCount
+     * @apiGroup Users
+     * @apiDescription Returns the number of Users matching the given criteria.
+     *
+     * @apiParam {Object} where The where clause for the query.
+     *
+     * @apiSuccess {Number} count The number of Users matching the given criteria.
+     */
+    router.get(
+      "/users/count",
+      passport.authenticate("bearer", { session: false }),
+      Express.handler.call(controller, controller.count)
+    );
 
     /**
      * @api {get} /users/:id Get User
@@ -55,7 +79,11 @@ export class UsersRouter {
      *
      * @apiSuccess {[User](#api-Models-User)} user The user matching the given ID.
      */
-    router.get("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.findOne));
+    router.get(
+      "/users/:id",
+      passport.authenticate("bearer", { session: false }),
+      Express.handler.call(controller, controller.findOne)
+    );
 
     /**
      * @api {put} /users/:id Update User
@@ -67,7 +95,11 @@ export class UsersRouter {
      *
      * @apiSuccess {[User](#api-Models-User)} user The updated user.
      */
-    router.put("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.update));
+    router.put(
+      "/users/:id",
+      passport.authenticate("bearer", { session: false }),
+      Express.handler.call(controller, controller.update)
+    );
 
     /**
      * @api {delete} /users/:id Remove User
@@ -77,6 +109,10 @@ export class UsersRouter {
      *
      * @apiParam {String} :id The ID of the user.
      */
-    router.delete("/users/:id", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.remove));
+    router.delete(
+      "/users/:id",
+      passport.authenticate("bearer", { session: false }),
+      Express.handler.call(controller, controller.remove)
+    );
   }
 }

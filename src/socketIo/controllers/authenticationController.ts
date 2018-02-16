@@ -20,4 +20,8 @@ export class AuthenticationController extends Controller {
       throw new Error("Invalid access token.");
     }
   }
+
+  public async unauthenticate(data: any) {
+    SocketIo.socketManager.removeUserFromSocket(this.socket);
+  }
 }

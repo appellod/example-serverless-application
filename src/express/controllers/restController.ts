@@ -7,6 +7,17 @@ export abstract class RestController {
   protected Model: mongoose.Model<mongoose.Document>;
   protected permissions: Permissions;
 
+  public async count(req: express.Request, res?: express.Response): Promise<{ count: number }> {
+    const where = await this.permissions.where(req.query.where, req.user);
+
+    const count = await this.Model
+      .find(where)
+      .count()
+      .exec();
+
+    return { count };
+  }
+
   public async create(req: express.Request, res?: express.Response): Promise<any> {
     const record = await this.permissions.create(req.body, req.user);
     return { record };
