@@ -40,13 +40,16 @@ export class Token {
       }
     }, {
       autoIndex: false,
-      timestamps: true
+      timestamps: true,
+      toJSON : { virtuals : true },
+      toObject : { virtuals: true }
     });
 
     this.schema.virtual("user", {
       ref: "User",
       localField: "userId",
-      foreignField: "_id"
+      foreignField: "_id",
+      justOne: true
     });
 
     this.setupSchemaMiddleware(config);
