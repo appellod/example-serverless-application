@@ -18,6 +18,19 @@ describe("express/controllers/usersController.ts", function() {
     user = await Mongoose.User.mock({ level: 1 });
   });
 
+  describe("count()", function() {
+    it("returns the number of users matching the criteria", async function() {
+      const req = {
+        query: {},
+        user
+      } as express.Request;
+
+      const res = await usersController.count(req);
+
+      expect(res.count).to.eql(1);
+    });
+  });
+
   describe("create()", function() {
     it("creates a new user", async function() {
       const req = {

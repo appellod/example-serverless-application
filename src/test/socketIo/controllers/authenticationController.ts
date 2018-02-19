@@ -1,6 +1,6 @@
 import * as chai from "chai";
 
-import { AuthToken, Mongoose, UserDocument } from "../../../mongoose";
+import { Mongoose, UserDocument } from "../../../mongoose";
 import { AuthenticationController, Socket } from "../../../socketIo";
 
 const index = require("../../");
@@ -62,6 +62,22 @@ describe("socketIo/controllers/authenticationController.ts", function() {
 
         expect(socket.user.id).to.eql(user.id);
       });
+    });
+  });
+
+  describe("unauthenticate", function() {
+    it("removes the user from the socket", async function() {
+      const user = await Mongoose.User.mock();
+      const { token } = await user.login();
+
+      const data = {
+        token: token._id
+      };
+      await authenticationController.authenticate(data);
+
+      await authenticationController.unauthenticate(null);
+
+      expect(socket.user).to.been.null;
     });
   });
 });

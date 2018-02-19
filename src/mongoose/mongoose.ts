@@ -1,9 +1,10 @@
 import * as mongoose from "mongoose";
 
 import { Config } from "../config";
-import { UserModel, User } from "./";
+import { TokenModel, Token, UserModel, User } from "./";
 
 export class Mongoose {
+  public static Token: TokenModel;
   public static User: UserModel;
 
   constructor(config: Config) {
@@ -20,10 +21,12 @@ export class Mongoose {
       if (config.environment !== "test") console.log("Mongoose connection successful.");
     });
 
+    Mongoose.Token = new Token(config).model;
     Mongoose.User = new User(config).model;
   }
 
   public static async clear() {
+    await Mongoose.Token.remove({});
     await Mongoose.User.remove({});
   }
 }

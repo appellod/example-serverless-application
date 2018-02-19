@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import * as nock from "nock";
 
-import { AuthToken, Mongoose, UserDocument } from "../../../mongoose";
+import { Mongoose, UserDocument, TokenDocument } from "../../../mongoose";
 
 const index = require("../../");
 const expect = chai.expect;
@@ -33,26 +33,37 @@ describe("mongoose/models/user.ts", function() {
       user = await Mongoose.User.resetPassword(user.resetHash, "password");
       expect(user.resetHash).to.be.undefined;
     });
+
+    it("removes all the user's access token", async function() {
+      const token = await Mongoose.Token.create({ userId: user._id });
+
+      user = await Mongoose.User.resetPassword(user.resetHash, "password");
+
+      const count = await Mongoose.Token.count({ userId: user._id });
+      expect(count).to.eql(0);
+    });
   });
 
   describe("schema.methods.login()", function() {
-    let token: AuthToken;
+    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
       user = await Mongoose.User.mock();
     });
 
-    it("adds an access token to the user's tokens array", async function() {
+    it("adds an access token associated with the user", async function() {
       ({ token, user } = await user.login());
 
-      expect(user.tokens.length).to.eq(1);
-      expect(user.tokens[0]._id.toString()).to.eq(token._id.toString());
+      const tokens = await Mongoose.Token.find({ userId: user._id });
+
+      expect(tokens.length).to.eq(1);
+      expect(tokens[0].id).to.eq(token.id);
     });
   });
 
   describe("schema.methods.logout()", function() {
-    let token: AuthToken;
+    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -62,24 +73,9 @@ describe("mongoose/models/user.ts", function() {
 
     it("removes the token that was used for the API request", async function() {
       user = await user.logout(token._id);
-      expect(user.tokens.length).to.eq(0);
-    });
-  });
 
-  describe("schema.methods.refreshToken()", function() {
-    let token: AuthToken;
-    let user: UserDocument;
-
-    beforeEach(async function() {
-      user = await Mongoose.User.mock();
-      ({ token, user } = await user.login());
-    });
-
-    it("updates the token's expiresAt", async function() {
-      const expiresAt = user.tokens[0].expiresAt;
-
-      user = await user.refreshToken(token._id);
-      expect(user.tokens[0].expiresAt).to.be.above(expiresAt.getTime());
+      const count = await Mongoose.Token.count({ userId: user._id });
+      expect(count).to.eq(0);
     });
   });
 

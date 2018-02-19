@@ -3,7 +3,7 @@ import * as express from "express";
 import * as nock from "nock";
 
 import { AuthenticationController } from "../../../express";
-import { AuthToken, Mongoose, UserDocument } from "../../../mongoose";
+import { TokenDocument, Mongoose, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 
@@ -116,7 +116,7 @@ describe("express/controllers/authenticationController.ts", function() {
   });
 
   describe("logout()", function() {
-    let token: AuthToken;
+    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -137,7 +137,7 @@ describe("express/controllers/authenticationController.ts", function() {
   });
 
   describe("requestPasswordReset()", function() {
-    let token: AuthToken;
+    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -166,7 +166,7 @@ describe("express/controllers/authenticationController.ts", function() {
   });
 
   describe("resetPassword()", function() {
-    let token: AuthToken;
+    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {

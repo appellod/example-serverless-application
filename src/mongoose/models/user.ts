@@ -4,16 +4,11 @@ import * as mongoose from "mongoose";
 import * as request from "request";
 
 import { Config } from "../../config";
-import { Mongoose } from "../";
+import { Mongoose, TokenDocument } from "../";
 
 export enum UserLevel {
   Default,
   Admin
-}
-
-export interface AuthToken {
-  _id: mongoose.Schema.Types.ObjectId;
-  expiresAt: Date;
 }
 
 export interface UserDocument extends mongoose.Document {
@@ -23,18 +18,15 @@ export interface UserDocument extends mongoose.Document {
   level?: number;
   password?: string;
   resetHash?: string;
-  tokens?: AuthToken[];
 
   isValidPassword(password: string): boolean;
-  login(): Promise<{ token: AuthToken, user: UserDocument }>;
+  login(): Promise<{ token: TokenDocument, user: UserDocument }>;
   logout(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument>;
-  refreshToken(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument>;
   requestPasswordReset(): Promise<UserDocument>;
 }
 
 export interface UserModel extends mongoose.Model<UserDocument> {
   getPasswordHash(password: string): string;
-  getTokenExpirationDate(): Date;
   mock(params?: any): Promise<UserDocument>;
   resetPassword(resetHash: string, newPassword: string): Promise<UserDocument>;
 }
@@ -65,10 +57,7 @@ export class User {
         required: true,
         type: String
       },
-      resetHash: String,
-      tokens: [{
-        expiresAt: Date
-      }]
+      resetHash: String
     }, {
       autoIndex: false,
       timestamps: true
@@ -93,22 +82,13 @@ export class User {
     /**
      * Logs a user in.
      */
-    this.schema.methods.login = async function(): Promise<{ token: AuthToken, user: UserDocument }> {
-      const user = await Mongoose.User.findOneAndUpdate({
-        _id: this._id
-      }, {
-        $push: {
-          tokens: {
-            expiresAt: Mongoose.User.getTokenExpirationDate()
-          }
-        }
-      }, {
-        new: true
+    this.schema.methods.login = async function(): Promise<{ token: TokenDocument, user: UserDocument }> {
+      const token = await Mongoose.Token.create({
+        expiresAt: Mongoose.Token.getExpirationDate(),
+        userId: this._id
       });
 
-      const token = user.tokens[user.tokens.length - 1];
-
-      return { token, user };
+      return { token, user: this };
     };
 
     /**
@@ -120,36 +100,9 @@ export class User {
         throw new Error("A valid access token must be used for logout.");
       }
 
-      const user = await Mongoose.User.findOneAndUpdate({
-        _id: this._id
-      }, {
-        $pull: {
-          tokens: {
-            _id: token
-          }
-        }
-      }, {
-        new: true
-      });
+      await Mongoose.Token.remove({ _id: token });
 
-      return user;
-    };
-
-    /**
-     * Refreshes the given token"s expiration date.
-     * @param {String} token The token"s ID.
-     */
-    this.schema.methods.refreshToken = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument> {
-      const user = await Mongoose.User.findOneAndUpdate({
-        "_id": this._id,
-        "tokens._id": token
-      }, {
-        "tokens.$.expiresAt": Mongoose.User.getTokenExpirationDate()
-      }, {
-        new: true
-      });
-
-      return user;
+      return this;
     };
 
     /**
@@ -225,16 +178,6 @@ export class User {
     };
 
     /**
-     * Gets the expiration date for access tokens.
-     */
-    this.schema.statics.getTokenExpirationDate = function(): Date {
-      const expiration = new Date();
-      expiration.setDate(expiration.getDate() + 30);
-
-      return expiration;
-    };
-
-    /**
      * Creates a record with randomized required parameters if not specified.
      * @param {Object} params The parameters to initialize the record with.
      */
@@ -249,9 +192,9 @@ export class User {
     };
 
     /**
-     * Resets a user's password.
-     * @param {String} resetHash The user"s resetHash.
-     * @param {String} newPassword The user"s new password.
+     * Resets a user"s password.
+     * @param {String} resetHash The user's resetHash.
+     * @param {String} newPassword The user's new password.
      */
     this.schema.statics.resetPassword = async function(resetHash: string, newPassword: string): Promise<UserDocument> {
       if (!resetHash || !newPassword) {
@@ -262,13 +205,14 @@ export class User {
         resetHash
       }, {
         password: Mongoose.User.getPasswordHash(newPassword),
-        tokens: [],
         $unset: {
           resetHash: true
         }
       }, {
         new: true
       });
+
+      await Mongoose.Token.remove({ userId: user._id });
 
       return user;
     };

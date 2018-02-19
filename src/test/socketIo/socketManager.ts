@@ -93,4 +93,18 @@ describe("socketIo/socketManager.ts", function() {
       expect(socketManager.sockets).to.contain(otherSocket);
     });
   });
+
+  describe("removeUserFromSocket()", function() {
+    it("removes the user from the socket", async function() {
+      socketManager.addSocket(socket);
+
+      const user = await Mongoose.User.mock();
+      socketManager.registerSocketToUser(socket, user);
+
+      socketManager.removeUserFromSocket(socket);
+
+      expect(socket.user).to.be.null;
+      expect(socketManager.sockets[0].user).to.be.null;
+    });
+  });
 });

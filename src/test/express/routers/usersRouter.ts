@@ -29,6 +29,18 @@ describe("express/routes/usersRouter.ts", function() {
     });
   });
 
+  describe("GET /users/count", function() {
+    it("returns a success response", async function() {
+      const method = "get";
+      const path = "/users/count";
+      const params: any = null;
+
+      const res = await apiHelper.request(method, path, params, admin);
+
+      expect(res.status).to.eq(200);
+    });
+  });
+
   describe("POST /users", function() {
     it("returns a success response", async function() {
       const method = "post";

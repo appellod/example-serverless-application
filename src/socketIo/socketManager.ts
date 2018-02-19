@@ -60,4 +60,12 @@ export class SocketManager {
       this.sockets.splice(index, 1);
     }
   }
+
+  /**
+   * Removes the association to the user from the socket.
+   * @param socket The socket.
+   */
+  public removeUserFromSocket(socket: Socket) {
+    socket.user = null;
+  }
 }

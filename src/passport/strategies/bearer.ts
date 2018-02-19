@@ -2,7 +2,7 @@ import * as passport from "passport";
 import { Strategy } from "passport-http-bearer";
 
 import { Config } from "../../config";
-import { Mongoose, UserDocument } from "../../mongoose";
+import { Mongoose, UserDocument, TokenDocument } from "../../mongoose";
 
 export class BearerStrategy {
   constructor(config: Config) {
@@ -12,19 +12,15 @@ export class BearerStrategy {
     }));
   }
 
-  public static async authenticate(token: string): Promise<UserDocument> {
-    // Find user with matching access token.
-    let user = await Mongoose.User.findOne({ "tokens._id" : token }, { "tokens.$": 1 });
+  public static async authenticate(tokenId: string): Promise<UserDocument> {
+    const token = await Mongoose.Token.findOne({ _id: tokenId });
 
     // Make sure token is not expired.
-    if (!user || user.tokens[0].expiresAt < new Date()) {
+    if (!token || token.isExpired()) {
         return null;
     }
 
-    // If token is not expired, authenticate user.
-    user = await Mongoose.User.findOne({ _id: user._id });
-    await user.refreshToken(token);
-
-    return user;
+    token.refresh();
+    return Mongoose.User.findOne({ _id: token.userId });
   }
 }
