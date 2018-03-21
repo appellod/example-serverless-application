@@ -1,4 +1,4 @@
-import * as chai from "chai";
+import { expect } from "chai";
 import * as express from "express";
 import * as nock from "nock";
 
@@ -8,7 +8,6 @@ import { TokenDocument, Mongoose, UserDocument } from "../../../mongoose";
 const index = require("../../");
 
 const authenticationController = new AuthenticationController();
-const expect = chai.expect;
 
 describe("express/controllers/authenticationController.ts", function() {
   describe("checkAvailability()", function() {

@@ -1,11 +1,10 @@
-import * as chai from "chai";
+import { expect } from "chai";
 import { Chance } from "chance";
 import * as nock from "nock";
 
 import { Mongoose, UserPermissions, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
-const expect = chai.expect;
 const index = require("../../");
 const permissions = new UserPermissions();
 
@@ -21,13 +20,12 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           level: 1
         });
 
-        const record = <UserDocument> await permissions.create(params, user);
+        const record = <UserDocument> await permissions.create(params, {}, user);
 
         expect(record.email).to.eq(params.email);
         expect(record.level).to.eq(0);
         expect(record.password).to.not.eq(params.password);
         expect(record.resetHash).to.be.undefined;
-        expect(record.tokens).to.be.undefined;
       });
     });
 
@@ -42,7 +40,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
         });
 
         try {
-          const record = <UserDocument> await permissions.create(params, user);
+          const record = <UserDocument> await permissions.create(params, {}, user);
         } catch (e) {
           expect(e.message).to.eql("User does not have permission to perform this action.");
           return;
@@ -73,7 +71,6 @@ describe("mongoose/permissions/userPermissions.ts", function() {
         expect(record.level).to.exist;
         expect(record.password).to.be.undefined;
         expect(record.resetHash).to.be.undefined;
-        expect(record.tokens).to.be.undefined;
       });
     });
 
@@ -87,7 +84,6 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           expect(record.level).to.exist;
           expect(record.password).to.be.undefined;
           expect(record.resetHash).to.be.undefined;
-          expect(record.tokens).to.be.undefined;
         });
       });
 
@@ -104,7 +100,6 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           expect(record.level).to.be.undefined;
           expect(record.password).to.be.undefined;
           expect(record.resetHash).to.be.undefined;
-          expect(record.tokens).to.be.undefined;
         });
       });
     });
@@ -174,13 +169,12 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           level: 1
         });
 
-        record = <UserDocument> await permissions.update(record, params, user);
+        record = <UserDocument> await permissions.update(record, params, {}, user);
 
         expect(record.email).to.eq(params.email);
         expect(record.level).to.eq(params.level);
         expect(record.password).to.be.undefined;
         expect(record.resetHash).to.be.undefined;
-        expect(record.tokens).to.be.undefined;
       });
     });
 
@@ -192,13 +186,12 @@ describe("mongoose/permissions/userPermissions.ts", function() {
             level: record.level + 1
           };
 
-          record = <UserDocument> await permissions.update(record, params, record);
+          record = <UserDocument> await permissions.update(record, params, {}, record);
 
           expect(record.email).to.eq(params.email);
           expect(record.level).to.eq(params.level - 1);
           expect(record.password).to.be.undefined;
           expect(record.resetHash).to.be.undefined;
-          expect(record.tokens).to.be.undefined;
         });
       });
 
@@ -213,7 +206,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           });
 
           try {
-            record = <UserDocument> await permissions.update(record, params, user);
+            record = <UserDocument> await permissions.update(record, params, {}, user);
           } catch (e) {
             expect(e.message).to.eql("User does not have permission to perform this action.");
             return;

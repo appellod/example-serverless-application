@@ -1,4 +1,4 @@
-import * as chai from "chai";
+import { expect } from "chai";
 import * as nock from "nock";
 
 import { Mongoose, UserDocument } from "../../../mongoose";
@@ -7,7 +7,6 @@ import { ApiHelper } from "../apiHelper";
 const index = require("../../");
 
 const apiHelper = new ApiHelper(index.config);
-const expect = chai.expect;
 
 describe("express/routes/authenticationRouter.ts", function() {
   let user: UserDocument;

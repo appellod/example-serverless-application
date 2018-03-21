@@ -1,12 +1,10 @@
-import * as chai from "chai";
+import { expect } from "chai";
 import * as io from "socket.io-client";
 
 import { Mongoose, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 const config = index.config;
-
-const expect = chai.expect;
 
 describe("socketIo/authentication.ts", function() {
   describe("authenticate", function() {

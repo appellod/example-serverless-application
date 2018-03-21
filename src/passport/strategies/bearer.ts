@@ -7,7 +7,12 @@ import { Mongoose, UserDocument, TokenDocument } from "../../mongoose";
 export class BearerStrategy {
   constructor(config: Config) {
     passport.use(new Strategy(async (token, done) => {
-      const user = await BearerStrategy.authenticate(token);
+      let user: UserDocument;
+
+      try {
+        user = await BearerStrategy.authenticate(token);
+      } catch (e) {}
+
       return done(null, user);
     }));
   }

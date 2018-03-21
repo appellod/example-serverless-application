@@ -2,6 +2,7 @@ module.exports = function(grunt) {
   "use strict";
 
   grunt.initConfig({
+    clean: ['./dist'],
     copy: {
       build: {
         files: [
@@ -24,6 +25,13 @@ module.exports = function(grunt) {
             dest: "./dist/test"
           }
         ]
+      }
+    },
+    express: {
+      dev: {
+        options: {
+          script: "dist/index.js"
+        }
       }
     },
     ts: {
@@ -56,27 +64,23 @@ module.exports = function(grunt) {
         files: ["src/\*\*/\*.ts"],
         tasks: ["ts"]
       }
-    },
-    express: {
-      dev: {
-        options: {
-          script: "dist/index.js"
-        }
-      }
     }
   });
 
+  grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-express-server");
   grunt.loadNpmTasks("grunt-ts");
 
   grunt.registerTask("default", [
+    "clean",
     "copy",
     "ts"
   ]);
 
   grunt.registerTask("serve", [
+    "clean",
     "copy",
     "ts",
     "express:dev",

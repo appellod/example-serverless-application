@@ -1,4 +1,4 @@
-import * as chai from "chai";
+import { expect } from "chai";
 import { Chance } from "chance";
 
 import { Mongoose, UserDocument } from "../../../mongoose";
@@ -8,7 +8,6 @@ const index = require("../../");
 
 const apiHelper = new ApiHelper(index.config);
 const chance = new Chance();
-const expect = chai.expect;
 
 describe("express/routes/usersRouter.ts", function() {
   let admin: UserDocument;

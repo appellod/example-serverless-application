@@ -3,44 +3,44 @@ import * as express from "express";
 import { Mongoose, UserDocument, UserModel, UserPermissions } from "../../mongoose";
 import { RestController } from "./";
 
-export class UsersController extends RestController {
-  protected Model: UserModel;
-  protected permissions: UserPermissions;
+export class UsersController {
+  private restController: RestController;
 
   constructor() {
-    super();
-
-    this.Model = Mongoose.User;
-    this.permissions = new UserPermissions();
+    this.restController = new RestController(Mongoose.User, new UserPermissions());
   }
 
   public async count(req: express.Request, res?: express.Response): Promise<{ count: number }> {
-    return await super.count(req, res);
+    return await this.restController.count(req.query, req.user);
   }
 
   public async create(req: express.Request, res?: express.Response): Promise<{ user: UserDocument }> {
-    const results = await super.create(req, res);
+    const results = await this.restController.create(req.body, {}, req.user);
     const user = <UserDocument> results.record;
 
     return { user };
   }
 
   public async find(req: express.Request, res?: express.Response): Promise<{ users: UserDocument[] }> {
-    const results = await super.find(req, res);
+    const results = await this.restController.find(req.query, req.user);
     const users = <UserDocument[]> results.records;
 
     return { users };
   }
 
   public async findOne(req: express.Request, res?: express.Response): Promise<{ user: UserDocument }> {
-    const results = await super.findOne(req, res);
+    const results = await this.restController.findOne(req.params, req.user);
     const user = <UserDocument> results.record;
 
     return { user };
   }
 
+  public async remove(req: express.Request, res?: express.Response): Promise<any> {
+    return this.restController.remove(req.params, req.user);
+  }
+
   public async update(req: express.Request, res?: express.Response): Promise<{ user: UserDocument }> {
-    const results = await super.update(req, res);
+    const results = await this.restController.update(req.params, req.body, {}, req.user);
     const user = <UserDocument> results.record;
 
     return { user };

@@ -8,7 +8,7 @@ import * as morgan from "morgan";
 import * as path from "path";
 
 import { Config } from "../config";
-import { AuthenticationRouter, UsersRouter } from "./";
+import { AuthenticationRouter, GroupsRouter, UsersRouter } from "./";
 import { mongoSessionStoreMiddleware, queryStringJsonParserMiddleware } from "./";
 
 export class Express {
@@ -39,7 +39,7 @@ export class Express {
     this.app.use(queryStringJsonParserMiddleware);
 
     this.app.use(express.static(path.resolve(__dirname, "views")));
-    this.setupRoutes();
+    this.setupRouters();
 
     this.server = this.app.listen(config.server.port, (err: any) => {
       if (err) console.error(err);
@@ -58,19 +58,26 @@ export class Express {
         const results = await fn.call(this, req, res);
         res.json(results);
       } catch (e) {
-        res.status(400).json({ error: e.message });
+        let code = 400;
+
+        if (e.message === "User does not have permission to perform this action.") {
+          code = 403;
+        }
+
+        res.status(code).json({ error: e.message });
       }
     };
   }
 
   /**
-   * Loads route files and registers them with Express.
+   * Load routers and register them with Express.
    */
-  private setupRoutes() {
+  private setupRouters() {
     const router = express.Router();
     this.app.use("/v1", router);
 
-    const authenticationRoutes = new AuthenticationRouter(router);
-    const usersRoutes = new UsersRouter(router);
+    const authenticationRouter = new AuthenticationRouter(router);
+    const groupsRouter = new GroupsRouter(router);
+    const usersRouter = new UsersRouter(router);
   }
 }

@@ -1,7 +1,5 @@
-import * as bcrypt from "bcrypt-nodejs";
 import { Chance } from "chance";
 import * as mongoose from "mongoose";
-import * as request from "request";
 
 import { Config } from "../../config";
 import { Mongoose, UserDocument } from "../";
@@ -10,8 +8,8 @@ export interface TokenDocument extends mongoose.Document {
   [key: string]: any;
 
   expiresAt?: Date;
-  user: UserDocument;
-  userId?: mongoose.Types.ObjectId;
+  user?: UserDocument;
+  userId: mongoose.Types.ObjectId;
 
   isExpired(): boolean;
   refresh(): TokenDocument;
@@ -40,16 +38,7 @@ export class Token {
       }
     }, {
       autoIndex: false,
-      timestamps: true,
-      toJSON : { virtuals : true },
-      toObject : { virtuals: true }
-    });
-
-    this.schema.virtual("user", {
-      ref: "User",
-      localField: "userId",
-      foreignField: "_id",
-      justOne: true
+      timestamps: true
     });
 
     this.setupSchemaMiddleware(config);

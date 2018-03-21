@@ -1,4 +1,4 @@
-import * as chai from "chai";
+import { expect } from "chai";
 import { Chance } from "chance";
 import * as express from "express";
 
@@ -8,7 +8,6 @@ import { Mongoose, UserDocument } from "../../../mongoose";
 const index = require("../../");
 
 const chance = new Chance();
-const expect = chai.expect;
 const usersController = new UsersController();
 
 describe("express/controllers/usersController.ts", function() {

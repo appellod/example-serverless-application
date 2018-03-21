@@ -1,9 +1,10 @@
 import * as mongoose from "mongoose";
 
 import { Config } from "../config";
-import { TokenModel, Token, UserModel, User } from "./";
+import { GroupModel, Group, TokenModel, Token, UserModel, User } from "./";
 
 export class Mongoose {
+  public static Group: GroupModel;
   public static Token: TokenModel;
   public static User: UserModel;
 
@@ -21,12 +22,26 @@ export class Mongoose {
       if (config.environment !== "test") console.log("Mongoose connection successful.");
     });
 
+    Mongoose.Group = new Group(config).model;
     Mongoose.Token = new Token(config).model;
     Mongoose.User = new User(config).model;
   }
 
   public static async clear() {
+    await Mongoose.Group.remove({});
     await Mongoose.Token.remove({});
     await Mongoose.User.remove({});
   }
+
+  // public static removeUnpopulatedValuesFromArray(documents: mongoose.Document[], populate: any) {
+  //   return documents.map((document) => this.removeUnpopulatedValuesFromDocument(document, populate));
+  // }
+
+  // public static removeUnpopulatedValuesFromDocument(document: mongoose.Document, populate: any): mongoose.Document {
+  //   Object.keys(document).forEach(key => {
+      
+  //   });
+    
+  //   return document;
+  // }
 }

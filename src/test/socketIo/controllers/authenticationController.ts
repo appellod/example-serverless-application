@@ -1,11 +1,9 @@
-import * as chai from "chai";
+import { expect } from "chai";
 
 import { Mongoose, UserDocument } from "../../../mongoose";
 import { AuthenticationController, Socket } from "../../../socketIo";
 
 const index = require("../../");
-
-const expect = chai.expect;
 
 describe("socketIo/controllers/authenticationController.ts", function() {
   let authenticationController: AuthenticationController;
