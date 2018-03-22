@@ -32,16 +32,4 @@ export class Mongoose {
     await Mongoose.Token.remove({});
     await Mongoose.User.remove({});
   }
-
-  // public static removeUnpopulatedValuesFromArray(documents: mongoose.Document[], populate: any) {
-  //   return documents.map((document) => this.removeUnpopulatedValuesFromDocument(document, populate));
-  // }
-
-  // public static removeUnpopulatedValuesFromDocument(document: mongoose.Document, populate: any): mongoose.Document {
-  //   Object.keys(document).forEach(key => {
-      
-  //   });
-    
-  //   return document;
-  // }
 }
