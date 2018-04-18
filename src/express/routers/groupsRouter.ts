@@ -152,7 +152,7 @@ export class GroupsRouter {
     );
 
     /**
-     * @api {delete} /groups/:id/userIds/:userIds Add User IDs
+     * @api {delete} /groups/:id/userIds/:userIds Remove User IDs
      * @apiName RemoveUserIDs
      * @apiGroup Groups
      * @apiDescription Removes the given userIds.
