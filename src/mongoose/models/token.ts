@@ -33,8 +33,8 @@ export class Token {
     this.schema = new mongoose.Schema({
       expiresAt: Date,
       userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
       }
     }, {
       autoIndex: false,

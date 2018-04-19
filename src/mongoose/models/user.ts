@@ -132,13 +132,13 @@ export class User {
       try {
         await new Promise((res, rej) => {
           request.post({
-            url,
             form: {
               from: config.passwordReset.from,
-              to: user.email,
+              html,
               subject: "Reset Password",
-              html
-            }
+              to: user.email
+            },
+            url
           }, function(err, response, body) {
             return err ? rej(err) : res(body);
           });
@@ -204,10 +204,10 @@ export class User {
       const user = await Mongoose.User.findOneAndUpdate({
         resetHash
       }, {
-        password: Mongoose.User.getPasswordHash(newPassword),
         $unset: {
           resetHash: true
-        }
+        },
+        password: Mongoose.User.getPasswordHash(newPassword)
       }, {
         new: true
       });

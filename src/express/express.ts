@@ -8,8 +8,20 @@ import * as morgan from "morgan";
 import * as path from "path";
 
 import { Config } from "../config";
-import { AuthenticationRouter, GroupsRouter, UsersRouter } from "./";
+import {
+  AuthenticationRouter,
+  GroupsRouter,
+  UsersRouter,
+  CompaniesRouter,
+  ContactsRouter,
+  TasksRouter,
+  BuyersNeedsRouter,
+  ContactGroupsRouter,
+  PropertiesRouter,
+  OwnershipsRouter
+} from "./";
 import { mongoSessionStoreMiddleware, queryStringJsonParserMiddleware } from "./";
+import { ContactGroup } from "../mongoose";
 
 export class Express {
   public app: express.Application;
@@ -77,7 +89,14 @@ export class Express {
     this.app.use("/v1", router);
 
     const authenticationRouter = new AuthenticationRouter(router);
+    const buyersNeedsRouter = new BuyersNeedsRouter(router);
+    const companiesRouter = new CompaniesRouter(router);
+    const contactsRouter = new ContactsRouter(router);
+    const contactGroupsRouter = new ContactGroupsRouter(router);
     const groupsRouter = new GroupsRouter(router);
+    const ownershipsRouter = new OwnershipsRouter(router);
+    const propertiesRouter = new PropertiesRouter(router);
+    const tasksRouter = new TasksRouter(router);
     const usersRouter = new UsersRouter(router);
   }
 }
