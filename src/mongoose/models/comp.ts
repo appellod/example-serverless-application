@@ -27,6 +27,7 @@ export interface CompDocument extends mongoose.Document {
   leaseType?: string;
   listingId?: string;
   mortgageAmount?: number;
+  name?: string;
   netOperatingIncome?: number;
   occupancyAtClose?: number;
   ownerId?: string;
@@ -42,6 +43,7 @@ export interface CompDocument extends mongoose.Document {
   squareFootage?: number;
   tenancyAtClose?: string;
   termRemainingAtClose?: string;
+  type?: string;
   units?: number;
 }
 
@@ -80,6 +82,7 @@ export class Comp {
       leaseType: String,
       listingId: String,
       mortgageAmount: Number,
+      name: String,
       netOperatingIncome: Number,
       occupancyAtClose: Number,
       ownerId: {
@@ -98,6 +101,7 @@ export class Comp {
       squareFootage: Number,
       tenancyAtClose: String,
       termRemainingAtClose: String,
+      type: String,
       units: Number
     }, {
       autoIndex: false,

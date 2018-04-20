@@ -31,6 +31,7 @@ export class CompPermissions extends Permissions {
       "leaseType",
       "listingId",
       "mortgageAmount",
+      "name",
       "netOperatingIncome",
       "occupancyAtClose",
       "priceType",
@@ -45,6 +46,7 @@ export class CompPermissions extends Permissions {
       "squareFootage",
       "tenancyAtClose",
       "termRemainingAtClose",
+      "type",
       "units"
     ];
 
@@ -80,6 +82,7 @@ export class CompPermissions extends Permissions {
       "leaseType",
       "listingId",
       "mortgageAmount",
+      "name",
       "netOperatingIncome",
       "occupancyAtClose",
       "ownerId",
@@ -95,6 +98,7 @@ export class CompPermissions extends Permissions {
       "squareFootage",
       "tenancyAtClose",
       "termRemainingAtClose",
+      "type",
       "units"
     ];
 
@@ -127,6 +131,7 @@ export class CompPermissions extends Permissions {
       "leaseType",
       "listingId",
       "mortgageAmount",
+      "name",
       "netOperatingIncome",
       "occupancyAtClose",
       "priceType",
@@ -141,6 +146,7 @@ export class CompPermissions extends Permissions {
       "squareFootage",
       "tenancyAtClose",
       "termRemainingAtClose",
+      "type",
       "units"
     ];
 
