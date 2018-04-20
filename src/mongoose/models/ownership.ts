@@ -12,6 +12,7 @@ export interface OwnershipDocument extends mongoose.Document {
   contactId?: string;
   contactRole?: string;
   isPrimaryContact?: boolean;
+  ownerId?: string;
   propertyId?: string;
 }
 
@@ -35,6 +36,10 @@ export class Ownership {
       contactId: String,
       contactRole: String,
       isPrimaryContact: Boolean,
+      ownerId: {
+        ref: "User",
+        type: mongoose.Schema.Types.ObjectId
+      },
       propertyId: String
     }, {
       autoIndex: false,

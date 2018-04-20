@@ -11,6 +11,7 @@ export interface ContactGroupDocument extends mongoose.Document {
   memberIds?: mongoose.Types.ObjectId[];
   name?: string;
   numberOfMembers?: number;
+  ownerId?: string;
 }
 
 export interface ContactGroupModel extends mongoose.Model<ContactGroupDocument> {
@@ -29,12 +30,16 @@ export class ContactGroup {
   private setupSchema(config: Config) {
     this.schema = new mongoose.Schema({
       createdDate: String,
-      memberIds: {
+      memberIds: [{
         ref: "Contact",
         type: mongoose.Schema.Types.ObjectId
-      },
+      }],
       name: String,
-      numberOfMembers: Number
+      numberOfMembers: Number,
+      ownerId: {
+        ref: "User",
+        type: mongoose.Schema.Types.ObjectId
+      }
     }, {
       autoIndex: false,
       timestamps: true

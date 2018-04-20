@@ -15,7 +15,7 @@ describe("express/routes/buyersNeedsRouter.ts", function() {
 
   beforeEach(async function() {
     admin = await Mongoose.User.mock();
-    buyersNeed = await Mongoose.BuyersNeed.mock();
+    buyersNeed = await Mongoose.BuyersNeed.mock({ ownerId: admin._id });
   });
 
   describe("GET /buyers-needs", function() {

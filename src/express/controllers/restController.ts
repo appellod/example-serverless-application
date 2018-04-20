@@ -36,7 +36,9 @@ export class RestController {
   }
 
   public async create(body: any, override: any, user: UserDocument): Promise<any> {
+    override = Object.assign(override, { ownerId: user._id });
     const record = await this.permissions.create(body, override, user);
+
     return { record };
   }
 
@@ -114,6 +116,7 @@ export class RestController {
       throw new Error("Record not found");
     }
 
+    override = Object.assign(override, { ownerId: user._id });
     record = await this.permissions.update(record, body, override, user);
 
     return { record };

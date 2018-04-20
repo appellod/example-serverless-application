@@ -15,7 +15,7 @@ describe("express/routes/ownershipsRouter.ts", function() {
 
   beforeEach(async function() {
     admin = await Mongoose.User.mock();
-    ownership = await Mongoose.Ownership.mock();
+    ownership = await Mongoose.Ownership.mock({ ownerId: admin._id });
   });
 
   describe("GET /ownerships", function() {

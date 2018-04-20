@@ -15,6 +15,7 @@ export interface TaskDocument extends mongoose.Document {
   isComplete?: boolean;
   lastModifiedDate?: string;
   marketingStatus?: string;
+  ownerId?: string;
   ownerName?: string;
   priority?: string;
   status?: string;
@@ -47,6 +48,10 @@ export class Task {
       isComplete: Boolean,
       lastModifiedDate: String,
       marketingStatus: String,
+      ownerId: {
+        ref: "User",
+        type: mongoose.Schema.Types.ObjectId
+      },
       ownerName: String,
       priority: String,
       status: String,

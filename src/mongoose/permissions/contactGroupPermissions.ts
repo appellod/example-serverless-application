@@ -21,7 +21,7 @@ export class ContactGroupPermissions extends Permissions {
   }
 
   public async findPermissions(user: UserDocument): Promise<any> {
-    const query: any = {};
+    const query: any = { ownerId: user._id };
 
     return query;
   }
@@ -32,7 +32,8 @@ export class ContactGroupPermissions extends Permissions {
       "createdDate",
       "memberIds",
       "name",
-      "numberOfMembers"
+      "numberOfMembers",
+      "ownerId"
     ];
 
     return attributes;

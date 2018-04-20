@@ -62,7 +62,7 @@ export class PropertyPermissions extends Permissions {
   }
 
   public async findPermissions(user: UserDocument): Promise<any> {
-    const query: any = {};
+    const query: any = { ownerId: user._id };
 
     return query;
   }
@@ -93,6 +93,7 @@ export class PropertyPermissions extends Permissions {
       "market",
       "name",
       "occupancy",
+      "ownerId",
       "parcelNumber",
       "parkingRatio",
       "parkingSpaces",

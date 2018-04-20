@@ -15,8 +15,8 @@ describe("express/controllers/propertiesController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    property = await Mongoose.Property.mock();
     user = await Mongoose.User.mock();
+    property = await Mongoose.Property.mock({ ownerId: user._id });
   });
 
   describe("count()", function() {

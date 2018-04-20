@@ -43,6 +43,7 @@ export interface ContactDocument extends mongoose.Document {
   lastName?: string;
   mobilePhone?: PhoneNumberModel;
   otherPhone?: PhoneNumberModel;
+  ownerId?: string;
   phone?: PhoneNumberModel;
   recordTypeId?: string;
   selectedCompany?: any;
@@ -77,6 +78,10 @@ export class Contact {
       lastName: String,
       mobilePhone: mongoose.Schema.Types.Mixed,
       otherPhone: mongoose.Schema.Types.Mixed,
+      ownerId: {
+        ref: "User",
+        type: mongoose.Schema.Types.ObjectId
+      },
       phone: mongoose.Schema.Types.Mixed,
       recordTypeId: String,
       selectedCompany: mongoose.Schema.Types.Mixed,

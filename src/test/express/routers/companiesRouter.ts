@@ -15,7 +15,7 @@ describe("express/routes/companiesRouter.ts", function() {
 
   beforeEach(async function() {
     admin = await Mongoose.User.mock();
-    company = await Mongoose.Company.mock();
+    company = await Mongoose.Company.mock({ ownerId: admin._id });
   });
 
   describe("GET /companies", function() {

@@ -136,7 +136,7 @@ describe("mongoose/permissions/companyPermissions.ts", function() {
 
       const query = await permissions.where(params, user);
 
-      expect(query).to.eql({});
+      expect(query).to.eql({ ownerId: user._id });
     });
   });
 });

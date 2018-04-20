@@ -12,13 +12,19 @@ import {
   AuthenticationRouter,
   GroupsRouter,
   UsersRouter,
+  CompsRouter,
   CompaniesRouter,
   ContactsRouter,
   TasksRouter,
   BuyersNeedsRouter,
   ContactGroupsRouter,
   PropertiesRouter,
-  OwnershipsRouter
+  OwnershipsRouter,
+  ContractsRouter,
+  ListingsRouter,
+  PursuitsRouter,
+  DealPartiesRouter,
+  OffersRouter
 } from "./";
 import { mongoSessionStoreMiddleware, queryStringJsonParserMiddleware } from "./";
 import { ContactGroup } from "../mongoose";
@@ -90,12 +96,18 @@ export class Express {
 
     const authenticationRouter = new AuthenticationRouter(router);
     const buyersNeedsRouter = new BuyersNeedsRouter(router);
+    const compsRouter = new CompsRouter(router);
     const companiesRouter = new CompaniesRouter(router);
     const contactsRouter = new ContactsRouter(router);
     const contactGroupsRouter = new ContactGroupsRouter(router);
+    const contractsRouter = new ContractsRouter(router);
+    const dealPartiesRouter = new DealPartiesRouter(router);
     const groupsRouter = new GroupsRouter(router);
+    const listingsRouter = new ListingsRouter(router);
+    const offersRouter = new OffersRouter(router);
     const ownershipsRouter = new OwnershipsRouter(router);
     const propertiesRouter = new PropertiesRouter(router);
+    const pursuitsRouter = new PursuitsRouter(router);
     const tasksRouter = new TasksRouter(router);
     const usersRouter = new UsersRouter(router);
   }

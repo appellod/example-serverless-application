@@ -25,14 +25,14 @@ export class BuyersNeedPermissions extends Permissions {
       "minLirr",
       "minPrice",
       "minSquareFootage",
-      "name"
+      "name",
     ];
 
     return attributes;
   }
 
   public async findPermissions(user: UserDocument): Promise<any> {
-    const query: any = {};
+    const query: any = { ownerId: user._id };
 
     return query;
   }
@@ -54,7 +54,8 @@ export class BuyersNeedPermissions extends Permissions {
       "minLirr",
       "minPrice",
       "minSquareFootage",
-      "name"
+      "name",
+      "ownerId"
     ];
 
     return attributes;

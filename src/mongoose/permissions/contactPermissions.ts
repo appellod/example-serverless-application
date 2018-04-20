@@ -34,7 +34,7 @@ export class ContactPermissions extends Permissions {
   }
 
   public async findPermissions(user: UserDocument): Promise<any> {
-    const query: any = {};
+    const query: any = { ownerId: user._id };
 
     return query;
   }
@@ -55,6 +55,7 @@ export class ContactPermissions extends Permissions {
       "lastName",
       "mobilePhone",
       "otherPhone",
+      "ownerId",
       "phone",
       "selectedCompany",
       "title",

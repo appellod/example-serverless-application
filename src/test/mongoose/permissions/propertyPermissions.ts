@@ -8,7 +8,7 @@ const chance = new Chance();
 const index = require("../../");
 const permissions = new PropertyPermissions();
 
-describe("mongoose/permissions/contactGroupPermissions.ts", function() {
+describe("mongoose/permissions/propertyPermissions.ts", function() {
   describe("create()", function() {
     it("creates a new record", async function() {
       const user = await Mongoose.User.mock();
@@ -316,7 +316,7 @@ describe("mongoose/permissions/contactGroupPermissions.ts", function() {
 
       const query = await permissions.where(params, user);
 
-      expect(query).to.eql({});
+      expect(query).to.eql({ ownerId: user._id });
     });
   });
 });

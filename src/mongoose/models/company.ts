@@ -19,6 +19,7 @@ export interface CompanyDocument extends mongoose.Document {
   fax?: PhoneNumberModel;
   name?: string;
   numberOfEmployees?: number;
+  ownerId?: string;
   phone?: PhoneNumberModel;
   // properties?: PropertyModel[];
   shippingAddress?: AddressModel;
@@ -47,6 +48,10 @@ export class Company {
       fax: mongoose.Schema.Types.Mixed,
       name: String,
       numberOfEmployees: Number,
+      ownerId: {
+        ref: "User",
+        type: mongoose.Schema.Types.ObjectId
+      },
       phone: mongoose.Schema.Types.Mixed,
       shippingAddress: mongoose.Schema.Types.Mixed,
       type: String,

@@ -30,6 +30,7 @@ export interface PropertyDocument extends mongoose.Document {
   market?: string;
   name?: string;
   occupancy?: string;
+  ownerId?: string;
   parcelNumber?: string;
   parkingRatio?: string;
   parkingSpaces?: string;
@@ -92,6 +93,10 @@ export class Property {
       market: String,
       name: String,
       occupancy: String,
+      ownerId: {
+        ref: "User",
+        type: mongoose.Schema.Types.ObjectId
+      },
       parcelNumber: String,
       parkingRatio: String,
       parkingSpaces: String,

@@ -15,7 +15,7 @@ describe("express/routes/propertiesRouter.ts", function() {
 
   beforeEach(async function() {
     admin = await Mongoose.User.mock();
-    property = await Mongoose.Property.mock();
+    property = await Mongoose.Property.mock({ ownerId: admin._id });
   });
 
   describe("GET /properties", function() {

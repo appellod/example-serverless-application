@@ -22,6 +22,7 @@ export interface BuyersNeedDocument extends mongoose.Document {
   minPrice?: string;
   minSquareFootage?: string;
   name?: string;
+  ownerId?: string;
 }
 
 export interface BuyersNeedModel extends mongoose.Model<BuyersNeedDocument> {
@@ -53,7 +54,11 @@ export class BuyersNeed {
       minLirr: Number,
       minPrice: String,
       minSquareFootage: String,
-      name: String
+      name: String,
+      ownerId: {
+        ref: "User",
+        type: mongoose.Schema.Types.ObjectId
+      }
     }, {
       autoIndex: false,
       timestamps: true

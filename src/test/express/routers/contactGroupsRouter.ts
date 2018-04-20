@@ -15,7 +15,7 @@ describe("express/routes/contactGroupsRouter.ts", function() {
 
   beforeEach(async function() {
     admin = await Mongoose.User.mock();
-    contactGroup = await Mongoose.ContactGroup.mock();
+    contactGroup = await Mongoose.ContactGroup.mock({ ownerId: admin._id });
   });
 
   describe("GET /contact-groups", function() {

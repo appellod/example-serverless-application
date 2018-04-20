@@ -15,8 +15,8 @@ describe("express/controllers/contactGroupsController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    contactGroup = await Mongoose.ContactGroup.mock();
     user = await Mongoose.User.mock();
+    contactGroup = await Mongoose.ContactGroup.mock({ ownerId: user._id });
   });
 
   describe("count()", function() {

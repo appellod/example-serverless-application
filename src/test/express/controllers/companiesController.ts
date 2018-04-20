@@ -15,8 +15,8 @@ describe("express/controllers/companiesController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    company = await Mongoose.Company.mock();
     user = await Mongoose.User.mock();
+    company = await Mongoose.Company.mock({ ownerId: user._id });
   });
 
   describe("count()", function() {

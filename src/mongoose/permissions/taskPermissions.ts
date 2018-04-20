@@ -32,7 +32,7 @@ export class TaskPermissions extends Permissions {
   }
 
   public async findPermissions(user: UserDocument): Promise<any> {
-    const query: any = {};
+    const query: any = { ownerId: user._id };
 
     return query;
   }
@@ -48,6 +48,7 @@ export class TaskPermissions extends Permissions {
       "isComplete",
       "lastModifiedDate",
       "marketingStatus",
+      "ownerId",
       "ownerName",
       "priority",
       "status",

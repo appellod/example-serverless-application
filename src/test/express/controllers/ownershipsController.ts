@@ -15,8 +15,8 @@ describe("express/controllers/ownershipsController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    ownership = await Mongoose.Ownership.mock();
     user = await Mongoose.User.mock();
+    ownership = await Mongoose.Ownership.mock({ ownerId: user._id });
   });
 
   describe("count()", function() {

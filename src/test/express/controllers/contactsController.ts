@@ -15,8 +15,8 @@ describe("express/controllers/contactsController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    contact = await Mongoose.Contact.mock();
     user = await Mongoose.User.mock();
+    contact = await Mongoose.Contact.mock({ ownerId: user._id });
   });
 
   describe("count()", function() {

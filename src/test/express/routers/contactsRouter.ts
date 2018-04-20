@@ -15,7 +15,7 @@ describe("express/routes/contactsRouter.ts", function() {
 
   beforeEach(async function() {
     admin = await Mongoose.User.mock();
-    contact = await Mongoose.Contact.mock();
+    contact = await Mongoose.Contact.mock({ ownerId: admin._id });
   });
 
   describe("GET /contacts", function() {

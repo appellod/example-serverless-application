@@ -15,8 +15,8 @@ describe("express/controllers/tasksController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    task = await Mongoose.Task.mock();
     user = await Mongoose.User.mock();
+    task = await Mongoose.Task.mock({ ownerId: user._id });
   });
 
   describe("count()", function() {

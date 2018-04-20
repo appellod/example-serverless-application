@@ -15,7 +15,7 @@ describe("express/routes/tasksRouter.ts", function() {
 
   beforeEach(async function() {
     admin = await Mongoose.User.mock();
-    task = await Mongoose.Task.mock();
+    task = await Mongoose.Task.mock({ ownerId: admin._id });
   });
 
   describe("GET /tasks", function() {
