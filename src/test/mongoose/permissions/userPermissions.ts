@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { Chance } from "chance";
 import * as nock from "nock";
 
-import { Mongoose, UserPermissions, UserDocument } from "../../../mongoose";
+import { User, UserPermissions, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
 const index = require("../../");
@@ -16,7 +16,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           email: chance.email(),
           password: chance.hash()
         };
-        const user = await Mongoose.User.mock({
+        const user = await User.mock({
           level: 1
         });
 
@@ -35,7 +35,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           email: chance.email(),
           password: chance.hash()
         };
-        const user = await Mongoose.User.mock({
+        const user = await User.mock({
           level: 0
         });
 
@@ -55,12 +55,12 @@ describe("mongoose/permissions/userPermissions.ts", function() {
     let record: UserDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.User.mock();
+      record = await User.mock();
     });
 
     context("when user is an admin", function() {
       it ("returns the record", async function() {
-        const user = await Mongoose.User.mock({
+        const user = await User.mock({
           level: 1
         });
 
@@ -89,7 +89,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
 
       context("when user is accessing another user's record", function() {
         it ("returns the record", async function() {
-          const user = await Mongoose.User.mock({
+          const user = await User.mock({
             level: 0
           });
 
@@ -109,12 +109,12 @@ describe("mongoose/permissions/userPermissions.ts", function() {
     let record: UserDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.User.mock();
+      record = await User.mock();
     });
 
     context("when the user is an admin", function() {
       it("returns the record", async function() {
-        const user = await Mongoose.User.mock({
+        const user = await User.mock({
           level: 1
         });
 
@@ -135,7 +135,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
 
       context("when user is removing another user's record", function() {
         it ("returns an error", async function() {
-          const user = await Mongoose.User.mock({
+          const user = await User.mock({
             level: 0
           });
 
@@ -156,7 +156,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
     let record: UserDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.User.mock();
+      record = await User.mock();
     });
 
     context("when the user is an admin", function() {
@@ -165,7 +165,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           email: chance.email(),
           level: record.level + 1
         };
-        const user = await Mongoose.User.mock({
+        const user = await User.mock({
           level: 1
         });
 
@@ -201,7 +201,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
             email: chance.email(),
             level: record.level + 1
           };
-          const user = await Mongoose.User.mock({
+          const user = await User.mock({
             level: 0
           });
 
@@ -225,7 +225,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           email: chance.email(),
           level: 1
         };
-        const user = await Mongoose.User.mock({
+        const user = await User.mock({
           level: 1
         });
 
@@ -242,7 +242,7 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           email: chance.email(),
           level: 1
         };
-        const user = await Mongoose.User.mock({
+        const user = await User.mock({
           level: 0
         });
 

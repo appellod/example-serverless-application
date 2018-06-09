@@ -1,6 +1,6 @@
 import * as express from "express";
 
-import { Mongoose, UserDocument, UserPermissions } from "../../mongoose";
+import { User, UserDocument, UserPermissions } from "../../mongoose";
 
 export class AuthenticationController {
   public async checkAvailability(req: express.Request, res?: express.Response): Promise<any> {
@@ -8,7 +8,7 @@ export class AuthenticationController {
       return { isAvailable: false };
     }
 
-    const user = await Mongoose.User.findOne({ email: req.query.email });
+    const user = await User.findOne({ email: req.query.email });
     return { isAvailable: !user };
   }
 
@@ -17,7 +17,7 @@ export class AuthenticationController {
       throw new Error("Please provide an email address and password.");
     }
 
-    const user = await Mongoose.User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
 
     if (!user || !user.isValidPassword(req.body.password)) {
       throw new Error("Incorrect username or password.");
@@ -40,7 +40,7 @@ export class AuthenticationController {
   }
 
   public async requestPasswordReset(req: express.Request, res?: express.Response): Promise<any> {
-    let user = await Mongoose.User.findOne({ email: req.body.email });
+    let user = await User.findOne({ email: req.body.email });
 
     if (!user) {
       throw new Error("User with email " + req.body.email + " not found.");
@@ -52,7 +52,7 @@ export class AuthenticationController {
   }
 
   public async resetPassword(req: express.Request, res?: express.Response): Promise<any> {
-    const user = await Mongoose.User.resetPassword(req.body.resetHash, req.body.password);
+    const user = await User.resetPassword(req.body.resetHash, req.body.password);
 
     if (!user) {
       throw new Error("No users matching given resetHash.");
@@ -66,7 +66,7 @@ export class AuthenticationController {
       throw new Error("Please provide an email address and password.");
     }
 
-    const user = await Mongoose.User.create({
+    const user = await User.create({
         email: req.body.email,
         password: req.body.password
     });

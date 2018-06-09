@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as nock from "nock";
 
-import { Mongoose, UserDocument, TokenDocument } from "../../../mongoose";
+import { Token, TokenDocument, User, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 
@@ -10,7 +10,7 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock();
+      user = await User.mock();
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -24,21 +24,21 @@ describe("mongoose/models/user.ts", function() {
 
     it("updates the user's password", async function() {
       const previousPassword = user.password;
-      user = await Mongoose.User.resetPassword(user.resetHash, "password");
+      user = await User.resetPassword(user.resetHash, "password");
       expect(user.password).to.not.eq(previousPassword);
     });
 
     it("removes the user's resetHash", async function() {
-      user = await Mongoose.User.resetPassword(user.resetHash, "password");
+      user = await User.resetPassword(user.resetHash, "password");
       expect(user.resetHash).to.be.undefined;
     });
 
     it("removes all the user's access token", async function() {
-      const token = await Mongoose.Token.create({ userId: user._id });
+      const token = await Token.create({ userId: user._id });
 
-      user = await Mongoose.User.resetPassword(user.resetHash, "password");
+      user = await User.resetPassword(user.resetHash, "password");
 
-      const count = await Mongoose.Token.count({ userId: user._id });
+      const count = await Token.count({ userId: user._id });
       expect(count).to.eql(0);
     });
   });
@@ -48,13 +48,13 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock();
+      user = await User.mock();
     });
 
     it("adds an access token associated with the user", async function() {
       ({ token, user } = await user.login());
 
-      const tokens = await Mongoose.Token.find({ userId: user._id });
+      const tokens = await Token.find({ userId: user._id });
 
       expect(tokens.length).to.eq(1);
       expect(tokens[0].id).to.eq(token.id);
@@ -66,14 +66,14 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock();
+      user = await User.mock();
       ({ token, user } = await user.login());
     });
 
     it("removes the token that was used for the API request", async function() {
       user = await user.logout(token._id);
 
-      const count = await Mongoose.Token.count({ userId: user._id });
+      const count = await Token.count({ userId: user._id });
       expect(count).to.eq(0);
     });
   });
@@ -82,7 +82,7 @@ describe("mongoose/models/user.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock();
+      user = await User.mock();
 
       nock(/mailgun\.net/)
         .post(/.*/)

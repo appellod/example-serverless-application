@@ -1,7 +1,6 @@
 import * as chai from "chai";
 
-import { Config } from "../../config";
-import { Mongoose, UserDocument, TokenDocument } from "../../mongoose";
+import { Token, TokenDocument, UserDocument } from "../../mongoose";
 
 const chaiHttp = require("chai-http");
 
@@ -9,11 +8,11 @@ export class ApiHelper {
   public host: string;
   public port: string;
 
-  constructor(config: Config) {
+  constructor() {
     chai.use(chaiHttp);
 
-    this.host = config.server.host;
-    this.port = config.server.port;
+    this.host = process.env.SERVER_HOST;
+    this.port = process.env.SERVER_PORT;
   }
 
   /**
@@ -27,8 +26,8 @@ export class ApiHelper {
     let token: TokenDocument;
 
     if (user) {
-      token = await Mongoose.Token.create({
-        expiresAt: Mongoose.Token.getExpirationDate(),
+      token = await Token.create({
+        expiresAt: Token.getExpirationDate(),
         userId: user._id
       });
     }

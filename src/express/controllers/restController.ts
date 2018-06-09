@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as mongoose from "mongoose";
 
-import { Mongoose, Permissions, UserDocument } from "../../mongoose";
+import { Permissions, UserDocument } from "../../mongoose";
 
 export class RestController {
   public Model: mongoose.Model<mongoose.Document>;

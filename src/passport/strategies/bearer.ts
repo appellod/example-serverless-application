@@ -1,11 +1,10 @@
 import * as passport from "passport";
 import { Strategy } from "passport-http-bearer";
 
-import { Config } from "../../config";
-import { Mongoose, UserDocument, TokenDocument } from "../../mongoose";
+import { Token, TokenDocument, User, UserDocument } from "../../mongoose";
 
 export class BearerStrategy {
-  constructor(config: Config) {
+  constructor() {
     passport.use(new Strategy(async (token, done) => {
       let user: UserDocument;
 
@@ -18,7 +17,7 @@ export class BearerStrategy {
   }
 
   public static async authenticate(tokenId: string): Promise<UserDocument> {
-    const token = await Mongoose.Token.findOne({ _id: tokenId });
+    const token = await Token.findOne({ _id: tokenId });
 
     // Make sure token is not expired.
     if (!token || token.isExpired()) {
@@ -26,6 +25,6 @@ export class BearerStrategy {
     }
 
     token.refresh();
-    return Mongoose.User.findOne({ _id: token.userId });
+    return User.findOne({ _id: token.userId });
   }
 }

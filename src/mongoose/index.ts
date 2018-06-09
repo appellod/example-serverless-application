@@ -1,4 +1,5 @@
 export * from "./mongoose";
 
-export * from "./models/index";
-export * from "./permissions/index";
+export * from "./schemas";
+export * from "./models";
+export * from "./permissions";

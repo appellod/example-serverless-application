@@ -8,9 +8,8 @@ const expect = chai.expect;
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 
-const config = index.config;
-const host = config.server.host;
-const port = config.server.port;
+const host = process.env.SERVER_HOST;
+const port = process.env.SERVER_PORT;
 
 describe("documentation/index.ts", function() {
   describe("GET /apidoc/index.html", function() {

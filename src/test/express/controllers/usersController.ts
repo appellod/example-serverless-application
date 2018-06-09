@@ -3,7 +3,7 @@ import { Chance } from "chance";
 import * as express from "express";
 
 import { UsersController } from "../../../express";
-import { Mongoose, UserDocument } from "../../../mongoose";
+import { User, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 
@@ -14,7 +14,7 @@ describe("express/controllers/usersController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    user = await Mongoose.User.mock({ level: 1 });
+    user = await User.mock({ level: 1 });
   });
 
   describe("count()", function() {

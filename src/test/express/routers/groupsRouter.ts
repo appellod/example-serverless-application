@@ -1,12 +1,12 @@
 import { expect } from "chai";
 import { Chance } from "chance";
 
-import { Mongoose, UserDocument, GroupDocument } from "../../../mongoose";
+import { Group, GroupDocument, User, UserDocument } from "../../../mongoose";
 import { ApiHelper } from "../apiHelper";
 
 const index = require("../../");
 
-const apiHelper = new ApiHelper(index.config);
+const apiHelper = new ApiHelper();
 const chance = new Chance();
 
 describe("express/routes/groupsRouter.ts", function() {
@@ -14,8 +14,8 @@ describe("express/routes/groupsRouter.ts", function() {
   let group: GroupDocument;
 
   beforeEach(async function() {
-    admin = await Mongoose.User.mock({ level: 1 });
-    group = await Mongoose.Group.mock();
+    admin = await User.mock({ level: 1 });
+    group = await Group.mock();
   });
 
   describe("GET /groups", function() {

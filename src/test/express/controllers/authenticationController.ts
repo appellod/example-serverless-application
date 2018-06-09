@@ -3,7 +3,7 @@ import * as express from "express";
 import * as nock from "nock";
 
 import { AuthenticationController } from "../../../express";
-import { TokenDocument, Mongoose, UserDocument } from "../../../mongoose";
+import { TokenDocument, User, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 
@@ -27,7 +27,7 @@ describe("express/controllers/authenticationController.ts", function() {
 
     context("when email is unavailable", function() {
       beforeEach(async function() {
-        await Mongoose.User.mock({ email: "taken@example.com" });
+        await User.mock({ email: "taken@example.com" });
       });
 
       it("returns isAvailable set to false", async function() {
@@ -69,7 +69,7 @@ describe("express/controllers/authenticationController.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock({ password: "password" });
+      user = await User.mock({ password: "password" });
     });
 
     context("when credentials are correct", function() {
@@ -119,7 +119,7 @@ describe("express/controllers/authenticationController.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock();
+      user = await User.mock();
       ({ token, user } = await user.login());
     });
 
@@ -140,7 +140,7 @@ describe("express/controllers/authenticationController.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock();
+      user = await User.mock();
       ({ token, user } = await user.login());
 
       nock(/mailgun\.net/)
@@ -169,7 +169,7 @@ describe("express/controllers/authenticationController.ts", function() {
     let user: UserDocument;
 
     beforeEach(async function() {
-      user = await Mongoose.User.mock();
+      user = await User.mock();
       ({ token, user } = await user.login());
 
       nock(/mailgun\.net/)

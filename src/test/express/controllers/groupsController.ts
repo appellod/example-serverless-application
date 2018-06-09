@@ -3,7 +3,7 @@ import { Chance } from "chance";
 import * as express from "express";
 
 import { GroupsController } from "../../../express";
-import { Mongoose, UserDocument, GroupDocument, User } from "../../../mongoose";
+import { Group, GroupDocument, User, UserDocument } from "../../../mongoose";
 
 const index = require("../../");
 
@@ -15,8 +15,8 @@ describe("express/controllers/groupsController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {
-    group = await Mongoose.Group.mock();
-    user = await Mongoose.User.mock({ level: 1 });
+    group = await Group.mock();
+    user = await User.mock({ level: 1 });
   });
 
   describe("addUserIds()", function() {

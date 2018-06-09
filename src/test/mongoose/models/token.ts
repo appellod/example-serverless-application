@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as nock from "nock";
 
-import { Mongoose, TokenDocument } from "../../../mongoose";
+import { Token, TokenDocument } from "../../../mongoose";
 
 const index = require("../../");
 
@@ -13,7 +13,7 @@ describe("mongoose/models/token.ts", function() {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
 
-      token = await Mongoose.Token.mock({ expiresAt: yesterday });
+      token = await Token.mock({ expiresAt: yesterday });
     });
 
     it("returns whether or not the token is expired", function() {
@@ -25,7 +25,7 @@ describe("mongoose/models/token.ts", function() {
     let token: TokenDocument;
 
     beforeEach(async function() {
-      token = await Mongoose.Token.mock({
+      token = await Token.mock({
         expiresAt: new Date()
       });
     });

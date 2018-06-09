@@ -227,18 +227,17 @@ export abstract class Permissions {
    * @param schema The object's Mongoose schema.
    */
   private removeArrayValues(obj: any, schema: mongoose.Schema) {
-    for (const key in obj) {
+    Object.keys(obj).forEach((key) => {
       const info: any = schema.path(key);
 
-      if (info.instance !== "Array") {
-        continue;
-      }
+      if (info.instance === "Array") {
+        const type: string = info.caster.instance;
 
-      const type: string = info.caster.instance;
-      if (obj[key] instanceof Array && type === "ObjectID") {
-        delete obj[key];
+        if (obj[key] instanceof Array && type === "ObjectID") {
+          delete obj[key];
+        }
       }
-    }
+    });
 
     return obj;
   }

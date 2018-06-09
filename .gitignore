@@ -1,3 +1,5 @@
+settings.sh
+settings.test.sh
 tscommand*.tmp.txt
 
 .tscache/

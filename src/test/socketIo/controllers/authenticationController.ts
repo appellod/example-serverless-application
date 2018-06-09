@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { Mongoose, UserDocument } from "../../../mongoose";
+import { User, UserDocument } from "../../../mongoose";
 import { AuthenticationController, Socket } from "../../../socketIo";
 
 const index = require("../../");
@@ -49,7 +49,7 @@ describe("socketIo/controllers/authenticationController.ts", function() {
 
     context("when a valid token is provided", function() {
       it("does not return an error", async function() {
-        const user = await Mongoose.User.mock();
+        const user = await User.mock();
         const { token } = await user.login();
 
         const data = {
@@ -65,7 +65,7 @@ describe("socketIo/controllers/authenticationController.ts", function() {
 
   describe("unauthenticate", function() {
     it("removes the user from the socket", async function() {
-      const user = await Mongoose.User.mock();
+      const user = await User.mock();
       const { token } = await user.login();
 
       const data = {

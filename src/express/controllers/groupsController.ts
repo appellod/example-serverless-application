@@ -1,13 +1,13 @@
 import * as express from "express";
 
-import { Mongoose, GroupDocument, GroupModel, GroupPermissions } from "../../mongoose";
+import { Group, GroupDocument, GroupModel, GroupPermissions } from "../../mongoose";
 import { RestController } from "./";
 
 export class GroupsController {
   private restController: RestController;
 
   constructor() {
-    this.restController = new RestController(Mongoose.Group, new GroupPermissions());
+    this.restController = new RestController(Group, new GroupPermissions());
   }
 
   public async addUserIds(req: express.Request, res?: express.Response): Promise<{ group: GroupDocument }> {

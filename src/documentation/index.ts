@@ -2,7 +2,7 @@ import * as ejs from "ejs";
 import * as express from "express";
 import * as path from "path";
 
-import { Mongoose } from "../mongoose";
+import { User } from "../mongoose";
 
 export class Documentation {
   private app: express.Application;
@@ -51,7 +51,7 @@ export class Documentation {
      */
     this.app.post("/login", async (req, res) => {
       try {
-        const user = await Mongoose.User.findOne({ email: req.body.email });
+        const user = await User.findOne({ email: req.body.email });
 
         if (user && user.isValidPassword(req.body.password)) {
           req.session.isLoggedIn = true;

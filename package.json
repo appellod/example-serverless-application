@@ -21,16 +21,16 @@
     }
   },
   "scripts": {
+    "build": "grunt",
     "documentation": "apidoc -i src/express/ -o src/documentation/public/apidoc/",
-    "grunt": "grunt",
     "grunt:serve": "grunt serve",
     "grunt:test": "grunt && npm test",
     "grunt:watch": "grunt watch",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "migrations:create": "mm create",
     "migrations:run": "mm",
-    "start": "node dist/index.js",
-    "test": "mocha dist/test --opts dist/test/mocha.opts --exit"
+    "start": "./scripts/start.sh",
+    "test": "./scripts/test.sh"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",

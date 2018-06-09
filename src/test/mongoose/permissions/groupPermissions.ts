@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { Chance } from "chance";
 import * as nock from "nock";
 
-import { Mongoose, GroupDocument, UserDocument, GroupPermissions, User } from "../../../mongoose";
+import { Group, GroupDocument, GroupPermissions, User, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
 const index = require("../../");
@@ -13,13 +13,13 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
     let record: GroupDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.Group.mock();
+      record = await Group.mock();
     });
 
     context("when adding an association to userIds", function() {
       context("when the user is an admin", function() {
         it("adds the userId to the record's userIds", async function() {
-          const user = await Mongoose.User.mock({ level: 1 });
+          const user = await User.mock({ level: 1 });
 
           record = <GroupDocument> await permissions.addAssociations(record, "userIds", [user.id], user);
 
@@ -31,7 +31,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
         let user: UserDocument;
 
         beforeEach(async function() {
-          user = await Mongoose.User.mock();
+          user = await User.mock();
         });
 
         context("when user has permission", function() {
@@ -63,7 +63,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
   describe("create()", function() {
     context("when user is an admin", function() {
       it("creates a new record", async function() {
-        const user = await Mongoose.User.mock({ level: 1 });
+        const user = await User.mock({ level: 1 });
         const params = {
           isPrivate: chance.bool(),
           ownerId: user._id,
@@ -80,8 +80,8 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
 
     context("when user is not an admin", function() {
       it("returns an error", async function() {
-        const user = await Mongoose.User.mock();
-        const otherUser = await Mongoose.User.mock();
+        const user = await User.mock();
+        const otherUser = await User.mock();
         const params = {
           isPrivate: chance.bool(),
           ownerId: otherUser._id,
@@ -105,14 +105,14 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
     let record: GroupDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.Group.mock({
+      record = await Group.mock({
         isPrivate: true
       });
     });
 
     context("when user is an admin", function() {
       it ("returns the record", async function() {
-        const user = await Mongoose.User.mock({ level: 1 });
+        const user = await User.mock({ level: 1 });
 
         record = <GroupDocument> await permissions.read(record, user);
 
@@ -127,7 +127,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
       let user: UserDocument;
 
       beforeEach(async function() {
-        user = await Mongoose.User.mock();
+        user = await User.mock();
       });
 
       context("when user is a member of the group", function() {
@@ -159,12 +159,12 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
     let record: GroupDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.Group.mock();
+      record = await Group.mock();
     });
 
     context("when the user is an admin", function() {
       it("returns the record", async function() {
-        const user = await Mongoose.User.mock({ level: 1 });
+        const user = await User.mock({ level: 1 });
 
         record = <GroupDocument> await permissions.remove(record, user);
 
@@ -176,7 +176,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
       let user: UserDocument;
 
       beforeEach(async function() {
-        user = await Mongoose.User.mock();
+        user = await User.mock();
       });
 
       context("when user is removing their own group", function() {
@@ -208,14 +208,14 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
     let record: GroupDocument;
 
     beforeEach(async function() {
-      associatedUser = await Mongoose.User.mock();
-      record = await Mongoose.Group.mock({ userIds: [associatedUser._id] });
+      associatedUser = await User.mock();
+      record = await Group.mock({ userIds: [associatedUser._id] });
     });
 
     context("when removing associations from userIds", function() {
       context("when the user is an admin", function() {
         it("removes the record's userIds", async function() {
-          const user = await Mongoose.User.mock({ level: 1 });
+          const user = await User.mock({ level: 1 });
 
           record = <GroupDocument> await permissions.removeAllAssociations(record, "userIds", user);
 
@@ -227,7 +227,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
         let user: UserDocument;
 
         beforeEach(async function() {
-          user = await Mongoose.User.mock();
+          user = await User.mock();
         });
 
         context("when user has permission", function() {
@@ -261,14 +261,14 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
     let record: GroupDocument;
 
     beforeEach(async function() {
-      associatedUser = await Mongoose.User.mock();
-      record = await Mongoose.Group.mock({ userIds: [associatedUser._id] });
+      associatedUser = await User.mock();
+      record = await Group.mock({ userIds: [associatedUser._id] });
     });
 
     context("when removing associations from userIds", function() {
       context("when the user is an admin", function() {
         it("removes the userId from the record's userIds", async function() {
-          const user = await Mongoose.User.mock({ level: 1 });
+          const user = await User.mock({ level: 1 });
 
           record = <GroupDocument> await permissions.removeAssociations(record, "userIds", [associatedUser.id], user);
 
@@ -280,7 +280,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
         let user: UserDocument;
 
         beforeEach(async function() {
-          user = await Mongoose.User.mock();
+          user = await User.mock();
         });
 
         context("when user has permission", function() {
@@ -313,12 +313,12 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
     let record: GroupDocument;
 
     beforeEach(async function() {
-      record = await Mongoose.Group.mock();
+      record = await Group.mock();
     });
 
     context("when the user is an admin", function() {
       it("updates and returns the record", async function() {
-        const user = await Mongoose.User.mock({ level: 1 });
+        const user = await User.mock({ level: 1 });
         const params = {
           isPrivate: chance.bool(),
           ownerId: user._id,
@@ -337,7 +337,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
       let user: UserDocument;
 
       beforeEach(async function() {
-        user = await Mongoose.User.mock();
+        user = await User.mock();
       });
 
       context("when user is updating their own group", function() {
@@ -381,7 +381,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
   describe("where()", function() {
     context("when the user is an admin", function() {
       it("returns a valid where query", async function() {
-        const user = await Mongoose.User.mock({ level: 1 });
+        const user = await User.mock({ level: 1 });
         const params = {
           isPrivate: chance.bool(),
           ownerId: user._id,
@@ -398,7 +398,7 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
 
     context("when the user is not an admin", function() {
       it("returns a valid where query", async function() {
-        const user = await Mongoose.User.mock();
+        const user = await User.mock();
         const params = {
           isPrivate: chance.bool(),
           ownerId: user._id,

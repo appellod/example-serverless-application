@@ -66,26 +66,26 @@ git clone https://github.com/appellod/restful-api
 npm install
 ```
 
-**Run MongoDB: Download MongoDB or Run with Docker Compose**
-
-**Download MongoDB**  
-The API requires a local MongoDB instance to be running. [Download MongoDB here](https://www.mongodb.com/). 
-The default port for MongoDB is 27017 which is already declared in the API's configuration file.
-
-**Run with Docker Compose**  
-If you prefer to run dependencies through Docker, you can simply run:
+**Run MongoDB with Docker Compose**  
+You can start up any development dependencies such as MongoDB using:
 ```
 docker-compose up
 ```
-This will start up any dependencies you need for development such as MongoDB.
 
 **Compile Typescript with Grunt**  
 The Typescript included within the src/ directory needs to be compiled before being run. To do this, we will
 run the following command:
 ```
-npm run grunt
+npm run build
 ```
 This will compile all the Typescript within the src/ directory into a dist/ directory. 
+
+**Setup Environment Variables**  
+All variables are declared inside a root-level `settings.sh` file. You can use the existing `settings.example.sh`
+as a template. Update all the variables here such as external API keys, local ports, etc.
+
+A `settings.test.sh` can also need to be created to run your test suite. If this file doesn't exist, the test suite
+will default to your `settings.sh` file.
 
 **Run Test Suite**  
 The test suite uses [Mocha](https://mochajs.org/). Make sure a local MongoDB instance is running and run

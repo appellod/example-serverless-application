@@ -2,11 +2,13 @@ const loggly = require("winston-loggly-bulk");
 import * as util from "util";
 import * as winston from "winston";
 
-import { Config } from "../config";
-
 export class Loggly {
-  constructor(config: Config) {
-    if (!config.loggly) {
+  constructor() {
+    const isLogglyConfigured = process.env.LOGGLY_INPUT_TOKEN &&
+      process.env.LOGGLY_SUBDOMAIN &&
+      process.env.LOGGLY_TAGS;
+
+    if (!isLogglyConfigured) {
       console.debug = console.log;
       return;
     }
@@ -18,7 +20,7 @@ export class Loggly {
           handleExceptions: true,
           humanReadableUnhandledException: true,
           json: false,
-          level: config.loggly.level || "info"
+          level: process.env.LOGGLY_LEVEL || "info"
         })
       ]
     });
@@ -30,7 +32,11 @@ export class Loggly {
       json: true,
       level: "info",
       stripColors: false
-    }, config.loggly);
+    }, {
+      inputToken: process.env.LOGGLY_INPUT_TOKEN,
+      subdomain: process.env.LOGGLY_SUBDOMAIN,
+      tags: process.env.LOGGLY_TAGS.split(",")
+    });
     logger.add(winston.transports.Loggly, logglyConfig);
 
     console.log = function() { logger.info.apply(logger, arguments); };

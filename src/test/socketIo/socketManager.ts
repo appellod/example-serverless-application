@@ -3,7 +3,7 @@ import * as Chance from "chance";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import { Mongoose, UserDocument } from "../../mongoose";
+import { User, UserDocument } from "../../mongoose";
 import { Socket, SocketManager } from "../../socketIo";
 import { SocketMock } from "../mocks";
 
@@ -35,7 +35,7 @@ describe("socketIo/socketManager.ts", function() {
     it("emits the event and payload to all the user's sockets", async function() {
       socketManager.addSocket(socket);
 
-      const user = await Mongoose.User.mock();
+      const user = await User.mock();
       socketManager.registerSocketToUser(socket, user);
 
       const otherSocket = new SocketMock() as Socket;
@@ -54,7 +54,7 @@ describe("socketIo/socketManager.ts", function() {
     it("returns all sockets associated with the user", async function() {
       socketManager.addSocket(socket);
 
-      const user = await Mongoose.User.mock();
+      const user = await User.mock();
       socketManager.registerSocketToUser(socket, user);
 
       const otherSocket = new SocketMock() as Socket;
@@ -71,7 +71,7 @@ describe("socketIo/socketManager.ts", function() {
     it("sets the socket's user to the user", async function() {
       socketManager.addSocket(socket);
 
-      const user = await Mongoose.User.mock();
+      const user = await User.mock();
       socketManager.registerSocketToUser(socket, user);
 
       expect(socket.user).to.eql(user);
@@ -98,7 +98,7 @@ describe("socketIo/socketManager.ts", function() {
     it("removes the user from the socket", async function() {
       socketManager.addSocket(socket);
 
-      const user = await Mongoose.User.mock();
+      const user = await User.mock();
       socketManager.registerSocketToUser(socket, user);
 
       socketManager.removeUserFromSocket(socket);
