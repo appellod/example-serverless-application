@@ -1,7 +1,5 @@
-import * as bcrypt from "bcrypt-nodejs";
 import { Chance } from "chance";
 import * as mongoose from "mongoose";
-import * as request from "request";
 
 import { Config } from "../../config";
 import { Mongoose, UserDocument } from "../";

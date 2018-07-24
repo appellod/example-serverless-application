@@ -1,7 +1,5 @@
-import * as bcrypt from "bcrypt-nodejs";
 import { Chance } from "chance";
 import * as mongoose from "mongoose";
-import * as request from "request";
 
 import { Config } from "../../config";
 import { Mongoose, UserDocument } from "../";
@@ -11,8 +9,8 @@ export interface FileDocument extends mongoose.Document {
 
   isPublic?: boolean;
   name?: number;
-  userIds?: mongoose.Types.ObjectId[];
-  users?: UserDocument[];
+  userId?: mongoose.Types.ObjectId;
+  user?: UserDocument;
 }
 
 export interface FileModel extends mongoose.Model<FileDocument> {
@@ -35,20 +33,22 @@ export class File {
         default: false
       },
       name: String,
-      userIds: [{
-        type: mongoose.Types.ObjectId,
-        ref: "User"
-      }]
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+      }
     }, {
       autoIndex: false,
-      timestamps: true
+      timestamps: true,
+      toJSON : { virtuals : true },
+      toObject : { virtuals: true }
     });
 
-    this.schema.virtual("users", {
+    this.schema.virtual("user", {
       ref: "User",
-      localField: "userIds",
+      localField: "userId",
       foreignField: "_id",
-      justOne: false
+      justOne: true
     });
 
     this.setupSchemaMiddleware(config);
@@ -69,6 +69,11 @@ export class File {
       const chance = new Chance();
 
       params = params || {};
+      if (!params.userId) {
+        const user = await Mongoose.User.mock();
+        params.userId = user._id;
+      }
+
       return this.create(params);
     };
   }

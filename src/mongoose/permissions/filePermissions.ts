@@ -6,20 +6,15 @@ export class FilePermissions extends Permissions {
   constructor() {
     super();
 
-    this.Model = Mongoose.User;
+    this.Model = Mongoose.File;
   }
 
   public async createPermissions(user: UserDocument): Promise<string[]> {
-    const attributes: string[] = [];
-
-    // If the user is an admin
-    if (user.level === 1) {
-      attributes.push(
-        "email",
-        "password",
-        "level"
-      );
-    }
+    const attributes: string[] = [
+      "isPublic",
+      "name",
+      "userId"
+    ];
 
     return attributes;
   }
@@ -28,31 +23,33 @@ export class FilePermissions extends Permissions {
     const query: any = {};
 
     if (user.level === 0) {
-      query.level = 0;
+      query.$or = [
+        { isPublic: true },
+        { userId: user._id }
+      ];
     }
 
     return query;
   }
 
   public async readPermissions(record: FileDocument, user: UserDocument): Promise<string[]> {
-    const attributes: string[] = [
-      "_id",
-      "email"
-    ];
+    const attributes: string[] = [];
 
-    // If user is reading their own record
-    if (record.id === user.id) {
+    if (user.level === 0) {
+      if (record.isPublic || record.userId.equals(user._id)) {
+        attributes.push(
+          "_id",
+          "isPublic",
+          "name",
+          "userId"
+        );
+      }
+    } else if (user.level === 1) {
       attributes.push(
-        "level",
-        "resetHash"
-      );
-    }
-
-    // If user is an admin
-    if (user.level === 1) {
-      attributes.push(
-        "level",
-        "resetHash"
+        "_id",
+        "isPublic",
+        "name",
+        "userId"
       );
     }
 
@@ -60,13 +57,11 @@ export class FilePermissions extends Permissions {
   }
 
   public async removePermissions(record: FileDocument, user: UserDocument): Promise<boolean> {
-    // If user is removing their own record
-    if (record.id === user.id) {
-      return true;
-    }
-
-    // If the user is an admin
-    if (user.level === 1) {
+    if (user.level === 0) {
+      if (record.userId.equals(user._id)) {
+        return true;
+      }
+    } else if (user.level === 1) {
       return true;
     }
 
@@ -76,20 +71,19 @@ export class FilePermissions extends Permissions {
   public async updatePermissions(record: FileDocument, user: UserDocument): Promise<string[]> {
     const attributes: string[] = [];
 
-    // If user is modifying a file they own
-    if (record.userIds.some((id) => id.equals(user._id))) {
+    if (user.level === 0 ) {
+      if (record.userId.equals(user._id)) {
+        attributes.push(
+          "isPublic",
+          "name",
+          "userId"
+        );
+      }
+    } else if (user.level === 1) {
       attributes.push(
-        "email",
-        "password"
-      );
-    }
-
-    // If the user is an admin
-    if (user.level === 1) {
-      attributes.push(
-        "email",
-        "password",
-        "level"
+        "isPublic",
+        "name",
+        "userId"
       );
     }
 

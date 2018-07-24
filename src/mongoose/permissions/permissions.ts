@@ -100,21 +100,23 @@ export abstract class Permissions {
 
     // Combines the two queries
     Object.keys(where).forEach((key) => {
-      if (key === "$and" && "$and" in query) {
-        query.$and = query.$and.concat(where.$and);
-      } else if (key === "$or" && "$or" in query) {
-        query.$or = query.$or.concat(where.$or);
-      } else if (key === "$nor" && "$nor" in query) {
-        query.$nor = query.$nor.concat(where.$nor);
-      } else if (key in query) {
-        if (!query.$and) {
-          query.$and = [];
+      if (key in query) {
+        if (key === "$and") {
+          query.$and = query.$and.concat(where.$and);
+        } else if (key === "$or") {
+          query.$or = query.$or.concat(where.$or);
+        } else if (key === "$nor") {
+          query.$nor = query.$nor.concat(where.$nor);
+        } else {
+          if (!query.$and) {
+            query.$and = [];
+          }
+
+          query.$and.push({ [key]: query[key] });
+          query.$and.push({ [key]: where[key] });
+
+          delete query[key];
         }
-
-        query.$and.push({ [key]: query[key] });
-        query.$and.push({ [key]: where[key] });
-
-        delete query[key];
       } else {
         query[key] = where[key];
       }
