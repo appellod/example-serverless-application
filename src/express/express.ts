@@ -75,8 +75,8 @@ export class Express {
     const router = express.Router();
     this.app.use("/v1", router);
 
-    const authenticationRouter = new AuthenticationRouter(router);
-    const groupsRouter = new GroupsRouter(router);
-    const usersRouter = new UsersRouter(router);
+    new AuthenticationRouter(router);
+    new GroupsRouter(router);
+    new UsersRouter(router);
   }
 }

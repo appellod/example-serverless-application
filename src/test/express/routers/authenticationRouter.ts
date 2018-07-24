@@ -15,7 +15,7 @@ describe("express/routes/authenticationRouter.ts", function() {
     user = await User.mock();
   });
 
-  describe("GET /authentication/availability", function() {
+  describe("GET /v1/authentication/availability", function() {
     it("returns a success response", async function() {
       const method = "get";
       const path = "/authentication/availability";
@@ -29,7 +29,7 @@ describe("express/routes/authenticationRouter.ts", function() {
     });
   });
 
-  describe("POST /authentication/signup", function() {
+  describe("POST /v1/authentication/signup", function() {
     it("returns a success response", async function() {
       const method = "post";
       const path = "/authentication/signup";
@@ -44,7 +44,7 @@ describe("express/routes/authenticationRouter.ts", function() {
     });
   });
 
-  describe("POST /authentication/login", function() {
+  describe("POST /v1/authentication/login", function() {
     beforeEach(async function() {
       user = await User.mock({ password: "password" });
     });
@@ -63,7 +63,7 @@ describe("express/routes/authenticationRouter.ts", function() {
     });
   });
 
-  describe("DELETE /authentication/logout", function() {
+  describe("DELETE /v1/authentication/logout", function() {
     it("returns a success response", async function() {
       const method = "delete";
       const path = "/authentication/logout";
@@ -75,7 +75,7 @@ describe("express/routes/authenticationRouter.ts", function() {
     });
   });
 
-  describe("POST /authentication/request-password-reset", function() {
+  describe("POST /v1/authentication/request-password-reset", function() {
     beforeEach(async function() {
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -98,7 +98,7 @@ describe("express/routes/authenticationRouter.ts", function() {
     });
   });
 
-  describe("POST /authentication/reset-password", function() {
+  describe("POST /v1/authentication/reset-password", function() {
     beforeEach(async function() {
       nock(/mailgun\.net/)
         .post(/.*/)

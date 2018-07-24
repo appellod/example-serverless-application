@@ -76,5 +76,17 @@ export class AuthenticationRouter {
      * @apiParam {String} password The new password.
      */
     router.post("/authentication/reset-password", Express.handler.call(controller, controller.resetPassword));
+
+    /**
+     * @api {get} /authentication/validate-token Validate Token
+     * @apiName ValidateToken
+     * @apiGroup Authentication
+     * @apiDescription Refreshes the user's token if user is found.
+     *
+     * @apiParam {String} token The user's access token.
+     *
+     * @apiSuccess {Object} user The user.
+     */
+    router.get("/authentication/validate-token", Express.handler.call(controller, controller.validateToken));
   }
 }

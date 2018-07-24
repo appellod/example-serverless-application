@@ -195,4 +195,24 @@ describe("express/controllers/authenticationController.ts", function() {
       expect(res.message).to.exist;
     });
   });
+
+  describe("validateToken()", function() {
+    let token: TokenDocument;
+    let user: UserDocument;
+
+    beforeEach(async function() {
+      user = await User.mock();
+      ({ token, user } = await user.login());
+    });
+
+    it("returns the user", async function() {
+      const req = {
+        query: { token }
+      } as express.Request;
+
+      const res = await authenticationController.validateToken(req);
+
+      expect(res.user).to.exist;
+    });
+  });
 });

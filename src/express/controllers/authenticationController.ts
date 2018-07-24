@@ -1,6 +1,7 @@
 import * as express from "express";
 
 import { User, UserDocument, UserPermissions } from "../../mongoose";
+import { BearerStrategy } from "../../passport";
 
 export class AuthenticationController {
   public async checkAvailability(req: express.Request, res?: express.Response): Promise<any> {
@@ -76,5 +77,20 @@ export class AuthenticationController {
     results.user = <UserDocument> await userPermissions.read(results.user, results.user);
 
     return { token: results.token._id, user: results.user };
+  }
+
+  public async validateToken(req: express.Request, res?: express.Response): Promise<any> {
+    if (!req.query.token) {
+      throw new Error("Please provide your access token.");
+    }
+
+    const token = req.query.token;
+    const user = await BearerStrategy.authenticate(token);
+
+    if (!user) {
+      throw new Error("No users matching given token.");
+    }
+
+    return { user };
   }
 }
