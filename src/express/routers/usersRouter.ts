@@ -12,9 +12,12 @@ export class UsersRouter {
      * @api {Object} User User
      * @apiName User
      * @apiGroup Models
+     * @apiParam {String} _id The ID of the group.
+     * @apiParam {Date} createdAt When the group was created.
      * @apiParam {String} email The user's email address.
      * @apiParam {Number} level The authorization level of the user.
      * @apiParam {String} password The user's password. It will be hashed on save.
+     * @apiParam {Date} updatedAt When the group was last updated.
      */
 
     /**
@@ -108,6 +111,8 @@ export class UsersRouter {
      * @apiDescription Removes a user.
      *
      * @apiParam {String} :id The ID of the user.
+     *
+     * @apiSuccess {[User](#api-Models-User)} user The removed user.
      */
     router.delete(
       "/users/:id",

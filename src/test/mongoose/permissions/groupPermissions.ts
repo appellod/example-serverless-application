@@ -143,13 +143,15 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
       });
 
       context("when user is is not a member of the group", function() {
-        it ("returns the record", async function() {
-          record = <GroupDocument> await permissions.read(record, user);
+        it ("returns an error", async function() {
+          try {
+            await permissions.read(record, user);
+          } catch (e) {
+            expect(e.message).to.eql("User does not have permission to perform this action.");
+            return;
+          }
 
-          expect(record._id).to.exist;
-          expect(record.isPrivate).to.be.undefined;
-          expect(record.ownerId).to.be.undefined;
-          expect(record.userIds).to.be.undefined;
+          throw new Error("Error should have been thrown.");
         });
       });
     });

@@ -12,10 +12,13 @@ export class GroupsRouter {
      * @api {Object} Group Group
      * @apiName Group
      * @apiGroup Models
+     * @apiParam {String} _id The ID of the group.
+     * @apiParam {Date} createdAt When the group was created.
      * @apiParam {Boolean} isPrivate True if the group is private, false if it is public.
      * @apiParam {String} name The name of the group.
      * @apiParam {[Group](#api-Models-Group)} owner The owner of the group.
      * @apiParam {String} ownerId The ID of the group's owner.
+     * @apiParam {Date} updatedAt When the group was last updated.
      * @apiParam {[Group](#api-Models-Group)[]} users The Users in the group.
      * @apiParam {String} userIds The IDs of the Users in the group.
      */
@@ -111,6 +114,8 @@ export class GroupsRouter {
      * @apiDescription Removes a group.
      *
      * @apiParam {String} :id The ID of the group.
+     *
+     * @apiSuccess {[Group](#api-Models-Group)} group The removed group.
      */
     router.delete(
       "/groups/:id",

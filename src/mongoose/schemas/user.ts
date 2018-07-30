@@ -3,7 +3,7 @@ import { Chance } from "chance";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
-import { Token, TokenDocument, User, UserDocument } from "../";
+import { Token, TokenDocument, UserDocument, UserModel } from "../";
 
 const schema = new mongoose.Schema({
   email: {
@@ -176,4 +176,4 @@ schema.methods.requestPasswordReset = async function(): Promise<UserDocument> {
   }
 };
 
-export const UserSchema = schema;
+export const User = mongoose.model<UserDocument, UserModel>("User", schema);

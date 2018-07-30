@@ -1,22 +1,18 @@
-import { Chance } from "chance";
 import * as mongoose from "mongoose";
 
-import { TokenSchema, User, UserDocument } from "../";
-
-export interface TokenDocument extends mongoose.Document {
+export interface IToken {
   [key: string]: any;
 
   expiresAt?: Date;
-  user?: UserDocument;
-  userId: mongoose.Types.ObjectId;
+  userId?: mongoose.Types.ObjectId;
+}
 
+export interface TokenDocument extends mongoose.Document, IToken {
   isExpired(): boolean;
   refresh(): TokenDocument;
 }
 
 export interface TokenModel extends mongoose.Model<TokenDocument> {
   getExpirationDate(): Date;
-  mock(params?: any): Promise<TokenDocument>;
+  mock(params?: IToken): Promise<TokenDocument>;
 }
-
-export const Token = mongoose.model<TokenDocument, TokenModel>("Token", TokenSchema);

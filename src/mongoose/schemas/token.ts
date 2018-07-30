@@ -1,7 +1,7 @@
 import { Chance } from "chance";
 import * as mongoose from "mongoose";
 
-import { Token, TokenDocument, User, UserDocument } from "../";
+import { TokenDocument, TokenModel, User } from "../";
 
 const schema = new mongoose.Schema({
   expiresAt: Date,
@@ -62,4 +62,4 @@ schema.methods.refresh = async function(): Promise<TokenDocument> {
   return token;
 };
 
-export const TokenSchema = schema;
+export const Token = mongoose.model<TokenDocument, TokenModel>("Token", schema);

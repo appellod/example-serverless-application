@@ -47,7 +47,10 @@ export class GroupsController {
   }
 
   public async remove(req: express.Request, res?: express.Response): Promise<any> {
-    return this.restController.remove(req.params, req.user);
+    const results = await this.restController.remove(req.params, req.user);
+    const group = <GroupDocument> results.record;
+
+    return { group };
   }
 
   public async removeAllUserIds(req: express.Request, res?: express.Response): Promise<{ group: GroupDocument }> {

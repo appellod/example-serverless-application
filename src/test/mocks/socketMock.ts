@@ -8,6 +8,6 @@ export class SocketMock {
 
   constructor() {
     this.emit = (event) => true;
-    this.id = chance.string();
+    this.id = chance.hash();
   }
 }

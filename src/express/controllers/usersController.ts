@@ -36,7 +36,10 @@ export class UsersController {
   }
 
   public async remove(req: express.Request, res?: express.Response): Promise<any> {
-    return this.restController.remove(req.params, req.user);
+    const results = await this.restController.remove(req.params, req.user);
+    const user = <UserDocument> results.record;
+
+    return { user };
   }
 
   public async update(req: express.Request, res?: express.Response): Promise<{ user: UserDocument }> {

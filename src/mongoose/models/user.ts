@@ -1,23 +1,22 @@
-import * as bcrypt from "bcrypt-nodejs";
-import { Chance } from "chance";
 import * as mongoose from "mongoose";
-import * as request from "request";
 
-import { TokenDocument, UserSchema } from "../";
+import { TokenDocument } from "../";
 
 export enum UserLevel {
   Default,
   Admin
 }
 
-export interface UserDocument extends mongoose.Document {
+export interface IUser {
   [key: string]: any;
 
   email?: string;
   level?: number;
   password?: string;
   resetHash?: string;
+}
 
+export interface UserDocument extends mongoose.Document, IUser {
   isValidPassword(password: string): boolean;
   login(): Promise<{ token: TokenDocument, user: UserDocument }>;
   logout(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument>;
@@ -26,8 +25,6 @@ export interface UserDocument extends mongoose.Document {
 
 export interface UserModel extends mongoose.Model<UserDocument> {
   getPasswordHash(password: string): string;
-  mock(params?: any): Promise<UserDocument>;
+  mock(params?: IUser): Promise<UserDocument>;
   resetPassword(resetHash: string, newPassword: string): Promise<UserDocument>;
 }
-
-export const User = mongoose.model<UserDocument, UserModel>("User", UserSchema);

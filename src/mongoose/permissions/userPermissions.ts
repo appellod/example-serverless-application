@@ -37,7 +37,9 @@ export class UserPermissions extends Permissions {
   public async readPermissions(record: UserDocument, user: UserDocument): Promise<string[]> {
     const attributes: string[] = [
       "_id",
-      "email"
+      "createdAt",
+      "email",
+      "updatedAt"
     ];
 
     // If user is reading their own record

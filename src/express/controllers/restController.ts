@@ -80,7 +80,7 @@ export class RestController {
 
     await this.permissions.remove(record, user);
 
-    return { message: "Record removed successfully." };
+    return { record };
   }
 
   public async removeAllAssociations(recordId: string | mongoose.Types.ObjectId, attribute: string, user: UserDocument): Promise<any> {

@@ -49,7 +49,7 @@ describe("express/controllers/groupsController.ts", function() {
   });
 
   describe("create()", function() {
-    it("creates a new user", async function() {
+    it("creates a new group", async function() {
       const req = {
         body: {
           isPrivate: true
@@ -92,7 +92,7 @@ describe("express/controllers/groupsController.ts", function() {
   });
 
   describe("remove()", function() {
-    it("returns a success message", async function() {
+    it("returns the removed group", async function() {
       const req = {
         params: {
           id: group._id
@@ -102,7 +102,7 @@ describe("express/controllers/groupsController.ts", function() {
 
       const res = await groupsController.remove(req);
 
-      expect(res.message).to.exist;
+      expect(res.group).to.exist;
     });
   });
 

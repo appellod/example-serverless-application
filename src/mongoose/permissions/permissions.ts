@@ -76,6 +76,11 @@ export abstract class Permissions {
    */
   public async read(record: any, user: UserDocument): Promise<mongoose.Document> {
     const readPermissions = await this.readPermissions(record, user);
+
+    if (readPermissions.length === 0) {
+      throw new Error("User does not have permission to perform this action.");
+    }
+
     record = this.removeUnauthorizedAttributes(record._doc, readPermissions);
 
     return record;

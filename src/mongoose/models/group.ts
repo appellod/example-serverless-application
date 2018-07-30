@@ -1,20 +1,16 @@
 import * as mongoose from "mongoose";
 
-import { GroupSchema, User, UserDocument } from "../";
-
-export interface GroupDocument extends mongoose.Document {
+export interface IGroup {
   [key: string]: any;
 
-  isPrivate: boolean;
+  isPrivate?: boolean;
   name?: string;
-  owner?: UserDocument;
-  ownerId: mongoose.Types.ObjectId;
-  users?: UserDocument[];
-  userIds: mongoose.Types.ObjectId[];
+  ownerId?: mongoose.Types.ObjectId;
+  userIds?: mongoose.Types.ObjectId[];
 }
+
+export interface GroupDocument extends mongoose.Document, IGroup {}
 
 export interface GroupModel extends mongoose.Model<GroupDocument> {
-  mock(params?: any): Promise<GroupDocument>;
+  mock(params?: IGroup): Promise<GroupDocument>;
 }
-
-export const Group = mongoose.model<GroupDocument, GroupModel>("Group", GroupSchema);

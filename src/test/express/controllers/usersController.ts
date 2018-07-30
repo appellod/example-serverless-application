@@ -75,7 +75,7 @@ describe("express/controllers/usersController.ts", function() {
   });
 
   describe("remove()", function() {
-    it("returns a success message", async function() {
+    it("returns the removed record", async function() {
       const req = {
         params: {
           id: user._id
@@ -85,7 +85,7 @@ describe("express/controllers/usersController.ts", function() {
 
       const res = await usersController.remove(req);
 
-      expect(res.message).to.exist;
+      expect(res.user).to.exist;
     });
   });
 

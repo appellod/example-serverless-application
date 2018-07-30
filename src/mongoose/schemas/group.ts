@@ -1,7 +1,7 @@
 import { Chance } from "chance";
 import * as mongoose from "mongoose";
 
-import { GroupDocument, User } from "../";
+import { GroupDocument, GroupModel, User } from "../";
 
 const schema = new mongoose.Schema({
   isPrivate: {
@@ -35,4 +35,4 @@ schema.statics.mock = async function(params?: any): Promise<GroupDocument> {
   return this.create(params);
 };
 
-export const GroupSchema = schema;
+export const Group = mongoose.model<GroupDocument, GroupModel>("Group", schema);
