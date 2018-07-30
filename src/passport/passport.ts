@@ -1,12 +1,13 @@
-import { Application } from "express";
-import * as passport from "passport";
+import * as koa from "koa";
+import * as passport from "koa-passport";
 
 import { BearerStrategy } from "./";
 
 export class Passport {
-  constructor(express: Application) {
-    express.use(passport.initialize());
+  constructor(app: koa) {
+    app.use(passport.initialize());
 
     const bearerStrategy = new BearerStrategy();
+    passport.use(bearerStrategy);
   }
 }

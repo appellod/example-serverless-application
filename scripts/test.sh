@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 if [ -f settings.test.sh ]; then
   source settings.test.sh

@@ -3,7 +3,7 @@ require("source-map-support").install();
 import * as bluebird from "bluebird";
 
 import { Documentation } from "./documentation";
-import { Express } from "./express";
+import { Koa } from "./koa";
 import { Loggly } from "./loggly";
 import { Mongoose, User } from "./mongoose";
 import { Passport } from "./passport";
@@ -18,12 +18,12 @@ if (process.env.ENVIRONMENT !== "test") console.log("Using Environment: " + proc
 // Setup components
 const loggly = new Loggly();
 const mongoose = new Mongoose();
-const express = new Express();
-const documentation = new Documentation(express.app);
-const passport = new Passport(express.app);
-const socketIo = new SocketIo(express.server);
+const koa = new Koa();
+const documentation = new Documentation(koa.app);
+const passport = new Passport(koa.app);
+const socketIo = new SocketIo(koa.server);
 
-export = { documentation, express, mongoose, passport, socketIo };
+export = { documentation, koa, mongoose, passport, socketIo };
 
 // Create admin user if user doesn't exit, but only when running locally
 if (process.env.ENVIRONMENT === "local") {

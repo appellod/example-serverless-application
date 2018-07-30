@@ -1,11 +1,10 @@
-import * as passport from "passport";
 import { Strategy } from "passport-http-bearer";
 
-import { Token, TokenDocument, User, UserDocument } from "../../mongoose";
+import { Token, User, UserDocument } from "../../mongoose";
 
-export class BearerStrategy {
+export class BearerStrategy extends Strategy {
   constructor() {
-    passport.use(new Strategy(async (token, done) => {
+    super(async (token, done) => {
       let user: UserDocument;
 
       try {
@@ -13,7 +12,7 @@ export class BearerStrategy {
       } catch (e) {}
 
       return done(null, user);
-    }));
+    });
   }
 
   public static async authenticate(tokenId: string): Promise<UserDocument> {

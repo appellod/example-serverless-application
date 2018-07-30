@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import { Chance } from "chance";
-import * as express from "express";
+import { Context } from "koa";
 
-import { GroupsController } from "../../../express";
+import { GroupsController } from "../../../koa";
 import { Group, GroupDocument, User, UserDocument } from "../../../mongoose";
 
-const index = require("../../");
+require("../../");
 
 const chance = new Chance();
 const groupsController = new GroupsController();
@@ -21,88 +21,90 @@ describe("express/controllers/groupsController.ts", function() {
 
   describe("addUserIds()", function() {
     it("returns the updated group", async function() {
-      const req = {
+      const ctx = {
         params: {
           id: group.id,
           userIds: user.id + "," + user.id
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.addUserIds(req);
+      await groupsController.addUserIds(ctx);
 
-      expect(res.group.userIds).to.contain(user._id);
+      expect(ctx.body.group.userIds).to.contain(user._id);
     });
   });
 
   describe("count()", function() {
     it("returns the number of groups matching the criteria", async function() {
-      const req = {
+      const ctx = {
         query: {},
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.count(req);
+      await groupsController.count(ctx);
 
-      expect(res.count).to.eql(1);
+      expect(ctx.body.count).to.eql(1);
     });
   });
 
   describe("create()", function() {
     it("creates a new group", async function() {
-      const req = {
-        body: {
-          isPrivate: true
+      const ctx = {
+        request: {
+          body: {
+            isPrivate: true
+          }
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.create(req);
+      await groupsController.create(ctx);
 
-      expect(res.group).to.exist;
+      expect(ctx.body.group).to.exist;
     });
   });
 
   describe("find()", function() {
     it("returns all groups", async function() {
-      const req = {
+      const ctx = {
         query: {},
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.find(req);
+      await groupsController.find(ctx);
 
-      expect(res.groups.length).to.eql(1);
+      expect(ctx.body.groups.length).to.eql(1);
     });
   });
 
   describe("findOne()", function() {
     it("returns the group", async function() {
-      const req = {
+      const ctx = {
         params: {
           id: group._id
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.findOne(req);
+      await groupsController.findOne(ctx);
 
-      expect(res.group).to.exist;
+      expect(ctx.body.group).to.exist;
     });
   });
 
   describe("remove()", function() {
     it("returns the removed group", async function() {
-      const req = {
+      const ctx = {
         params: {
           id: group._id
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.remove(req);
+      await groupsController.remove(ctx);
 
-      expect(res.group).to.exist;
+      expect(ctx.body.group).to.exist;
     });
   });
 
@@ -111,16 +113,16 @@ describe("express/controllers/groupsController.ts", function() {
       group.userIds = [user._id];
       group = await group.save();
 
-      const req = {
+      const ctx = {
         params: {
           id: group.id
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.removeAllUserIds(req);
+      await groupsController.removeAllUserIds(ctx);
 
-      expect(res.group.userIds).to.not.contain(user._id);
+      expect(ctx.body.group.userIds).to.not.contain(user._id);
     });
   });
 
@@ -129,35 +131,37 @@ describe("express/controllers/groupsController.ts", function() {
       group.userIds = [user._id];
       group = await group.save();
 
-      const req = {
+      const ctx = {
         params: {
           id: group.id,
           userIds: user.id + "," + user.id
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.removeUserIds(req);
+      await groupsController.removeUserIds(ctx);
 
-      expect(res.group.userIds).to.not.contain(user._id);
+      expect(ctx.body.group.userIds).to.not.contain(user._id);
     });
   });
 
   describe("update()", function() {
     it("updates and returns the group", async function() {
-      const req = {
-        body: {
-          isPrivate: true
-        },
+      const ctx = {
         params: {
           id: group._id
         },
-        user
-      } as express.Request;
+        request: {
+          body: {
+            isPrivate: true
+          }
+        },
+        state: { user }
+      } as Context;
 
-      const res = await groupsController.findOne(req);
+      await groupsController.findOne(ctx);
 
-      expect(res.group).to.exist;
+      expect(ctx.body.group).to.exist;
     });
   });
 });

@@ -15,6 +15,6 @@ beforeEach(async function() {
 });
 
 export = {
-  express: index.express,
+  koa: index.koa,
   mongoose: index.mongoose
 };

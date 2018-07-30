@@ -1,11 +1,10 @@
-import * as express from "express";
-import * as passport from "passport";
+import * as passport from "koa-passport";
+import * as Router from "koa-router";
 
-import { Express } from "../";
 import { GroupsController } from "../";
 
 export class GroupsRouter {
-  constructor(router: express.Router) {
+  constructor(router: Router) {
     const controller = new GroupsController();
 
     /**
@@ -40,7 +39,7 @@ export class GroupsRouter {
     router.get(
       "/groups",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.find)
+      controller.find.bind(controller)
     );
 
     /**
@@ -56,7 +55,7 @@ export class GroupsRouter {
     router.post(
       "/groups",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.create)
+      controller.create.bind(controller)
     );
 
     /**
@@ -72,7 +71,7 @@ export class GroupsRouter {
     router.get(
       "/groups/count",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.count)
+      controller.count.bind(controller)
     );
 
     /**
@@ -88,7 +87,7 @@ export class GroupsRouter {
     router.get(
       "/groups/:id",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.findOne)
+      controller.findOne.bind(controller)
     );
 
     /**
@@ -104,7 +103,7 @@ export class GroupsRouter {
     router.put(
       "/groups/:id",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.update)
+      controller.update.bind(controller)
     );
 
     /**
@@ -120,7 +119,7 @@ export class GroupsRouter {
     router.delete(
       "/groups/:id",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.remove)
+      controller.remove.bind(controller)
     );
 
     /**
@@ -136,7 +135,7 @@ export class GroupsRouter {
     router.delete(
       "/groups/:id/userIds",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.removeAllUserIds)
+      controller.removeAllUserIds.bind(controller)
     );
 
     /**
@@ -153,7 +152,7 @@ export class GroupsRouter {
     router.post(
       "/groups/:id/userIds/:userIds",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.addUserIds)
+      controller.addUserIds.bind(controller)
     );
 
     /**
@@ -170,7 +169,7 @@ export class GroupsRouter {
     router.delete(
       "/groups/:id/userIds/:userIds",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.removeUserIds)
+      controller.removeUserIds.bind(controller)
     );
   }
 }

@@ -1,2 +1,2 @@
-export * from "./mongoSessionStoreMiddleware";
+export * from "./errorMiddleware";
 export * from "./queryStringJsonParserMiddleware";

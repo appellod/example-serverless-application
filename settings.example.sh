@@ -18,6 +18,6 @@ PASSWORD_RESET_COMPANY="The Example Team"
 PASSWORD_RESET_FROM="Example Support Team <no-reply@example.com>"
 PASSWORD_RESET_URL="http://127.0.0.1:3000/reset-password.html"
 
-# Express Server
+# HTTP Server
 SERVER_HOST="127.0.0.1"
 SERVER_PORT="3000"

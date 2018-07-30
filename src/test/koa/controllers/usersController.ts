@@ -1,11 +1,10 @@
 import { expect } from "chai";
 import { Chance } from "chance";
-import * as express from "express";
-
-import { UsersController } from "../../../express";
+import { Context } from "koa";
+import { UsersController } from "../../../koa";
 import { User, UserDocument } from "../../../mongoose";
 
-const index = require("../../");
+require("../../");
 
 const chance = new Chance();
 const usersController = new UsersController();
@@ -19,92 +18,96 @@ describe("express/controllers/usersController.ts", function() {
 
   describe("count()", function() {
     it("returns the number of users matching the criteria", async function() {
-      const req = {
+      const ctx = {
         query: {},
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await usersController.count(req);
+      await usersController.count(ctx);
 
-      expect(res.count).to.eql(1);
+      expect(ctx.body.count).to.eql(1);
     });
   });
 
   describe("create()", function() {
     it("creates a new user", async function() {
-      const req = {
-        body: {
-          email: chance.email(),
-          password: chance.hash()
+      const ctx = {
+        request: {
+          body: {
+            email: chance.email(),
+            password: chance.hash()
+          }
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await usersController.create(req);
+      await usersController.create(ctx);
 
-      expect(res.user).to.exist;
+      expect(ctx.body.user).to.exist;
     });
   });
 
   describe("find()", function() {
     it("returns all users", async function() {
-      const req = {
+      const ctx = {
         query: {},
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await usersController.find(req);
+      await usersController.find(ctx);
 
-      expect(res.users.length).to.eql(1);
+      expect(ctx.body.users.length).to.eql(1);
     });
   });
 
   describe("findOne()", function() {
     it("returns the user", async function() {
-      const req = {
+      const ctx = {
         params: {
           id: user._id
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await usersController.findOne(req);
+      await usersController.findOne(ctx);
 
-      expect(res.user).to.exist;
+      expect(ctx.body.user).to.exist;
     });
   });
 
   describe("remove()", function() {
     it("returns the removed record", async function() {
-      const req = {
+      const ctx = {
         params: {
           id: user._id
         },
-        user
-      } as express.Request;
+        state: { user }
+      } as Context;
 
-      const res = await usersController.remove(req);
+      await usersController.remove(ctx);
 
-      expect(res.user).to.exist;
+      expect(ctx.body.user).to.exist;
     });
   });
 
   describe("update()", function() {
     it("updates and returns the user", async function() {
-      const req = {
-        body: {
-          email: chance.email(),
-          level: user.level + 1
-        },
+      const ctx = {
         params: {
           id: user._id
         },
-        user
-      } as express.Request;
+        request: {
+          body: {
+            email: chance.email(),
+            level: user.level + 1
+          }
+        },
+        state: { user }
+      } as Context;
 
-      const res = await usersController.findOne(req);
+      await usersController.findOne(ctx);
 
-      expect(res.user).to.exist;
+      expect(ctx.body.user).to.exist;
     });
   });
 });

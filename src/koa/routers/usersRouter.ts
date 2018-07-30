@@ -1,11 +1,10 @@
-import * as express from "express";
-import * as passport from "passport";
+import * as passport from "koa-passport";
+import * as Router from "koa-router";
 
-import { Express } from "../";
 import { UsersController } from "../";
 
 export class UsersRouter {
-  constructor(router: express.Router) {
+  constructor(router: Router) {
     const controller = new UsersController();
 
     /**
@@ -37,7 +36,7 @@ export class UsersRouter {
     router.get(
       "/users",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.find)
+      controller.find.bind(controller)
     );
 
     /**
@@ -53,7 +52,7 @@ export class UsersRouter {
     router.post(
       "/users",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.create)
+      controller.create.bind(controller)
     );
 
     /**
@@ -69,7 +68,7 @@ export class UsersRouter {
     router.get(
       "/users/count",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.count)
+      controller.count.bind(controller)
     );
 
     /**
@@ -85,7 +84,7 @@ export class UsersRouter {
     router.get(
       "/users/:id",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.findOne)
+      controller.findOne.bind(controller)
     );
 
     /**
@@ -101,7 +100,7 @@ export class UsersRouter {
     router.put(
       "/users/:id",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.update)
+      controller.update.bind(controller)
     );
 
     /**
@@ -117,7 +116,7 @@ export class UsersRouter {
     router.delete(
       "/users/:id",
       passport.authenticate("bearer", { session: false }),
-      Express.handler.call(controller, controller.remove)
+      controller.remove.bind(controller)
     );
   }
 }

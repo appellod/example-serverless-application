@@ -1,11 +1,11 @@
+import { Context } from "koa";
 import { expect } from "chai";
-import * as express from "express";
 import * as nock from "nock";
 
-import { AuthenticationController } from "../../../express";
+import { AuthenticationController } from "../../../koa";
 import { TokenDocument, User, UserDocument } from "../../../mongoose";
 
-const index = require("../../");
+require("../../");
 
 const authenticationController = new AuthenticationController();
 
@@ -13,15 +13,15 @@ describe("express/controllers/authenticationController.ts", function() {
   describe("checkAvailability()", function() {
     context("when email is available", function() {
       it("returns isAvailable set to true", async function() {
-        const req = {
+        const ctx = {
           query: {
             email: "available@example.com"
           }
-        } as express.Request;
+        } as Context;
 
-        const res = await authenticationController.checkAvailability(req);
+        await authenticationController.checkAvailability(ctx);
 
-        expect(res.isAvailable).to.be.true;
+        expect(ctx.body.isAvailable).to.be.true;
       });
     });
 
@@ -31,37 +31,39 @@ describe("express/controllers/authenticationController.ts", function() {
       });
 
       it("returns isAvailable set to false", async function() {
-        const req = {
+        const ctx = {
           query: {
             email: "taken@example.com"
           }
-        } as express.Request;
+        } as Context;
 
-        const res = await authenticationController.checkAvailability(req);
+        await authenticationController.checkAvailability(ctx);
 
-        expect(res.isAvailable).to.be.false;
+        expect(ctx.body.isAvailable).to.be.false;
       });
     });
   });
 
   describe("signup()", function() {
     it("returns the user and access token", async function() {
-      const req = {
-        body: {
-          email: "user@example.com",
-          password: "password"
+      const ctx = {
+        request: {
+          body: {
+            email: "user@example.com",
+            password: "password"
+          }
         }
-      } as express.Request;
+      } as Context;
 
-      const res = await authenticationController.signup(req);
+      await authenticationController.signup(ctx);
 
-      expect(res.token).to.exist;
-      expect(res.user).to.exist;
-      expect(res.user.email).to.exist;
-      expect(res.user.level).to.exist;
-      expect(res.user.password).to.be.undefined;
-      expect(res.user.resetHash).to.be.undefined;
-      expect(res.user.tokens).to.be.undefined;
+      expect(ctx.body.token).to.exist;
+      expect(ctx.body.user).to.exist;
+      expect(ctx.body.user.email).to.exist;
+      expect(ctx.body.user.level).to.exist;
+      expect(ctx.body.user.password).to.be.undefined;
+      expect(ctx.body.user.resetHash).to.be.undefined;
+      expect(ctx.body.user.tokens).to.be.undefined;
     });
   });
 
@@ -74,36 +76,40 @@ describe("express/controllers/authenticationController.ts", function() {
 
     context("when credentials are correct", function() {
       it("returns the user and access token", async function() {
-        const req = {
-          body: {
-            email: user.email,
-            password: "password"
+        const ctx = {
+          request: {
+            body: {
+              email: user.email,
+              password: "password"
+            }
           }
-        } as express.Request;
+        } as Context;
 
-        const res = await authenticationController.login(req);
+        await authenticationController.login(ctx);
 
-        expect(res.token).to.exist;
-        expect(res.user).to.exist;
-        expect(res.user.email).to.exist;
-        expect(res.user.level).to.exist;
-        expect(res.user.password).to.be.undefined;
-        expect(res.user.resetHash).to.be.undefined;
-        expect(res.user.tokens).to.be.undefined;
+        expect(ctx.body.token).to.exist;
+        expect(ctx.body.user).to.exist;
+        expect(ctx.body.user.email).to.exist;
+        expect(ctx.body.user.level).to.exist;
+        expect(ctx.body.user.password).to.be.undefined;
+        expect(ctx.body.user.resetHash).to.be.undefined;
+        expect(ctx.body.user.tokens).to.be.undefined;
       });
     });
 
     context("when credentials are incorrect", function() {
       it("returns an error message", async function() {
-        const req = {
-          body: {
-            email: user.email,
-            password: "wrong"
+        const ctx = {
+          request: {
+            body: {
+              email: user.email,
+              password: "wrong"
+            }
           }
-        } as express.Request;
+        } as Context;
 
         try {
-          const res = await authenticationController.login(req);
+          await authenticationController.login(ctx);
         } catch (e) {
           expect(e.message).to.eql("Incorrect username or password.");
           return;
@@ -124,14 +130,16 @@ describe("express/controllers/authenticationController.ts", function() {
     });
 
     it("returns a success message", async function() {
-      const req = {} as express.Request;
-      req.headers = {};
-      req.headers.authorization = "Bearer " + token._id;
-      req.user = user;
+      const ctx = {
+        headers: {
+          authorization: `Bearer ${token._id}`
+        },
+        state: { user }
+      } as Context;
 
-      const res = await authenticationController.logout(req);
+      await authenticationController.logout(ctx);
 
-      expect(res.message).to.exist;
+      expect(ctx.body.message).to.exist;
     });
   });
 
@@ -152,15 +160,17 @@ describe("express/controllers/authenticationController.ts", function() {
     });
 
     it("returns a success message", async function() {
-      const req = {
-        body: {
-          email: user.email
+      const ctx = {
+        request: {
+          body: {
+            email: user.email
+          }
         }
-      } as express.Request;
+      } as Context;
 
-      const res = await authenticationController.requestPasswordReset(req);
+      await authenticationController.requestPasswordReset(ctx);
 
-      expect(res.message).to.exist;
+      expect(ctx.body.message).to.exist;
     });
   });
 
@@ -183,16 +193,18 @@ describe("express/controllers/authenticationController.ts", function() {
     });
 
     it("returns a success message", async function() {
-      const req = {
-        body: {
-          password: "newpassword",
-          resetHash: user.resetHash
+      const ctx = {
+        request: {
+          body: {
+            password: "newpassword",
+            resetHash: user.resetHash
+          }
         }
-      } as express.Request;
+      } as Context;
 
-      const res = await authenticationController.resetPassword(req);
+      await authenticationController.resetPassword(ctx);
 
-      expect(res.message).to.exist;
+      expect(ctx.body.message).to.exist;
     });
   });
 
@@ -206,13 +218,13 @@ describe("express/controllers/authenticationController.ts", function() {
     });
 
     it("returns the user", async function() {
-      const req = {
+      const ctx = {
         query: { token }
-      } as express.Request;
+      } as Context;
 
-      const res = await authenticationController.validateToken(req);
+      await authenticationController.validateToken(ctx);
 
-      expect(res.user).to.exist;
+      expect(ctx.body.user).to.exist;
     });
   });
 });

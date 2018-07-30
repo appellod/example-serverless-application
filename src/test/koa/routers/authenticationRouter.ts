@@ -4,7 +4,7 @@ import * as nock from "nock";
 import { TokenDocument, User, UserDocument } from "../../../mongoose";
 import { ApiHelper } from "../apiHelper";
 
-const index = require("../../");
+require("../../");
 
 const apiHelper = new ApiHelper();
 
@@ -134,7 +134,7 @@ describe("express/routes/authenticationRouter.ts", function() {
     it("returns a success response", async function() {
       const method = "get";
       const path = "/authentication/validate-token";
-      const params = { token };
+      const params = { token: token._id };
 
       const res = await apiHelper.request(method, path, params, user);
 

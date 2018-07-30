@@ -1,11 +1,10 @@
-import * as express from "express";
-import * as passport from "passport";
+import * as passport from "koa-passport";
+import * as Router from "koa-router";
 
-import { Express } from "../";
 import { AuthenticationController } from "../";
 
 export class AuthenticationRouter {
-  constructor(router: express.Router) {
+  constructor(router: Router) {
     const controller = new AuthenticationController();
 
     /**
@@ -18,7 +17,7 @@ export class AuthenticationRouter {
      *
      * @apiSuccess {Boolean} isAvailable True if the email is available, false otherwise.
      */
-    router.get("/authentication/availability", Express.handler.call(controller, controller.checkAvailability));
+    router.get("/authentication/availability", controller.checkAvailability.bind(controller));
 
     /**
      * @api {post} /authentication/signup Sign Up
@@ -32,7 +31,7 @@ export class AuthenticationRouter {
      * @apiSuccess {Object} user The created user.
      * @apiSuccess {String} token The user's access token.
      */
-    router.post("/authentication/signup", Express.handler.call(controller, controller.signup));
+    router.post("/authentication/signup", controller.signup.bind(controller));
 
     /**
      * @api {post} /authentication/login Log In
@@ -46,7 +45,7 @@ export class AuthenticationRouter {
      * @apiSuccess {Object} user The user.
      * @apiSuccess {String} token The user's access token.
      */
-    router.post("/authentication/login", Express.handler.call(controller, controller.login));
+    router.post("/authentication/login", controller.login.bind(controller));
 
     /**
      * @api {delete} /authentication/logout Log Out
@@ -54,7 +53,7 @@ export class AuthenticationRouter {
      * @apiGroup Authentication
      * @apiDescription Logs a user out.
      */
-    router.delete("/authentication/logout", passport.authenticate("bearer", { session: false }), Express.handler.call(controller, controller.logout));
+    router.delete("/authentication/logout", passport.authenticate("bearer", { session: false }), controller.logout.bind(controller));
 
     /**
      * @api {post} /authentication/request-password-reset Request Password Reset
@@ -64,7 +63,7 @@ export class AuthenticationRouter {
      *
      * @apiParam {String} email The user's email address.
      */
-    router.post("/authentication/request-password-reset", Express.handler.call(controller, controller.requestPasswordReset));
+    router.post("/authentication/request-password-reset", controller.requestPasswordReset.bind(controller));
 
     /**
      * @api {post} /authentication/reset-password Reset Password
@@ -75,7 +74,7 @@ export class AuthenticationRouter {
      * @apiParam {String} resetHash The reset password hash.
      * @apiParam {String} password The new password.
      */
-    router.post("/authentication/reset-password", Express.handler.call(controller, controller.resetPassword));
+    router.post("/authentication/reset-password", controller.resetPassword.bind(controller));
 
     /**
      * @api {get} /authentication/validate-token Validate Token
@@ -87,6 +86,6 @@ export class AuthenticationRouter {
      *
      * @apiSuccess {Object} user The user.
      */
-    router.get("/authentication/validate-token", Express.handler.call(controller, controller.validateToken));
+    router.get("/authentication/validate-token", controller.validateToken.bind(controller));
   }
 }
