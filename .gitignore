@@ -2,7 +2,9 @@ settings.sh
 settings.test.sh
 tscommand*.tmp.txt
 
+.nyc_output/
 .tscache/
+coverage/
 dist/
 node_modules/
 src/documentation/public/apidoc/*

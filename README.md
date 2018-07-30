@@ -43,6 +43,9 @@ included for easily testing both secured and unsecured API endpoints.
 **End-to-End API Tests**  
 Included test suite performs end-to-end testing on all API routes.
 
+**Test Coverage Reports**
+Generate test coverage reports by simply running `npm run test:coverage`.
+
 **Docker Ready**  
 A Dockerfile is included and is ready to run the application out-of-the-box.
 
@@ -138,6 +141,13 @@ NODE_ENV=local npm run migrations
 ```
 This will run all migrations on the environment specified by NODE_ENV (local in this example). Migrations will be saved 
 to the schemaMigrations collection within MongoDB.
+
+**Generating Test Coverage Report**  
+To generate a test coverage report, run:
+```
+npm run test:coverage
+```
+This will generate a `coverage/` folder. Open the `index.html ` inside to view the report.
 
 ## File Structure
 

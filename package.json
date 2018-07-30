@@ -9,6 +9,18 @@
     "type": "git",
     "url": "https://github.com/appellod/simple-restful-api.git"
   },
+  "scripts": {
+    "build": "./scripts/build.sh",
+    "documentation": "./scripts/documentation.sh",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "migrations": "mm",
+    "migrations:create": "mm create",
+    "start": "./scripts/documentation.sh && ./scripts/build.sh && ./scripts/start.sh",
+    "test": "./scripts/test.sh",
+    "test:coverage": "nyc --reporter=html npm test",
+    "test:watch": "./scripts/test-watch.sh",
+    "watch": "./scripts/watch.sh"
+  },
   "apidoc": {
     "name": "API Documentation",
     "description": "",
@@ -20,16 +32,10 @@
       "filename": "src/documentation/public/apidoc/header.md"
     }
   },
-  "scripts": {
-    "build": "./scripts/build.sh",
-    "documentation": "./scripts/documentation.sh",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "migrations": "mm",
-    "migrations:create": "mm create",
-    "start": "./scripts/documentation.sh && ./scripts/build.sh && ./scripts/start.sh",
-    "test": "./scripts/build.sh && ./scripts/test.sh",
-    "test:watch": "./scripts/test-watch.sh",
-    "watch": "./scripts/watch.sh"
+  "nyc": {
+    "exclude": [
+      "dist/test/**"
+    ]
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
@@ -88,6 +94,7 @@
     "mongodb-migrations": "^0.8.5",
     "nock": "^9.0.13",
     "nodemon": "^1.18.3",
+    "nyc": "^12.0.2",
     "pluralize": "^4.0.0",
     "sinon": "^4.2.2",
     "sinon-chai": "^2.14.0",

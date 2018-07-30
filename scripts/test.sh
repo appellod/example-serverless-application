@@ -7,4 +7,4 @@ elif [ -f settings.sh ]; then
   source settings.sh
 fi
 
-mocha dist/test --opts dist/test/mocha.opts --exit
+mocha --opts ./src/test/mocha.opts -r ./ts-node.js --inspect --exit $(find ./src/test -name '*.ts') 
