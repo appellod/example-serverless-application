@@ -28,6 +28,7 @@
     "migrations:create": "mm create",
     "start": "./scripts/documentation.sh && ./scripts/build.sh && ./scripts/start.sh",
     "test": "./scripts/build.sh && ./scripts/test.sh",
+    "test:watch": "./scripts/test-watch.sh",
     "watch": "./scripts/watch.sh"
   },
   "dependencies": {

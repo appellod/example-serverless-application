@@ -35,4 +35,6 @@ schema.statics.mock = async function(params?: any): Promise<GroupDocument> {
   return this.create(params);
 };
 
-export const Group = mongoose.model<GroupDocument, GroupModel>("Group", schema);
+export const Group = mongoose.modelNames().indexOf("Group") < 0 ? 
+  mongoose.model<GroupDocument, GroupModel>("Group", schema) :
+  mongoose.model<GroupDocument, GroupModel>("Group");

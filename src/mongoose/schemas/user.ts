@@ -176,4 +176,6 @@ schema.methods.requestPasswordReset = async function(): Promise<UserDocument> {
   }
 };
 
-export const User = mongoose.model<UserDocument, UserModel>("User", schema);
+export const User = mongoose.modelNames().indexOf("User") < 0 ? 
+  mongoose.model<UserDocument, UserModel>("User", schema) :
+  mongoose.model<UserDocument, UserModel>("User");

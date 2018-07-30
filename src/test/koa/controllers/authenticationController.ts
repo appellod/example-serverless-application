@@ -5,8 +5,6 @@ import * as nock from "nock";
 import { AuthenticationController } from "../../../koa";
 import { TokenDocument, User, UserDocument } from "../../../mongoose";
 
-require("../../");
-
 const authenticationController = new AuthenticationController();
 
 describe("express/controllers/authenticationController.ts", function() {

@@ -9,10 +9,12 @@ export class Mongoose {
     const database = process.env.MONGO_DATABASE;
     const url = `mongodb://${host}:${port}/${database}`;
 
-    mongoose.connect(url, (err) => {
-      if (err) throw err;
-
-      if (process.env.ENVIRONMENT !== "test") console.log("Mongoose connection successful.");
-    });
+    if (mongoose.connection.readyState !== 1) {
+      mongoose.connect(url, (err) => {
+        if (err) throw err;
+  
+        if (process.env.ENVIRONMENT !== "test") console.log("Mongoose connection successful.");
+      });
+    }
   }
 }
