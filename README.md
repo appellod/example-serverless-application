@@ -1,15 +1,8 @@
-# Simple RESTful API
+# Typescript RESTful API
 This is an open-source RESTful API designed to give Typescript developers a solid
 starting point for creating backend applications.
 
 ## Features
-
-**No Abstractions**  
-Many other frameworks require you to install their package globally and include
-many functions specific to their application. Sometimes it can take just as long
-to learn a new framework as just learning how to set up your own API. This API
-does not hide anything or abstract functionality away from the user. All code
-is included in the project and can be modified to fit the user's needs.
 
 **Passport**  
 Authentication is performed using Passport. The default authentication strategy
@@ -71,14 +64,6 @@ You can start up any development dependencies such as MongoDB using:
 ```
 docker-compose up
 ```
-
-**Compile Typescript with Grunt**  
-The Typescript included within the src/ directory needs to be compiled before being run. To do this, we will
-run the following command:
-```
-npm run build
-```
-This will compile all the Typescript within the src/ directory into a dist/ directory. 
 
 **Setup Environment Variables**  
 All variables are declared inside a root-level `settings.sh` file. You can use the existing `settings.example.sh`
@@ -149,7 +134,7 @@ field keys or adding or removing indexes.
 
 Migrations can be run with:
 ```
-NODE_ENV=local npm run migrations:run
+NODE_ENV=local npm run migrations
 ```
 This will run all migrations on the environment specified by NODE_ENV (local in this example). Migrations will be saved 
 to the schemaMigrations collection within MongoDB.
@@ -176,7 +161,7 @@ Contains the documentation for the API. This is separate from the API controller
 microservice. This can also be moved into a separate Git repository to allow documentation to be commited without messing
 up PRs and commit diffs.
 
-**express/**  
+**koa/**  
 Contains all the controllers and routes for the API. Logic is defined in the controllers and the routers map the logic
 to endpoints.
 

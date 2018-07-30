@@ -12,7 +12,7 @@ export class Mongoose {
     if (mongoose.connection.readyState !== 1) {
       mongoose.connect(url, (err) => {
         if (err) throw err;
-  
+
         if (process.env.ENVIRONMENT !== "test") console.log("Mongoose connection successful.");
       });
     }

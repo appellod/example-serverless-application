@@ -62,6 +62,6 @@ schema.methods.refresh = async function(): Promise<TokenDocument> {
   return token;
 };
 
-export const Token = mongoose.modelNames().indexOf("Token") < 0 ? 
+export const Token = mongoose.modelNames().indexOf("Token") < 0 ?
   mongoose.model<TokenDocument, TokenModel>("Token", schema) :
   mongoose.model<TokenDocument, TokenModel>("Token");

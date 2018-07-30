@@ -31,9 +31,9 @@ export class Koa {
     this.app.use(bodyParser({ jsonLimit: "50mb" }));
 
     // Setup our MongoDB session store for API documentation logins.
-    this.app.keys = ['this is a secret key for the sessions'];
-    const mongooseStore = new MongooseStore({ 
-      collection: "sessions", 
+    this.app.keys = ["this is a secret key for the sessions"];
+    const mongooseStore = new MongooseStore({
+      collection: "sessions",
       name: `Session-${Date.now()}` // Append date to model name to allow mocha --watch
     });
     const mongoSession = session({ store: mongooseStore }, this.app);
