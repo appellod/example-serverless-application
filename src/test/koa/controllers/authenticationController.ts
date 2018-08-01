@@ -3,7 +3,7 @@ import { expect } from "chai";
 import * as nock from "nock";
 
 import { AuthenticationController } from "../../../koa";
-import { TokenDocument, User, UserDocument } from "../../../mongoose";
+import { User, UserDocument } from "../../../mongoose";
 
 const authenticationController = new AuthenticationController();
 
@@ -119,7 +119,7 @@ describe("express/controllers/authenticationController.ts", function() {
   });
 
   describe("logout()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -130,7 +130,7 @@ describe("express/controllers/authenticationController.ts", function() {
     it("returns a success message", async function() {
       const ctx = {
         headers: {
-          authorization: `Bearer ${token._id}`
+          authorization: `Bearer ${token}`
         },
         state: { user }
       } as Context;
@@ -142,7 +142,7 @@ describe("express/controllers/authenticationController.ts", function() {
   });
 
   describe("requestPasswordReset()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -173,7 +173,7 @@ describe("express/controllers/authenticationController.ts", function() {
   });
 
   describe("resetPassword()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -207,7 +207,7 @@ describe("express/controllers/authenticationController.ts", function() {
   });
 
   describe("validateToken()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {

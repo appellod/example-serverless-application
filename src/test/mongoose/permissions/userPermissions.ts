@@ -22,9 +22,9 @@ describe("mongoose/permissions/userPermissions.ts", function() {
 
         const record = <UserDocument> await permissions.create(params, {}, user);
 
-        expect(record.email).to.eq(params.email);
-        expect(record.level).to.eq(0);
-        expect(record.password).to.not.eq(params.password);
+        expect(record.email).to.eql(params.email);
+        expect(record.level).to.eql(0);
+        expect(record.password).to.not.eql(params.password);
         expect(record.resetHash).to.be.undefined;
       });
     });
@@ -171,8 +171,8 @@ describe("mongoose/permissions/userPermissions.ts", function() {
 
         record = <UserDocument> await permissions.update(record, params, {}, user);
 
-        expect(record.email).to.eq(params.email);
-        expect(record.level).to.eq(params.level);
+        expect(record.email).to.eql(params.email);
+        expect(record.level).to.eql(params.level);
         expect(record.password).to.be.undefined;
         expect(record.resetHash).to.be.undefined;
       });
@@ -188,8 +188,8 @@ describe("mongoose/permissions/userPermissions.ts", function() {
 
           record = <UserDocument> await permissions.update(record, params, {}, record);
 
-          expect(record.email).to.eq(params.email);
-          expect(record.level).to.eq(params.level - 1);
+          expect(record.email).to.eql(params.email);
+          expect(record.level).to.eql(params.level - 1);
           expect(record.password).to.be.undefined;
           expect(record.resetHash).to.be.undefined;
         });

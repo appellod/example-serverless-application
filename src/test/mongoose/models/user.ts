@@ -1,9 +1,10 @@
 import { expect } from "chai";
 import * as nock from "nock";
 
-import { Token, TokenDocument, User, UserDocument } from "../../../mongoose";
+import { User, UserDocument } from "../../../mongoose";
+import { Token } from "../../../redis";
 
-const index = require("../../");
+require("../../");
 
 describe("mongoose/models/user.ts", function() {
   describe("schema.statics.resetPassword()", function() {
@@ -25,7 +26,7 @@ describe("mongoose/models/user.ts", function() {
     it("updates the user's password", async function() {
       const previousPassword = user.password;
       user = await User.resetPassword(user.resetHash, "password");
-      expect(user.password).to.not.eq(previousPassword);
+      expect(user.password).to.not.eql(previousPassword);
     });
 
     it("removes the user's resetHash", async function() {
@@ -34,17 +35,17 @@ describe("mongoose/models/user.ts", function() {
     });
 
     it("removes all the user's access token", async function() {
-      const token = await Token.create({ userId: user._id });
+      const token = await Token.create(user);
 
       user = await User.resetPassword(user.resetHash, "password");
 
-      const count = await Token.count({ userId: user._id });
-      expect(count).to.eql(0);
+      const result = await Token.validate(token);
+      expect(result).to.eql(null);
     });
   });
 
   describe("schema.methods.login()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -54,15 +55,14 @@ describe("mongoose/models/user.ts", function() {
     it("adds an access token associated with the user", async function() {
       ({ token, user } = await user.login());
 
-      const tokens = await Token.find({ userId: user._id });
+      const result = await Token.validate(token);
 
-      expect(tokens.length).to.eq(1);
-      expect(tokens[0].id).to.eq(token.id);
+      expect(result).to.not.eql(null);
     });
   });
 
   describe("schema.methods.logout()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -71,10 +71,10 @@ describe("mongoose/models/user.ts", function() {
     });
 
     it("removes the token that was used for the API request", async function() {
-      user = await user.logout(token._id);
+      user = await user.logout(token);
 
-      const count = await Token.count({ userId: user._id });
-      expect(count).to.eq(0);
+      const result = await Token.validate(token);
+      expect(result).to.eql(null);
     });
   });
 

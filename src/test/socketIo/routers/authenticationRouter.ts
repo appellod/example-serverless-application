@@ -36,7 +36,7 @@ describe("socketIo/authentication.ts", function() {
         const user = await User.mock();
         const { token } = await user.login();
 
-        socket.emit("authenticate", { token: token._id });
+        socket.emit("authenticate", { token });
         const res: any = await new Promise((resolve) => socket.on("authenticate", resolve));
 
         expect(res).to.eql(null);
@@ -51,7 +51,7 @@ describe("socketIo/authentication.ts", function() {
       const user = await User.mock();
       const { token } = await user.login();
 
-      socket.emit("authenticate", { token: token._id });
+      socket.emit("authenticate", { token });
       await new Promise((resolve) => socket.on("authenticate", resolve));
 
       socket.emit("unauthenticate");

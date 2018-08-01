@@ -52,9 +52,7 @@ describe("socketIo/controllers/authenticationController.ts", function() {
         const user = await User.mock();
         const { token } = await user.login();
 
-        const data = {
-          token: token._id
-        };
+        const data = { token };
 
         await authenticationController.authenticate(data);
 
@@ -68,9 +66,7 @@ describe("socketIo/controllers/authenticationController.ts", function() {
       const user = await User.mock();
       const { token } = await user.login();
 
-      const data = {
-        token: token._id
-      };
+      const data = { token };
       await authenticationController.authenticate(data);
 
       await authenticationController.unauthenticate(null);

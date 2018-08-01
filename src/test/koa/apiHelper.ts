@@ -1,6 +1,7 @@
 import * as chai from "chai";
 
-import { Token, TokenDocument, UserDocument } from "../../mongoose";
+import { UserDocument } from "../../mongoose";
+import { Token } from "../../redis";
 
 const chaiHttp = require("chai-http");
 
@@ -23,13 +24,10 @@ export class ApiHelper {
    * @param user The user to send request with. Pass null to not supply token in header.
    */
   public async request(method: string, path: string, params: any, user?: UserDocument): Promise<ChaiHttp.Response> {
-    let token: TokenDocument;
+    let token: string;
 
     if (user) {
-      token = await Token.create({
-        expiresAt: Token.getExpirationDate(),
-        userId: user._id
-      });
+      token = await Token.create(user);
     }
 
     // if using GET, add params to query string and return proper HTTP function
@@ -43,7 +41,7 @@ export class ApiHelper {
     const request = <ChaiHttp.Request> (<any> chai.request(this.host + ":" + this.port))[method]("/v1" + path);
 
     if (token) {
-      request.set("Authorization", "Bearer " + token._id);
+      request.set("Authorization", "Bearer " + token);
     }
 
     if ((method === "post" || method === "put") && params) {

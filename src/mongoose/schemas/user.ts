@@ -3,7 +3,8 @@ import { Chance } from "chance";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
-import { Token, TokenDocument, UserDocument, UserModel } from "../";
+import { UserDocument, UserModel } from "../";
+import { Token } from "../../redis";
 
 const schema = new mongoose.Schema({
   email: {
@@ -84,7 +85,7 @@ schema.statics.resetPassword = async function(resetHash: string, newPassword: st
     new: true
   });
 
-  await Token.remove({ userId: user._id });
+  await Token.removeAll(user);
 
   return user;
 };
@@ -100,11 +101,8 @@ schema.methods.isValidPassword = function(password: string): boolean {
 /**
  * Logs a user in.
  */
-schema.methods.login = async function(): Promise<{ token: TokenDocument, user: UserDocument }> {
-  const token = await Token.create({
-    expiresAt: Token.getExpirationDate(),
-    userId: this._id
-  });
+schema.methods.login = async function(): Promise<{ token: string, user: UserDocument }> {
+  const token = await Token.create(this);
 
   return { token, user: this };
 };
@@ -113,12 +111,12 @@ schema.methods.login = async function(): Promise<{ token: TokenDocument, user: U
  * Logs the user out.
  * @param {String} token The access token to be cleared.
  */
-schema.methods.logout = async function(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument> {
+schema.methods.logout = async function(token: string): Promise<UserDocument> {
   if (!token) {
     throw new Error("A valid access token must be used for logout.");
   }
 
-  await Token.remove({ _id: token });
+  await Token.remove(token);
 
   return this;
 };

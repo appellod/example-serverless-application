@@ -21,3 +21,7 @@ PASSWORD_RESET_URL="http://127.0.0.1:3000/reset-password.html"
 # HTTP Server
 SERVER_HOST="127.0.0.1"
 SERVER_PORT="3000"
+
+# REDIS
+REDIS_DATABASE="0"
+REDIS_URL="redis://127.0.0.1:6379"

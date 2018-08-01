@@ -7,6 +7,7 @@ import { Koa } from "./koa";
 import { Loggly } from "./loggly";
 import { Mongoose, User } from "./mongoose";
 import { Passport } from "./passport";
+import { Token } from "./redis";
 import { SocketIo } from "./socketIo";
 
 global.Promise = bluebird;
@@ -38,5 +39,7 @@ if (process.env.ENVIRONMENT === "local") {
     upsert: true
   }, (err, user) => {
     if (err) console.error(err);
+
+    Token.create(user);
   });
 }

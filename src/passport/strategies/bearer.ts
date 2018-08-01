@@ -1,6 +1,7 @@
 import { Strategy } from "passport-http-bearer";
 
-import { Token, User, UserDocument } from "../../mongoose";
+import { User, UserDocument } from "../../mongoose";
+import { Token } from "../../redis";
 
 export class BearerStrategy extends Strategy {
   constructor() {
@@ -15,15 +16,15 @@ export class BearerStrategy extends Strategy {
     });
   }
 
-  public static async authenticate(tokenId: string): Promise<UserDocument> {
-    const token = await Token.findOne({ _id: tokenId });
+  public static async authenticate(token: string): Promise<UserDocument> {
+    const user = await Token.validate(token);
 
-    // Make sure token is not expired.
-    if (!token || token.isExpired()) {
-        return null;
+    // Reject if token was invalid.
+    if (!user) {
+      return null;
     }
 
-    token.refresh();
-    return User.findOne({ _id: token.userId });
+    Token.refresh(token);
+    return user;
   }
 }

@@ -26,7 +26,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -38,7 +38,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -52,7 +52,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -64,7 +64,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -78,7 +78,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -90,7 +90,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -102,7 +102,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -114,7 +114,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 
@@ -126,7 +126,7 @@ describe("express/routes/groupsRouter.ts", function() {
 
       const res = await apiHelper.request(method, path, params, admin);
 
-      expect(res.status).to.eq(200);
+      expect(res.status).to.eql(200);
     });
   });
 });
