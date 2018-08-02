@@ -46,6 +46,10 @@ Users can connect to Socket.IO and authenticate their connection. This allows us
 them push notifications based on their identity. Supports multiple connection from a single user. 
 Uses Redis to allow distributed communications between servers.
 
+**Cloud-based Log Management with Loggly**  
+By simply including your Loggly API key, subdomain, and tags, all console output will be sent to
+Loggly to allow centralized log management and application monitoring.
+
 **Thorough Test Suite**  
 Included test suite is ready to test any model or controller in your application.
 Tests are performed using Mocha. Redis and all database collections are cleared before
