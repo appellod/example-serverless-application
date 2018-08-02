@@ -35,7 +35,7 @@ MongoDB is the chosen data store to allow rapid prototyping without having to wo
 creating and changing migrations while experimenting with new implementations. Migrations are built-in
 to allow index management and data transformation if needed.
 
-**Mongoose**
+**Mongoose**  
 All database calls are performed using Mongoose, an ORM for MongoDB. By utilizing an ORM,
 developers can see Intellisense as they're working with their data to give them more insight
 into database fields and types. Mongoose also allows many useful features such as pre- and post-save 
