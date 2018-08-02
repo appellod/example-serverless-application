@@ -4,12 +4,6 @@ starting point for creating backend applications.
 
 ## Features
 
-**Passport**  
-Authentication is performed using Passport. The default authentication strategy
-is the Bearer strategy which allows basic token-based authentication. Other
-Passport strategies such as Facebook or Google authentication can easily be
-added if needed.
-
 **Login and Account Recovery**  
 Signup, login, and logout endpoints are provided without any configuration required.
 A two-step password recovery process is also included. A user can request a password
@@ -19,10 +13,9 @@ logout, and password recovery endpoints include full test coverage.
 **Token-Based Authentication with Redis**  
 Any route can be protected by token-based authentication. Any request to a
 secured route must include a valid access token in the Authorization HTTP
-header. The token will then be matched to a user and made accessible within
-controllers via the *req.user* variable. Tokens expire after 30 days. Any invalid
-tokens will receive a 401 Unauthorized HTTP response. Redis is used to keep database
-calls to a minimum and increase response speeds.
+header. Tokens expire after 30 days. Any invalid tokens will receive a 401 Unauthorized 
+HTTP response. Redis is used to during token lookup to keep database calls to a minimum 
+and increase response speeds.
 
 **API Documentation Generator**  
 The API uses ApiDoc to generate API documentation based on in-line comments
@@ -31,19 +24,37 @@ endpoints such as signup, login and logout. Documentation is easily updated
 using a single command. Documentation also requires that a user logs in to
 view the documentation, providing security for sensitive information.
 
-**Socket.IO Authentication and User-based Broadcasting**  
+**Passport**  
+Authentication is performed using Passport. The default authentication strategy
+is the Bearer strategy which allows basic token-based authentication. Other
+Passport strategies such as Facebook or Google authentication can easily be
+added if needed.
+
+**MongoDB**  
+MongoDB is the chosen data store to allow rapid prototyping without having to worry about constantly
+creating and changing migrations while experimenting with new implementations. Migrations are built-in
+to allow index management and data transformation if needed.
+
+**Mongoose**
+All database calls are performed using Mongoose, an ORM for MongoDB. By utilizing an ORM,
+developers can see Intellisense as they're working with their data to give them more insight
+into database fields and types. Mongoose also allows many useful features such as pre- and post-save 
+hooks, and static- and instance-level functions to provide even more development efficiency!
+
+**Socket.IO Authentication and User-based Broadcasting with Redis**  
 Users can connect to Socket.IO and authenticate their connection. This allows us to send
 them push notifications based on their identity. Supports multiple connection from a single user. 
 Uses Redis to allow distributed communications between servers.
 
-**Easy Test Suite**  
+**Thorough Test Suite**  
 Included test suite is ready to test any model or controller in your application.
-Tests are performed using Mocha. All database collections are cleared before
+Tests are performed using Mocha. Redis and all database collections are cleared before
 each test to make sure that every test uses fresh data. Helper method is
 included for easily testing both secured and unsecured API endpoints.
 
 **End-to-End API Tests**  
-Included test suite performs end-to-end testing on all API routes.
+Included test suite performs end-to-end testing on all API routes to make sure users
+experience what's intended.
 
 **Test Coverage Reports**  
 Generate test coverage reports by simply running `npm run test:coverage`.
