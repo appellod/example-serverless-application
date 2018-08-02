@@ -1,13 +1,14 @@
-import { AuthenticationController, Socket } from "../";
+import { AuthenticationController, ISocket } from "../";
+import { authenticationMiddleware } from "../middleware";
 import { Router } from "./";
 
 export class AuthenticationRouter extends Router {
-  constructor(socket: Socket) {
+  constructor(socket: ISocket) {
     super(socket);
 
     const controller = new AuthenticationController(socket);
 
-    this.on("authenticate", (data) => controller.authenticate(data));
-    this.on("unauthenticate", (data) => controller.unauthenticate(data));
+    this.on("authenticate", controller.authenticate);
+    this.on("unauthenticate", authenticationMiddleware, controller.unauthenticate);
   }
 }

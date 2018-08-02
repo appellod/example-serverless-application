@@ -1,26 +1,27 @@
 import { expect } from "chai";
 
-import { User, UserDocument } from "../../../mongoose";
-import { AuthenticationController, Socket } from "../../../socketIo";
+import { User } from "../../../mongoose";
+import { AuthenticationController, IContext, ISocket } from "../../../socketIo";
+import { SocketMock } from "../../mocks";
 
-const index = require("../../");
+require("../../");
 
 describe("socketIo/controllers/authenticationController.ts", function() {
   let authenticationController: AuthenticationController;
-  let socket: Socket;
+  let socket: ISocket;
 
   beforeEach(() => {
-    socket = {} as Socket;
+    socket = new SocketMock() as ISocket;
     authenticationController = new AuthenticationController(socket);
   });
 
   describe("authenticate", function() {
     context("when token is not provided", function() {
       it("throws an error", async function() {
-        const data = {};
+        const ctx = { data: {}, socket };
 
         try {
-          await authenticationController.authenticate(data);
+          await authenticationController.authenticate(ctx);
         } catch (e) {
           expect(e.message).to.eql("Please provide your access token.");
           return;
@@ -32,12 +33,10 @@ describe("socketIo/controllers/authenticationController.ts", function() {
 
     context("when an invalid token is provided", function() {
       it("throws an error", async function() {
-        const data = {
-          token: "invalid"
-        };
+        const ctx = { data: { token: "invalid" }, socket };
 
         try {
-          await authenticationController.authenticate(data);
+          await authenticationController.authenticate(ctx);
         } catch (e) {
           expect(e.message).to.eql("Invalid access token.");
           return;
@@ -52,9 +51,8 @@ describe("socketIo/controllers/authenticationController.ts", function() {
         const user = await User.mock();
         const { token } = await user.login();
 
-        const data = { token };
-
-        await authenticationController.authenticate(data);
+        const ctx = { data: { token }, socket };
+        await authenticationController.authenticate(ctx);
 
         expect(socket.user.id).to.eql(user.id);
       });
@@ -62,16 +60,20 @@ describe("socketIo/controllers/authenticationController.ts", function() {
   });
 
   describe("unauthenticate", function() {
-    it("removes the user from the socket", async function() {
+    let ctx: IContext;
+
+    beforeEach(async function() {
       const user = await User.mock();
       const { token } = await user.login();
 
-      const data = { token };
-      await authenticationController.authenticate(data);
+      ctx = { data: { token }, socket };
+      await authenticationController.authenticate(ctx);
+    });
 
-      await authenticationController.unauthenticate(null);
+    it("removes the user from the socket", async function() {
+      await authenticationController.unauthenticate(ctx);
 
-      expect(socket.user).to.been.null;
+      expect(socket.user).to.be.null;
     });
   });
 });

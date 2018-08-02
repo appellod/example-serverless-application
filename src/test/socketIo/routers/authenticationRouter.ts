@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import * as io from "socket.io-client";
 
-import { User, UserDocument } from "../../../mongoose";
+import { User } from "../../../mongoose";
 
-const index = require("../../");
+require("../../");
 
-describe("socketIo/authentication.ts", function() {
+describe("socketIo/routers/authenticationRouter.ts", function() {
   describe("authenticate", function() {
     context("when token is not provided", function() {
       it("returns an error", async function() {

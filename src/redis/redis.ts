@@ -1,10 +1,20 @@
-import { createClient } from "redis";
+import { createClient, RedisClient } from "redis";
 
-const redis = createClient(process.env.REDIS_URL);
+export class Redis {
+  public static client: RedisClient;
 
-const database = Number(process.env.REDIS_DATABASE);
-redis.select(database);
+  constructor() {
+    Redis.client = Redis.create();
+  }
 
-redis.on("error", console.error);
+  public static create() {
+    const client = createClient(process.env.REDIS_URL);
 
-export { redis };
+    const database = Number(process.env.REDIS_DATABASE);
+    client.select(database);
+
+    client.on("error", console.error);
+
+    return client;
+  }
+}

@@ -1,10 +1,12 @@
 import * as bcrypt from "bcrypt-nodejs";
 import { Chance } from "chance";
+import { EventEmitter } from "events";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
 import { UserDocument, UserModel } from "../";
 import { Token } from "../../redis";
+import { SocketIo } from "../../socketIo";
 
 const schema = new mongoose.Schema({
   email: {
@@ -41,6 +43,9 @@ schema.pre("save", function(next) {
 
   return next();
 });
+
+schema.statics.events = new EventEmitter();
+schema.methods.events = new EventEmitter();
 
 /**
  * Hash a password.
@@ -86,6 +91,7 @@ schema.statics.resetPassword = async function(resetHash: string, newPassword: st
   });
 
   await Token.removeAll(user);
+  User.events.emit("resetPassword", user);
 
   return user;
 };
