@@ -34,6 +34,7 @@ view the documentation, providing security for sensitive information.
 **Socket.IO Authentication and User-based Broadcasting**  
 Users can connect to Socket.IO and authenticate their connection. This allows us to send
 them push notifications based on their identity. Supports multiple connection from a single user. 
+Uses Redis to allow distributed communications between servers.
 
 **Easy Test Suite**  
 Included test suite is ready to test any model or controller in your application.
@@ -44,7 +45,7 @@ included for easily testing both secured and unsecured API endpoints.
 **End-to-End API Tests**  
 Included test suite performs end-to-end testing on all API routes.
 
-**Test Coverage Reports**
+**Test Coverage Reports**  
 Generate test coverage reports by simply running `npm run test:coverage`.
 
 **Docker Ready**  
@@ -183,6 +184,9 @@ Contains the Mongoose models. By default only a User model is included.
 Contains the Passport strategies for the application's authentication.
 By default only the Bearer strategy is included. The Bearer strategy allows
 basic token-based authentication to any API endpoint.
+
+**redis/**  
+Contains all the code for interacting with Redis such as generating API tokens.
 
 **socketIo/**  
 Contains the logic for Socket.IO. Includes an authentication controller so users
