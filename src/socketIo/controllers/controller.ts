@@ -1,9 +1,9 @@
-import { Socket } from "../";
+import { ISocket } from "../";
 
 export abstract class Controller {
-  protected socket: Socket;
+  protected socket: ISocket;
 
-  constructor(socket: Socket) {
+  constructor(socket: ISocket) {
     this.socket = socket;
   }
 }

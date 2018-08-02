@@ -1,4 +1,5 @@
 import { Chance } from "chance";
+import { EventEmitter } from "events";
 import * as mongoose from "mongoose";
 
 import { GroupDocument, GroupModel, User } from "../";
@@ -18,6 +19,9 @@ const schema = new mongoose.Schema({
   autoIndex: false,
   timestamps: true
 });
+
+schema.statics.events = new EventEmitter();
+schema.methods.events = new EventEmitter();
 
 /**
  * Creates a record with randomized required parameters if not specified.

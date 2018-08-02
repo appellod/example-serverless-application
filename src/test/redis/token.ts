@@ -3,7 +3,7 @@ import { Chance } from "chance";
 import { promisify } from "util";
 
 import { User, UserDocument } from "../../mongoose";
-import { redis, Token } from "../../redis";
+import { Redis, Token } from "../../redis";
 
 const chance = new Chance();
 
@@ -24,7 +24,7 @@ describe("redis/tokens.ts", function() {
         it("adds the token to the user's token list", async function() {
             const result = await Token.create(user);
 
-            const lpop = promisify(redis.lpop).bind(redis);
+            const lpop = promisify(Redis.client.lpop).bind(Redis.client);
             const token = await lpop(user.id);
 
             expect(token).to.eql(result);
@@ -35,7 +35,7 @@ describe("redis/tokens.ts", function() {
         it("returns the expiration", async function() {
             const token = chance.hash();
 
-            const set = promisify(redis.set).bind(redis);
+            const set = promisify(Redis.client.set).bind(Redis.client);
             await set(token, JSON.stringify(user));
 
             const result = await Token.refresh(token);
@@ -67,7 +67,7 @@ describe("redis/tokens.ts", function() {
             it("returns true", async function() {
                 const token = chance.hash();
 
-                const set = promisify(redis.set).bind(redis);
+                const set = promisify(Redis.client.set).bind(Redis.client);
                 await set(token, JSON.stringify(user));
 
                 const result = await Token.validate(token);

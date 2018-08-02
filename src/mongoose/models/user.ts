@@ -1,3 +1,4 @@
+import { EventEmitter } from "events";
 import * as mongoose from "mongoose";
 
 export enum UserLevel {
@@ -15,6 +16,7 @@ export interface IUser {
 }
 
 export interface UserDocument extends mongoose.Document, IUser {
+  events: EventEmitter;
   isValidPassword(password: string): boolean;
   login(): Promise<{ token: string, user: UserDocument }>;
   logout(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument>;
@@ -22,6 +24,7 @@ export interface UserDocument extends mongoose.Document, IUser {
 }
 
 export interface UserModel extends mongoose.Model<UserDocument> {
+  events: EventEmitter;
   getPasswordHash(password: string): string;
   mock(params?: IUser): Promise<UserDocument>;
   resetPassword(resetHash: string, newPassword: string): Promise<UserDocument>;

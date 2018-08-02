@@ -1,9 +1,12 @@
-import { Socket } from "../";
+import * as ware from "ware";
+import { promisify } from "util";
+
+import { IContext, ISocket } from "../";
 
 export abstract class Router {
-  protected socket: Socket;
+  protected socket: ISocket;
 
-  constructor(socket: Socket) {
+  constructor(socket: ISocket) {
     this.socket = socket;
   }
 
@@ -12,15 +15,23 @@ export abstract class Router {
    * the function's returned results back to the client. Catches any errors and also returns
    * them back to the client.
    * @param event The name of the event. Ex: "connect", "disconnect".
-   * @param fn The function to call on this event.
+   * @param middleware The functions to call. Will be executed in order.
    */
-  protected on(event: string, fn: (data: any) => any) {
+  protected on(event: string, ...middleware: Array<(ctx: IContext) => Promise<any>>) {
     this.socket.on(event, async (data) => {
-      data = data || {};
+      const ctx = {
+        data: data || {},
+        socket: this.socket
+      } as IContext;
 
       try {
-        const results = await fn(data);
-        this.socket.emit(event, results);
+        const stack = ware();
+        middleware.forEach((mw) => stack.use(mw));
+
+        const run = promisify(stack.run).bind(stack);
+        await run(ctx);
+
+        this.socket.emit(event, ctx.response);
       } catch (e) {
         this.socket.emit(event, { error: e.message });
       }

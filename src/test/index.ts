@@ -1,7 +1,7 @@
 process.env.NODE_ENV = "test";
 
 import { Group, User } from "../mongoose";
-import { redis } from "../redis";
+import { Redis } from "../redis";
 
 // start the API server
 const index = require("../");
@@ -14,7 +14,7 @@ beforeEach(async function() {
   ]);
 
   // Reset Redis
-  await new Promise((res) => redis.flushdb(res));
+  await new Promise((res) => Redis.client.flushdb(res));
 });
 
 export = {
