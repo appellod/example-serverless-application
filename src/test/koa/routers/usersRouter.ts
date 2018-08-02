@@ -9,7 +9,7 @@ const index = require("../../");
 const apiHelper = new ApiHelper();
 const chance = new Chance();
 
-describe("express/routes/usersRouter.ts", function() {
+describe("koa/routes/usersRouter.ts", function() {
   let admin: UserDocument;
 
   beforeEach(async function() {

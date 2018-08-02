@@ -10,7 +10,7 @@ require("../../");
 const chance = new Chance();
 const groupsController = new GroupsController();
 
-describe("express/controllers/groupsController.ts", function() {
+describe("koa/controllers/groupsController.ts", function() {
   let group: GroupDocument;
   let user: UserDocument;
 

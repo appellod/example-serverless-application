@@ -16,12 +16,13 @@ A two-step password recovery process is also included. A user can request a pass
 reset which will email the user a link to enter a new password. Signup, login,
 logout, and password recovery endpoints include full test coverage.
 
-**Token-Based Authentication**  
+**Token-Based Authentication with Redis**  
 Any route can be protected by token-based authentication. Any request to a
 secured route must include a valid access token in the Authorization HTTP
 header. The token will then be matched to a user and made accessible within
 controllers via the *req.user* variable. Tokens expire after 30 days. Any invalid
-tokens will receive a 401 Unauthorized HTTP response.
+tokens will receive a 401 Unauthorized HTTP response. Redis is used to keep database
+calls to a minimum and increase response speeds.
 
 **API Documentation Generator**  
 The API uses ApiDoc to generate API documentation based on in-line comments
@@ -62,7 +63,7 @@ git clone https://github.com/appellod/restful-api
 npm install
 ```
 
-**Run MongoDB with Docker Compose**  
+**Run MongoDB and Redis with Docker Compose**  
 You can start up any development dependencies such as MongoDB using:
 ```
 docker-compose up

@@ -7,7 +7,7 @@ import { User, UserDocument } from "../../../mongoose";
 
 const authenticationController = new AuthenticationController();
 
-describe("express/controllers/authenticationController.ts", function() {
+describe("koa/controllers/authenticationController.ts", function() {
   describe("checkAvailability()", function() {
     context("when email is available", function() {
       it("returns isAvailable set to true", async function() {

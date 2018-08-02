@@ -9,7 +9,7 @@ require("../../");
 const chance = new Chance();
 const usersController = new UsersController();
 
-describe("express/controllers/usersController.ts", function() {
+describe("koa/controllers/usersController.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {

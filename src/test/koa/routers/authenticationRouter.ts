@@ -8,7 +8,7 @@ require("../../");
 
 const apiHelper = new ApiHelper();
 
-describe("express/routes/authenticationRouter.ts", function() {
+describe("koa/routes/authenticationRouter.ts", function() {
   let user: UserDocument;
 
   beforeEach(async function() {

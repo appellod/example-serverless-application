@@ -9,7 +9,7 @@ const index = require("../../");
 const apiHelper = new ApiHelper();
 const chance = new Chance();
 
-describe("express/routes/groupsRouter.ts", function() {
+describe("koa/routes/groupsRouter.ts", function() {
   let admin: UserDocument;
   let group: GroupDocument;
 
