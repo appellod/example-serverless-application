@@ -28,7 +28,7 @@ const pubClient = Redis.create();
 const subClient = Redis.create();
 const socketIo = new SocketIo(pubClient, koa.server, subClient);
 
-export = { documentation, koa, mongoose, passport, socketIo };
+export { documentation, koa, mongoose, passport, socketIo };
 
 // Create admin user if user doesn't exit, but only when running locally
 if (process.env.ENVIRONMENT === "local") {

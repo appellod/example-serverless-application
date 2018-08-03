@@ -1,13 +1,9 @@
 import { expect } from "chai";
-import { Chance } from "chance";
 import { Context } from "koa";
 
 import { GroupsController } from "../../../koa";
 import { Group, GroupDocument, User, UserDocument } from "../../../mongoose";
 
-require("../../");
-
-const chance = new Chance();
 const groupsController = new GroupsController();
 
 describe("koa/controllers/groupsController.ts", function() {

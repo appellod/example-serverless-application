@@ -2,14 +2,14 @@ import { expect } from "chai";
 import * as io from "socket.io-client";
 
 import { User } from "../../../mongoose";
-
-require("../../");
+import { koa } from "../../..";
+import { SocketIo } from "../../../socketIo";
 
 describe("socketIo/routers/authenticationRouter.ts", function() {
   describe("authenticate", function() {
     context("when token is not provided", function() {
       it("returns an error", async function() {
-        const socket = await io.connect("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
+        const socket = io("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
 
         socket.emit("authenticate");
         const res: any = await new Promise((resolve) => socket.on("authenticate", resolve));

@@ -1,10 +1,9 @@
 import { expect } from "chai";
 import * as nock from "nock";
+import * as sinon from "sinon";
 
 import { User, UserDocument } from "../../../mongoose";
 import { Token } from "../../../redis";
-
-require("../../");
 
 describe("mongoose/models/user.ts", function() {
   describe("schema.statics.resetPassword()", function() {

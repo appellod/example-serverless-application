@@ -4,8 +4,6 @@ import { Context } from "koa";
 import { UsersController } from "../../../koa";
 import { User, UserDocument } from "../../../mongoose";
 
-require("../../");
-
 const chance = new Chance();
 const usersController = new UsersController();
 

@@ -1,11 +1,9 @@
 import { expect } from "chai";
 import { Chance } from "chance";
-import * as nock from "nock";
 
 import { User, UserPermissions, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
-const index = require("../../");
 const permissions = new UserPermissions();
 
 describe("mongoose/permissions/userPermissions.ts", function() {

@@ -5,7 +5,6 @@ import * as nock from "nock";
 import { Group, GroupDocument, GroupPermissions, User, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
-const index = require("../../");
 const permissions = new GroupPermissions();
 
 describe("mongoose/permissions/groupPermissions.ts", function() {

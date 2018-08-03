@@ -3,8 +3,7 @@ process.env.NODE_ENV = "test";
 import { Group, User } from "../mongoose";
 import { Redis } from "../redis";
 
-// start the API server
-const index = require("../");
+export * from "../";
 
 beforeEach(async function() {
   // Reset the database
@@ -16,8 +15,3 @@ beforeEach(async function() {
   // Reset Redis
   await new Promise((res) => Redis.client.flushdb(res));
 });
-
-export = {
-  koa: index.koa,
-  mongoose: index.mongoose
-};

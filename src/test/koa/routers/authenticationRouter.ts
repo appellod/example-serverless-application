@@ -2,11 +2,7 @@ import { expect } from "chai";
 import * as nock from "nock";
 
 import { User, UserDocument } from "../../../mongoose";
-import { ApiHelper } from "../apiHelper";
-
-require("../../");
-
-const apiHelper = new ApiHelper();
+import { request } from "../../request";
 
 describe("koa/routes/authenticationRouter.ts", function() {
   let user: UserDocument;
@@ -18,12 +14,12 @@ describe("koa/routes/authenticationRouter.ts", function() {
   describe("GET /v1/authentication/availability", function() {
     it("returns a success response", async function() {
       const method = "get";
-      const path = "/authentication/availability";
+      const path = "/v1/authentication/availability";
       const params = {
         email: "available@example.com"
       };
 
-      const res = await apiHelper.request(method, path, params, null);
+      const res = await request(method, path, params, null);
 
       expect(res.status).to.eql(200);
     });
@@ -32,13 +28,13 @@ describe("koa/routes/authenticationRouter.ts", function() {
   describe("POST /v1/authentication/signup", function() {
     it("returns a success response", async function() {
       const method = "post";
-      const path = "/authentication/signup";
+      const path = "/v1/authentication/signup";
       const params = {
         email: "user@example.com",
         password: "password"
       };
 
-      const res = await apiHelper.request(method, path, params, null);
+      const res = await request(method, path, params, null);
 
       expect(res.status).to.eql(200);
     });
@@ -51,13 +47,13 @@ describe("koa/routes/authenticationRouter.ts", function() {
 
     it("returns a success response", async function() {
       const method = "post";
-      const path = "/authentication/login";
+      const path = "/v1/authentication/login";
       const params = {
         email: user.email,
         password: "password"
       };
 
-      const res = await apiHelper.request(method, path, params, null);
+      const res = await request(method, path, params, null);
 
       expect(res.status).to.eql(200);
     });
@@ -66,10 +62,10 @@ describe("koa/routes/authenticationRouter.ts", function() {
   describe("DELETE /v1/authentication/logout", function() {
     it("returns a success response", async function() {
       const method = "delete";
-      const path = "/authentication/logout";
+      const path = "/v1/authentication/logout";
       const params: any = null;
 
-      const res = await apiHelper.request(method, path, params, user);
+      const res = await request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });
@@ -87,12 +83,12 @@ describe("koa/routes/authenticationRouter.ts", function() {
 
     it("returns a success response", async function() {
       const method = "post";
-      const path = "/authentication/request-password-reset";
+      const path = "/v1/authentication/request-password-reset";
       const params = {
         email: user.email
       };
 
-      const res = await apiHelper.request(method, path, params, null);
+      const res = await request(method, path, params, null);
 
       expect(res.status).to.eql(200);
     });
@@ -112,13 +108,13 @@ describe("koa/routes/authenticationRouter.ts", function() {
 
     it("returns a success response", async function() {
       const method = "post";
-      const path = "/authentication/reset-password";
+      const path = "/v1/authentication/reset-password";
       const params = {
         password: "newpassword",
         resetHash: user.resetHash
       };
 
-      const res = await apiHelper.request(method, path, params, user);
+      const res = await request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });
@@ -133,10 +129,10 @@ describe("koa/routes/authenticationRouter.ts", function() {
 
     it("returns a success response", async function() {
       const method = "get";
-      const path = "/authentication/validate-token";
+      const path = "/v1/authentication/validate-token";
       const params = { token };
 
-      const res = await apiHelper.request(method, path, params, user);
+      const res = await request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });

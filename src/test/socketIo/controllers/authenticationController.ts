@@ -4,8 +4,6 @@ import { User } from "../../../mongoose";
 import { AuthenticationController, IContext, ISocket } from "../../../socketIo";
 import { SocketMock } from "../../mocks";
 
-require("../../");
-
 describe("socketIo/controllers/authenticationController.ts", function() {
   let authenticationController: AuthenticationController;
   let socket: ISocket;
