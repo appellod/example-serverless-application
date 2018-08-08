@@ -1,10 +1,14 @@
-import { expect } from "chai";
+import * as chai from "chai";
+import * as chaiAsPromised from "chai-as-promised";
 import { Chance } from "chance";
 
 import { User, UserPermissions, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
+const expect = chai.expect;
 const permissions = new UserPermissions();
+
+chai.use(chaiAsPromised);
 
 describe("mongoose/permissions/userPermissions.ts", function() {
   describe("create()", function() {
@@ -37,14 +41,9 @@ describe("mongoose/permissions/userPermissions.ts", function() {
           level: 0
         });
 
-        try {
-          const record = <UserDocument> await permissions.create(params, {}, user);
-        } catch (e) {
-          expect(e.message).to.eql("User does not have permission to perform this action.");
-          return;
-        }
+        const promise = permissions.create(params, {}, user);
 
-        throw new Error("Error should have been thrown.");
+        return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
       });
     });
   });
@@ -137,14 +136,9 @@ describe("mongoose/permissions/userPermissions.ts", function() {
             level: 0
           });
 
-          try {
-            record = <UserDocument> await permissions.remove(record, user);
-          } catch (e) {
-            expect(e.message).to.eql("User does not have permission to perform this action.");
-            return;
-          }
+          const promise = permissions.remove(record, user);
 
-          throw new Error("Error should have been thrown.");
+          return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
         });
       });
     });
@@ -203,14 +197,9 @@ describe("mongoose/permissions/userPermissions.ts", function() {
             level: 0
           });
 
-          try {
-            record = <UserDocument> await permissions.update(record, params, {}, user);
-          } catch (e) {
-            expect(e.message).to.eql("User does not have permission to perform this action.");
-            return;
-          }
+          const promise = permissions.update(record, params, {}, user);
 
-          throw new Error("Error should have been thrown.");
+          return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
         });
       });
     });

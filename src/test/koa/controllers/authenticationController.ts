@@ -1,11 +1,15 @@
 import { Context } from "koa";
-import { expect } from "chai";
+import * as chai from "chai";
+import * as chaiAsPromised from "chai-as-promised";
 import * as nock from "nock";
 
 import { AuthenticationController } from "../../../koa";
 import { User, UserDocument } from "../../../mongoose";
 
 const authenticationController = new AuthenticationController();
+const expect = chai.expect;
+
+chai.use(chaiAsPromised);
 
 describe("koa/controllers/authenticationController.ts", function() {
   describe("checkAvailability()", function() {
@@ -96,7 +100,7 @@ describe("koa/controllers/authenticationController.ts", function() {
     });
 
     context("when credentials are incorrect", function() {
-      it("returns an error message", async function() {
+      it("returns an error message", function() {
         const ctx = {
           request: {
             body: {
@@ -106,14 +110,9 @@ describe("koa/controllers/authenticationController.ts", function() {
           }
         } as Context;
 
-        try {
-          await authenticationController.login(ctx);
-        } catch (e) {
-          expect(e.message).to.eql("Incorrect username or password.");
-          return;
-        }
+        const promise = authenticationController.login(ctx);
 
-        throw new Error("Error should have been thrown.");
+        return expect(promise).to.be.rejectedWith("Incorrect username or password.");
       });
     });
   });

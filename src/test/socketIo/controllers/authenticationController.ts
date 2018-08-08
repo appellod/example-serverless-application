@@ -1,8 +1,13 @@
-import { expect } from "chai";
+import * as chai from "chai";
+import * as chaiAsPromised from "chai-as-promised";
 
 import { User } from "../../../mongoose";
 import { AuthenticationController, IContext, ISocket } from "../../../socketIo";
 import { SocketMock } from "../../mocks";
+
+const expect = chai.expect;
+
+chai.use(chaiAsPromised);
 
 describe("socketIo/controllers/authenticationController.ts", function() {
   let authenticationController: AuthenticationController;
@@ -15,17 +20,12 @@ describe("socketIo/controllers/authenticationController.ts", function() {
 
   describe("authenticate", function() {
     context("when token is not provided", function() {
-      it("throws an error", async function() {
+      it("throws an error", function() {
         const ctx = { data: {}, socket };
 
-        try {
-          await authenticationController.authenticate(ctx);
-        } catch (e) {
-          expect(e.message).to.eql("Please provide your access token.");
-          return;
-        }
+        const promise = authenticationController.authenticate(ctx);
 
-        throw new Error("Error should have been thrown.");
+        return expect(promise).to.be.rejectedWith("Please provide your access token.");
       });
     });
 
@@ -33,14 +33,9 @@ describe("socketIo/controllers/authenticationController.ts", function() {
       it("throws an error", async function() {
         const ctx = { data: { token: "invalid" }, socket };
 
-        try {
-          await authenticationController.authenticate(ctx);
-        } catch (e) {
-          expect(e.message).to.eql("Invalid access token.");
-          return;
-        }
+        const promise = authenticationController.authenticate(ctx);
 
-        throw new Error("Error should have been thrown.");
+        return expect(promise).to.be.rejectedWith("Invalid access token.");
       });
     });
 

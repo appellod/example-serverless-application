@@ -1,11 +1,15 @@
-import { expect } from "chai";
+import * as chai from "chai";
+import * as chaiAsPromised from "chai-as-promised";
 import { Chance } from "chance";
 import * as nock from "nock";
 
 import { Group, GroupDocument, GroupPermissions, User, UserDocument } from "../../../mongoose";
 
 const chance = new Chance();
+const expect = chai.expect;
 const permissions = new GroupPermissions();
+
+chai.use(chaiAsPromised);
 
 describe("mongoose/permissions/groupPermissions.ts", function() {
   describe("addAssociations()", function() {
@@ -44,15 +48,10 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
         });
 
         context("when user does not have permission", function() {
-          it("returns an error", async function() {
-            try {
-              record = <GroupDocument> await permissions.addAssociations(record, "userIds", [user.id], user);
-            } catch (e) {
-              expect(e.message).to.eql("User does not have permission to perform this action.");
-              return;
-            }
+          it("returns an error", function() {
+            const promise = permissions.addAssociations(record, "userIds", [user.id], user);
 
-            throw new Error("Error should have been thrown.");
+            return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
           });
         });
       });
@@ -142,15 +141,10 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
       });
 
       context("when user is is not a member of the group", function() {
-        it ("returns an error", async function() {
-          try {
-            await permissions.read(record, user);
-          } catch (e) {
-            expect(e.message).to.eql("User does not have permission to perform this action.");
-            return;
-          }
+        it ("returns an error", function() {
+          const promise = permissions.read(record, user);
 
-          throw new Error("Error should have been thrown.");
+          return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
         });
       });
     });
@@ -191,14 +185,9 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
 
       context("when user is removing another user's group", function() {
         it ("returns an error", async function() {
-          try {
-            record = <GroupDocument> await permissions.remove(record, user);
-          } catch (e) {
-            expect(e.message).to.eql("User does not have permission to perform this action.");
-            return;
-          }
+          const promise = permissions.remove(record, user);
 
-          throw new Error("Error should have been thrown.");
+          return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
         });
       });
     });
@@ -242,15 +231,10 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
         });
 
         context("when user does not have permission", function() {
-          it("returns an error", async function() {
-            try {
-              record = <GroupDocument> await permissions.removeAllAssociations(record, "userIds", user);
-            } catch (e) {
-              expect(e.message).to.eql("User does not have permission to perform this action.");
-              return;
-            }
+          it("returns an error", function() {
+            const promise = permissions.removeAllAssociations(record, "userIds", user);
 
-            throw new Error("Error should have been thrown.");
+            return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
           });
         });
       });
@@ -295,15 +279,10 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
         });
 
         context("when user does not have permission", function() {
-          it("returns an error", async function() {
-            try {
-              record = <GroupDocument> await permissions.removeAssociations(record, "userIds", [associatedUser.id], user);
-            } catch (e) {
-              expect(e.message).to.eql("User does not have permission to perform this action.");
-              return;
-            }
+          it("returns an error", function() {
+            const promise = permissions.removeAssociations(record, "userIds", [associatedUser.id], user);
 
-            throw new Error("Error should have been thrown.");
+            return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
           });
         });
       });
@@ -366,14 +345,9 @@ describe("mongoose/permissions/groupPermissions.ts", function() {
             userIds: [user._id]
           };
 
-          try {
-            record = <GroupDocument> await permissions.update(record, params, {}, user);
-          } catch (e) {
-            expect(e.message).to.eql("User does not have permission to perform this action.");
-            return;
-          }
+          const promise = permissions.update(record, params, {}, user);
 
-          throw new Error("Error should have been thrown.");
+          return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
         });
       });
     });
