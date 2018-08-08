@@ -31,7 +31,7 @@ export class UsersRouter {
      * @apiParam {String} sort The sorting of the records.
      * @apiParam {Object} where The where clause for the query.
      *
-     * @apiSuccess {[User](#api-Models-User)[]} users Array of users matching the criteria.
+     * @apiSuccess {[User](#api-Models-User)[]} records Array of users matching the criteria.
      */
     router.get(
       "/users",
@@ -47,7 +47,7 @@ export class UsersRouter {
      *
      * @apiParam {[User](#api-Models-User)} - The attributes to set on the user.
      *
-     * @apiSuccess {[User](#api-Models-User)} user The new user.
+     * @apiSuccess {[User](#api-Models-User)} record The new user.
      */
     router.post(
       "/users",
@@ -79,7 +79,7 @@ export class UsersRouter {
      *
      * @apiParam {String} :id The ID of the user.
      *
-     * @apiSuccess {[User](#api-Models-User)} user The user matching the given ID.
+     * @apiSuccess {[User](#api-Models-User)} record The user matching the given ID.
      */
     router.get(
       "/users/:id",
@@ -95,7 +95,7 @@ export class UsersRouter {
      *
      * @apiParam {[User](#api-Models-User)} - The attributes to set on the user.
      *
-     * @apiSuccess {[User](#api-Models-User)} user The updated user.
+     * @apiSuccess {[User](#api-Models-User)} record The updated user.
      */
     router.put(
       "/users/:id",
@@ -111,7 +111,7 @@ export class UsersRouter {
      *
      * @apiParam {String} :id The ID of the user.
      *
-     * @apiSuccess {[User](#api-Models-User)} user The removed user.
+     * @apiSuccess {[User](#api-Models-User)} record The removed user.
      */
     router.delete(
       "/users/:id",

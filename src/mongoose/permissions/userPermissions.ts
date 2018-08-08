@@ -1,7 +1,7 @@
-import { User, UserDocument } from "../index";
+import { User, UserDocument, UserModel } from "../index";
 import { Permissions } from "./permissions";
 
-export class UserPermissions extends Permissions {
+export class UserPermissions extends Permissions<UserDocument, UserModel> {
 
   constructor() {
     super();
@@ -9,7 +9,7 @@ export class UserPermissions extends Permissions {
     this.Model = User;
   }
 
-  public async createPermissions(user: UserDocument): Promise<string[]> {
+  public async createPermissions(user: UserDocument) {
     const attributes: string[] = [];
 
     // If the user is an admin
@@ -24,7 +24,7 @@ export class UserPermissions extends Permissions {
     return attributes;
   }
 
-  public async findPermissions(user: UserDocument): Promise<any> {
+  public async findPermissions(user: UserDocument) {
     const query: any = {};
 
     if (user.level === 0) {
@@ -34,7 +34,7 @@ export class UserPermissions extends Permissions {
     return query;
   }
 
-  public async readPermissions(record: UserDocument, user: UserDocument): Promise<string[]> {
+  public async readPermissions(record: UserDocument, user: UserDocument) {
     const attributes: string[] = [
       "_id",
       "createdAt",
@@ -61,7 +61,7 @@ export class UserPermissions extends Permissions {
     return attributes;
   }
 
-  public async removePermissions(record: UserDocument, user: UserDocument): Promise<boolean> {
+  public async removePermissions(record: UserDocument, user: UserDocument) {
     // If user is removing their own record
     if (record.id === user.id) {
       return true;
@@ -75,7 +75,7 @@ export class UserPermissions extends Permissions {
     return false;
   }
 
-  public async updatePermissions(record: UserDocument, user: UserDocument): Promise<string[]> {
+  public async updatePermissions(record: UserDocument, user: UserDocument) {
     const attributes: string[] = [];
 
     // If user is modifying their own record

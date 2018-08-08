@@ -27,7 +27,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.addUserIds(ctx);
 
-      expect(ctx.body.group.userIds).to.contain(user._id);
+      expect(ctx.body.record.userIds).to.contain(user._id);
     });
   });
 
@@ -57,7 +57,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.create(ctx);
 
-      expect(ctx.body.group).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 
@@ -70,7 +70,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.find(ctx);
 
-      expect(ctx.body.groups.length).to.eql(1);
+      expect(ctx.body.records.length).to.eql(1);
     });
   });
 
@@ -85,7 +85,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.findOne(ctx);
 
-      expect(ctx.body.group).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 
@@ -100,7 +100,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.remove(ctx);
 
-      expect(ctx.body.group).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 
@@ -118,7 +118,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.removeAllUserIds(ctx);
 
-      expect(ctx.body.group.userIds).to.not.contain(user._id);
+      expect(ctx.body.record.userIds).to.not.contain(user._id);
     });
   });
 
@@ -137,7 +137,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.removeUserIds(ctx);
 
-      expect(ctx.body.group.userIds).to.not.contain(user._id);
+      expect(ctx.body.record.userIds).to.not.contain(user._id);
     });
   });
 
@@ -157,7 +157,7 @@ describe("koa/controllers/groupsController.ts", function() {
 
       await groupsController.findOne(ctx);
 
-      expect(ctx.body.group).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 });

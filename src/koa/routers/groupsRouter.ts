@@ -34,7 +34,7 @@ export class GroupsRouter {
      * @apiParam {String} sort The sorting of the records.
      * @apiParam {Object} where The where clause for the query.
      *
-     * @apiSuccess {[Group](#api-Models-Group)[]} groups Array of groups matching the criteria.
+     * @apiSuccess {[Group](#api-Models-Group)[]} records Array of groups matching the criteria.
      */
     router.get(
       "/groups",
@@ -50,7 +50,7 @@ export class GroupsRouter {
      *
      * @apiParam {[Group](#api-Models-Group)} - The attributes to set on the group.
      *
-     * @apiSuccess {[Group](#api-Models-Group)} group The new group.
+     * @apiSuccess {[Group](#api-Models-Group)} record The new group.
      */
     router.post(
       "/groups",
@@ -82,7 +82,7 @@ export class GroupsRouter {
      *
      * @apiParam {String} :id The ID of the group.
      *
-     * @apiSuccess {[Group](#api-Models-Group)} group The group matching the given ID.
+     * @apiSuccess {[Group](#api-Models-Group)} record The group matching the given ID.
      */
     router.get(
       "/groups/:id",
@@ -98,7 +98,7 @@ export class GroupsRouter {
      *
      * @apiParam {[Group](#api-Models-Group)} - The attributes to set on the group.
      *
-     * @apiSuccess {[Group](#api-Models-Group)} group The updated group.
+     * @apiSuccess {[Group](#api-Models-Group)} record The updated group.
      */
     router.put(
       "/groups/:id",
@@ -114,7 +114,7 @@ export class GroupsRouter {
      *
      * @apiParam {String} :id The ID of the group.
      *
-     * @apiSuccess {[Group](#api-Models-Group)} group The removed group.
+     * @apiSuccess {[Group](#api-Models-Group)} record The removed group.
      */
     router.delete(
       "/groups/:id",
@@ -130,7 +130,7 @@ export class GroupsRouter {
      *
      * @apiParam {String} :id The ID of the group.
      *
-     * @apiSuccess {[Group](#api-Models-Group)} group The updated group.
+     * @apiSuccess {[Group](#api-Models-Group)} record The updated group.
      */
     router.delete(
       "/groups/:id/userIds",
@@ -147,7 +147,7 @@ export class GroupsRouter {
      * @apiParam {String} :id The ID of the group.
      * @apiParam {String} :userIds A comma-separated list of User IDs to add.
      *
-     * @apiSuccess {[Group](#api-Models-Group)} group The updated group.
+     * @apiSuccess {[Group](#api-Models-Group)} record The updated group.
      */
     router.post(
       "/groups/:id/userIds/:userIds",
@@ -164,7 +164,7 @@ export class GroupsRouter {
      * @apiParam {String} :id The ID of the group.
      * @apiParam {String} :userIds A comma-separated list of User IDs to remove.
      *
-     * @apiSuccess {[Group](#api-Models-Group)} group The updated group.
+     * @apiSuccess {[Group](#api-Models-Group)} record The updated group.
      */
     router.delete(
       "/groups/:id/userIds/:userIds",

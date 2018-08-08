@@ -41,7 +41,7 @@ describe("koa/controllers/usersController.ts", function() {
 
       await usersController.create(ctx);
 
-      expect(ctx.body.user).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 
@@ -54,7 +54,7 @@ describe("koa/controllers/usersController.ts", function() {
 
       await usersController.find(ctx);
 
-      expect(ctx.body.users.length).to.eql(1);
+      expect(ctx.body.records.length).to.eql(1);
     });
   });
 
@@ -69,7 +69,7 @@ describe("koa/controllers/usersController.ts", function() {
 
       await usersController.findOne(ctx);
 
-      expect(ctx.body.user).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 
@@ -84,7 +84,7 @@ describe("koa/controllers/usersController.ts", function() {
 
       await usersController.remove(ctx);
 
-      expect(ctx.body.user).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 
@@ -105,7 +105,7 @@ describe("koa/controllers/usersController.ts", function() {
 
       await usersController.findOne(ctx);
 
-      expect(ctx.body.user).to.exist;
+      expect(ctx.body.record).to.exist;
     });
   });
 });

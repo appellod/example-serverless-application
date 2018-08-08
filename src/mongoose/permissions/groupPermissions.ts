@@ -1,7 +1,7 @@
-import { Group, GroupDocument, UserDocument } from "../index";
+import { Group, GroupDocument, GroupModel, UserDocument } from "../index";
 import { Permissions } from "./permissions";
 
-export class GroupPermissions extends Permissions {
+export class GroupPermissions extends Permissions<GroupDocument, GroupModel> {
 
   constructor() {
     super();

@@ -2,16 +2,18 @@ import * as mongoose from "mongoose";
 
 import { Permissions, UserDocument } from "../../mongoose";
 
-export class RestController {
-  public Model: mongoose.Model<mongoose.Document>;
-  public permissions: Permissions;
+export class RestController<TDocument extends mongoose.Document,
+                            TModel extends mongoose.Model<TDocument>,
+                            TPermissions extends Permissions<TDocument, TModel>> {
+  public Model: TModel;
+  public permissions: TPermissions;
 
-  constructor(Model: mongoose.Model<mongoose.Document>, permissions: Permissions) {
+  constructor(Model: TModel, permissions: TPermissions) {
     this.Model = Model;
     this.permissions = permissions;
   }
 
-  public async addAssociations(recordId: string | mongoose.Types.ObjectId, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument): Promise<any> {
+  public async addAssociations(recordId: string | mongoose.Types.ObjectId, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument) {
     let record = await this.Model.findOne({ _id: recordId });
 
     if (!record) {
@@ -23,7 +25,7 @@ export class RestController {
     return { record };
   }
 
-  public async count(query: any, user: UserDocument): Promise<{ count: number }> {
+  public async count(query: any, user: UserDocument) {
     const where = await this.permissions.where(query.where, user);
 
     const count = await this.Model
@@ -34,12 +36,12 @@ export class RestController {
     return { count };
   }
 
-  public async create(body: any, override: any, user: UserDocument): Promise<any> {
+  public async create(body: any, override: any, user: UserDocument) {
     const record = await this.permissions.create(body, override, user);
     return { record };
   }
 
-  public async find(query: any, user: UserDocument): Promise<any> {
+  public async find(query: any, user: UserDocument) {
     const where = await this.permissions.where(query.where, user);
 
     const records = await this.Model
@@ -57,7 +59,7 @@ export class RestController {
     return { records };
   }
 
-  public async findOne(params: any, user: UserDocument): Promise<any> {
+  public async findOne(params: any, user: UserDocument) {
     const where = await this.permissions.where({ _id: params.id }, user);
     let record = await this.Model.findOne(where);
 
@@ -70,7 +72,7 @@ export class RestController {
     return { record };
   }
 
-  public async remove(params: any, user: UserDocument): Promise<any> {
+  public async remove(params: any, user: UserDocument) {
     const record = await this.Model.findOne({ _id: params.id });
 
     if (!record) {
@@ -82,7 +84,7 @@ export class RestController {
     return { record };
   }
 
-  public async removeAllAssociations(recordId: string | mongoose.Types.ObjectId, attribute: string, user: UserDocument): Promise<any> {
+  public async removeAllAssociations(recordId: string | mongoose.Types.ObjectId, attribute: string, user: UserDocument) {
     let record = await this.Model.findOne({ _id: recordId });
 
     if (!record) {
@@ -94,7 +96,7 @@ export class RestController {
     return { record };
   }
 
-  public async removeAssociations(recordId: string | mongoose.Types.ObjectId, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument): Promise<any> {
+  public async removeAssociations(recordId: string | mongoose.Types.ObjectId, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument) {
     let record = await this.Model.findOne({ _id: recordId });
 
     if (!record) {
@@ -106,7 +108,7 @@ export class RestController {
     return { record };
   }
 
-  public async update(params: any, body: any, override: any, user: UserDocument): Promise<any> {
+  public async update(params: any, body: any, override: any, user: UserDocument) {
     let record = await this.Model.findOne({ _id: params.id });
 
     if (!record) {
@@ -118,7 +120,7 @@ export class RestController {
     return { record };
   }
 
-  public async push(id: string, field: string, otherId: string, user: UserDocument): Promise<any> {
+  public async push(id: string, field: string, otherId: string, user: UserDocument) {
     let record = await this.Model.findOne({ _id: id });
 
     if (!record) {

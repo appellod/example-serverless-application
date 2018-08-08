@@ -4,7 +4,7 @@ import { User, UserDocument, UserModel, UserPermissions } from "../../mongoose";
 import { RestController } from "./";
 
 export class UsersController {
-  private restController: RestController;
+  private restController: RestController<UserDocument, UserModel, UserPermissions>;
 
   constructor() {
     this.restController = new RestController(User, new UserPermissions());
@@ -15,37 +15,22 @@ export class UsersController {
   }
 
   public async create(ctx: Context) {
-    const results = await this.restController.create(ctx.request.body, {}, ctx.state.user);
-    const user = <UserDocument> results.record;
-
-    ctx.body = { user };
+    ctx.body = await this.restController.create(ctx.request.body, {}, ctx.state.user);
   }
 
   public async find(ctx: Context) {
-    const results = await this.restController.find(ctx.query, ctx.state.user);
-    const users = <UserDocument[]> results.records;
-
-    ctx.body = { users };
+    ctx.body = await this.restController.find(ctx.query, ctx.state.user);
   }
 
   public async findOne(ctx: Context) {
-    const results = await this.restController.findOne(ctx.params, ctx.state.user);
-    const user = <UserDocument> results.record;
-
-    ctx.body = { user };
+    ctx.body = await this.restController.findOne(ctx.params, ctx.state.user);
   }
 
   public async remove(ctx: Context) {
-    const results = await this.restController.remove(ctx.params, ctx.state.user);
-    const user = <UserDocument> results.record;
-
-    ctx.body = { user };
+    ctx.body = await this.restController.remove(ctx.params, ctx.state.user);
   }
 
   public async update(ctx: Context) {
-    const results = await this.restController.update(ctx.params, ctx.request.body, {}, ctx.state.user);
-    const user = <UserDocument> results.record;
-
-    ctx.body = { user };
+    ctx.body = await this.restController.update(ctx.params, ctx.request.body, {}, ctx.state.user);
   }
 }

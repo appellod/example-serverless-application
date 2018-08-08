@@ -1,14 +1,14 @@
 import * as mongoose from "mongoose";
 import { UserDocument } from "../";
 
-export abstract class Permissions {
-  public Model: mongoose.Model<mongoose.Document>;
+export abstract class Permissions<TDocument extends mongoose.Document, TModel extends mongoose.Model<TDocument>> {
+  public Model: TModel;
 
   public abstract createPermissions(user: UserDocument): Promise<string[]>;
   public abstract findPermissions(user: UserDocument): Promise<any>;
-  public abstract readPermissions(record: mongoose.Document, user: UserDocument): Promise<string[]>;
-  public abstract removePermissions(record: mongoose.Document, user: UserDocument): Promise<boolean>;
-  public abstract updatePermissions(record: mongoose.Document, user: UserDocument): Promise<string[]>;
+  public abstract readPermissions(record: TDocument, user: UserDocument): Promise<string[]>;
+  public abstract removePermissions(record: TDocument, user: UserDocument): Promise<boolean>;
+  public abstract updatePermissions(record: TDocument, user: UserDocument): Promise<string[]>;
 
   /**
    * Adds associations to the given record's attribute.
@@ -17,7 +17,7 @@ export abstract class Permissions {
    * @param id The IDs to add to the attribute.
    * @param user The user adding the associations.
    */
-  public async addAssociations(record: mongoose.Document, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument): Promise<mongoose.Document> {
+  public async addAssociations(record: TDocument, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument): Promise<TDocument> {
     const updatePermissions = await this.updatePermissions(record, user);
 
     if (updatePermissions.length === 0 || updatePermissions.indexOf(attribute) < 0) {
@@ -49,7 +49,7 @@ export abstract class Permissions {
    * @param override Parameters to apply regardless of filtering rules.
    * @param user The user creating the record.
    */
-  public async create(params: any, override: any, user: UserDocument): Promise<mongoose.Document> {
+  public async create(params: any, override: any, user: UserDocument): Promise<TDocument> {
     const createPermissions = await this.createPermissions(user);
 
     if (createPermissions.length === 0) {
@@ -74,14 +74,14 @@ export abstract class Permissions {
    * @param record The record to filter attributes from.
    * @param user The user accessing the record.
    */
-  public async read(record: any, user: UserDocument): Promise<mongoose.Document> {
+  public async read(record: any, user: UserDocument): Promise<TDocument> {
     const readPermissions = await this.readPermissions(record, user);
 
     if (readPermissions.length === 0) {
       throw new Error("User does not have permission to perform this action.");
     }
 
-    record = this.removeUnauthorizedAttributes(record._doc, readPermissions);
+    record = this.removeUnauthorizedAttributes(record, readPermissions);
 
     return record;
   }
@@ -91,7 +91,7 @@ export abstract class Permissions {
    * @param record The record to remove.
    * @param user The user removing the record.
    */
-  public async remove(record: mongoose.Document, user: UserDocument): Promise<mongoose.Document> {
+  public async remove(record: TDocument, user: UserDocument): Promise<TDocument> {
     const removePermissions = await this.removePermissions(record, user);
     if (!removePermissions) {
       throw new Error("User does not have permission to perform this action.");
@@ -106,7 +106,7 @@ export abstract class Permissions {
    * @param attribute The attribute's key to remove the associations from.
    * @param user The user removing the association.
    */
-  public async removeAllAssociations(record: mongoose.Document, attribute: string, user: UserDocument): Promise<mongoose.Document> {
+  public async removeAllAssociations(record: TDocument, attribute: string, user: UserDocument): Promise<TDocument> {
     const updatePermissions = await this.updatePermissions(record, user);
 
     if (updatePermissions.length === 0 || updatePermissions.indexOf(attribute) < 0) {
@@ -135,7 +135,7 @@ export abstract class Permissions {
    * @param id The IDs to remove from the attribute.
    * @param user The user removing the associations.
    */
-  public async removeAssociations(record: mongoose.Document, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument): Promise<mongoose.Document> {
+  public async removeAssociations(record: TDocument, attribute: string, ids: string[] | mongoose.Types.ObjectId[], user: UserDocument): Promise<TDocument> {
     const updatePermissions = await this.updatePermissions(record, user);
 
     if (updatePermissions.length === 0 || updatePermissions.indexOf(attribute) < 0) {
@@ -168,7 +168,7 @@ export abstract class Permissions {
    * @param override Parameters to apply regardless of filtering rules.
    * @param user The user updating the record.
    */
-  public async update(record: mongoose.Document, params: any, override: any, user: UserDocument): Promise<mongoose.Document> {
+  public async update(record: TDocument, params: any, override: any, user: UserDocument): Promise<TDocument> {
     const updatePermissions = await this.updatePermissions(record, user);
 
     if (updatePermissions.length === 0) {
@@ -231,7 +231,7 @@ export abstract class Permissions {
    * @param obj The object to remove array values from.
    * @param schema The object's Mongoose schema.
    */
-  private removeArrayValues(obj: any, schema: mongoose.Schema) {
+  private removeArrayValues(obj: any, schema: mongoose.Schema): any {
     Object.keys(obj).forEach((key) => {
       const info: any = schema.path(key);
 
@@ -252,9 +252,9 @@ export abstract class Permissions {
    * @param obj The object to remove unauthorized attributes from.
    * @param permissions An array of authorized key names.
    */
-  private removeUnauthorizedAttributes(obj: any, permissions: string[]): Promise<any> {
+  private removeUnauthorizedAttributes(obj: TDocument, permissions: string[]): TDocument {
     // If object is a Mongoose object, modify the ._doc property instead.
-    const object = obj._doc || obj;
+    const object = (obj as any)._doc || obj;
 
     for (const key in object) {
       if (permissions.indexOf(key) < 0) {
