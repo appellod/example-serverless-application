@@ -5,9 +5,9 @@ import * as bluebird from "bluebird";
 import { Documentation } from "./documentation";
 import { Koa } from "./koa";
 import { Loggly } from "./loggly";
-import { Mongoose, User } from "./mongoose";
+import { Mongoose, Token, User } from "./mongoose";
 import { Passport } from "./passport";
-import { Redis, Token } from "./redis";
+import { Redis } from "./redis";
 import { SocketIo } from "./socketIo";
 
 global.Promise = bluebird;
@@ -44,6 +44,6 @@ if (process.env.ENVIRONMENT === "local") {
   }, async (err, user) => {
     if (err) console.error(err);
 
-    Token.create(user);
+    Token.create({ userId: user._id });
   });
 }

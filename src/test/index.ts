@@ -1,6 +1,6 @@
 process.env.NODE_ENV = "test";
 
-import { Group, User } from "../mongoose";
+import { Group, Token, User } from "../mongoose";
 import { Redis } from "../redis";
 
 export * from "../";
@@ -9,6 +9,7 @@ beforeEach(async function() {
   // Reset the database
   await Promise.all([
     await Group.remove({}),
+    await Token.remove({}),
     await User.remove({})
   ]);
 

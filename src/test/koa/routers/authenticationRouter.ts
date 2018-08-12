@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as nock from "nock";
 
-import { User, UserDocument } from "../../../mongoose";
+import { TokenDocument, User, UserDocument } from "../../../mongoose";
 import { request } from "../../request";
 
 describe("koa/routes/authenticationRouter.ts", function() {
@@ -121,7 +121,7 @@ describe("koa/routes/authenticationRouter.ts", function() {
   });
 
   describe("GET /authentication/validate-token", function() {
-    let token: string;
+    let token: TokenDocument;
 
     beforeEach(async function() {
       ({ token, user } = await user.login());
@@ -130,7 +130,7 @@ describe("koa/routes/authenticationRouter.ts", function() {
     it("returns a success response", async function() {
       const method = "get";
       const path = "/v1/authentication/validate-token";
-      const params = { token };
+      const params = { token: token._id };
 
       const res = await request(method, path, params, user);
 

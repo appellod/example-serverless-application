@@ -29,7 +29,7 @@ export class AuthenticationController {
     const userPermissions = new UserPermissions();
     results.user = <UserDocument> await userPermissions.read(results.user, results.user);
 
-    ctx.body = { token: results.token, user: results.user };
+    ctx.body = { token: results.token._id, user: results.user };
   }
 
   public async logout(ctx: Context) {
@@ -76,7 +76,7 @@ export class AuthenticationController {
     const userPermissions = new UserPermissions();
     results.user = <UserDocument> await userPermissions.read(results.user, results.user);
 
-    ctx.body = { token: results.token, user: results.user };
+    ctx.body = { token: results.token._id, user: results.user };
   }
 
   public async validateToken(ctx: Context) {

@@ -11,10 +11,14 @@ const schema = new mongoose.Schema({
   },
   name: String,
   ownerId: {
+    ref: "User",
     required: true,
     type: mongoose.Schema.Types.ObjectId
   },
-  userIds: [mongoose.Schema.Types.ObjectId]
+  userIds: [{
+    ref: "User",
+    type: mongoose.Schema.Types.ObjectId
+  }]
 }, {
   autoIndex: false,
   timestamps: true

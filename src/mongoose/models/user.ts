@@ -1,6 +1,8 @@
 import { EventEmitter } from "events";
 import * as mongoose from "mongoose";
 
+import { TokenDocument } from "./";
+
 export enum UserLevel {
   Default,
   Admin
@@ -18,8 +20,8 @@ export interface IUser {
 export interface UserDocument extends mongoose.Document, IUser {
   events: EventEmitter;
   isValidPassword(password: string): boolean;
-  login(): Promise<{ token: string, user: UserDocument }>;
-  logout(token: string|mongoose.Schema.Types.ObjectId): Promise<UserDocument>;
+  login(): Promise<{ token: TokenDocument, user: UserDocument }>;
+  logout(token: string): Promise<UserDocument>;
   requestPasswordReset(): Promise<UserDocument>;
 }
 

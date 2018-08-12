@@ -4,9 +4,7 @@ import { EventEmitter } from "events";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
-import { UserDocument, UserModel } from "../";
-import { Token } from "../../redis";
-import { SocketIo } from "../../socketIo";
+import { Token, TokenDocument, UserDocument, UserModel } from "../";
 
 const schema = new mongoose.Schema({
   email: {
@@ -90,7 +88,7 @@ schema.statics.resetPassword = async function(resetHash: string, newPassword: st
     new: true
   });
 
-  await Token.removeAll(user);
+  await Token.remove({ userId: user._id });
   User.events.emit("resetPassword", user);
 
   return user;
@@ -107,8 +105,11 @@ schema.methods.isValidPassword = function(password: string): boolean {
 /**
  * Logs a user in.
  */
-schema.methods.login = async function(): Promise<{ token: string, user: UserDocument }> {
-  const token = await Token.create(this);
+schema.methods.login = async function(): Promise<{ token: TokenDocument, user: UserDocument }> {
+  const token = await Token.create({
+    expiresAt: Token.getExpirationDate(),
+    userId: this._id
+  });
 
   return { token, user: this };
 };
@@ -122,7 +123,7 @@ schema.methods.logout = async function(token: string): Promise<UserDocument> {
     throw new Error("A valid access token must be used for logout.");
   }
 
-  await Token.remove(token);
+  await Token.remove({ _id: token });
 
   return this;
 };

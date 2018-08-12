@@ -1,9 +1,7 @@
 import { expect } from "chai";
 import * as nock from "nock";
-import * as sinon from "sinon";
 
-import { User, UserDocument } from "../../../mongoose";
-import { Token } from "../../../redis";
+import { Token, TokenDocument, User, UserDocument } from "../../../mongoose";
 
 describe("mongoose/models/user.ts", function() {
   describe("schema.statics.resetPassword()", function() {
@@ -34,17 +32,17 @@ describe("mongoose/models/user.ts", function() {
     });
 
     it("removes all the user's access token", async function() {
-      const token = await Token.create(user);
+      await Token.create({ userId: user._id });
 
       user = await User.resetPassword(user.resetHash, "password");
 
-      const result = await Token.validate(token);
-      expect(result).to.eql(null);
+      const count = await Token.count({ userId: user._id });
+      expect(count).to.eql(0);
     });
   });
 
   describe("schema.methods.login()", function() {
-    let token: string;
+    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -54,14 +52,15 @@ describe("mongoose/models/user.ts", function() {
     it("adds an access token associated with the user", async function() {
       ({ token, user } = await user.login());
 
-      const result = await Token.validate(token);
+      const tokens = await Token.find({ userId: user._id });
 
-      expect(result).to.not.eql(null);
+      expect(tokens.length).to.eq(1);
+      expect(tokens[0].id).to.eq(token.id);
     });
   });
 
   describe("schema.methods.logout()", function() {
-    let token: string;
+    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
@@ -69,11 +68,11 @@ describe("mongoose/models/user.ts", function() {
       ({ token, user } = await user.login());
     });
 
-    it("removes the token that was used for the API request", async function() {
-      user = await user.logout(token);
+    it("removes the token that was used", async function() {
+      user = await user.logout(token._id);
 
-      const result = await Token.validate(token);
-      expect(result).to.eql(null);
+      const count = await Token.count({ userId: user._id });
+      expect(count).to.eq(0);
     });
   });
 

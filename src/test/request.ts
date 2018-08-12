@@ -1,7 +1,6 @@
 import * as chai from "chai";
 
-import { UserDocument } from "../mongoose";
-import { Token } from "../redis";
+import { Token, UserDocument } from "../mongoose";
 
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
@@ -24,8 +23,8 @@ export async function request(method: string, path: string, params: any, user?: 
   const req = (<any> chai.request(`http://${host}:${port}`))[method](path);
 
   if (user) {
-    const token = await Token.create(user);
-    req.set("Authorization", "Bearer " + token);
+    const token = await Token.create({ userId: user._id });
+    req.set("Authorization", `Bearer ${token._id}`);
   }
 
   if ((method === "post" || method === "put") && params) {
