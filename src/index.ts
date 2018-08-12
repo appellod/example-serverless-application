@@ -22,7 +22,6 @@ const mongoose = new Mongoose();
 const koa = new Koa();
 const documentation = new Documentation(koa.app);
 const passport = new Passport(koa.app);
-new Redis();
 
 const pubClient = Redis.create();
 const subClient = Redis.create();

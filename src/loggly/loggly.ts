@@ -1,6 +1,6 @@
-const loggly = require("winston-loggly-bulk");
-import * as util from "util";
 import * as winston from "winston";
+
+require("winston-loggly-bulk");
 
 export class Loggly {
   constructor() {
