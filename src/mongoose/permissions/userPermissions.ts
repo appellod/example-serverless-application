@@ -1,5 +1,11 @@
-import { User, UserDocument, UserModel } from "../index";
+import { User, UserDocument, UserModel } from "../";
 import { Permissions } from "./permissions";
+
+enum AccessLevel {
+  Admin,
+  Self,
+  Other
+}
 
 export class UserPermissions extends Permissions<UserDocument, UserModel> {
 
@@ -10,31 +16,39 @@ export class UserPermissions extends Permissions<UserDocument, UserModel> {
   }
 
   public async createPermissions(user: UserDocument) {
+    const accessLevel = this.getAccessLevel(null, user);
     const attributes: string[] = [];
 
-    // If the user is an admin
-    if (user.level === 1) {
-      attributes.push(
-        "email",
-        "password",
-        "level"
-      );
-    }
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+        return attributes.concat(
+          "email",
+          "password",
+          "level"
+        );
 
-    return attributes;
+      default:
+        return attributes;
+    }
   }
 
   public async findPermissions(user: UserDocument) {
+    const accessLevel = this.getAccessLevel(null, user);
     const query: any = {};
 
-    if (user.level === 0) {
-      query.level = 0;
-    }
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+        return query;
 
-    return query;
+      default:
+        return Object.assign(query, {
+          level: 0
+        });
+    }
   }
 
   public async readPermissions(record: UserDocument, user: UserDocument) {
+    const accessLevel = this.getAccessLevel(record, user);
     const attributes: string[] = [
       "_id",
       "createdAt",
@@ -42,60 +56,70 @@ export class UserPermissions extends Permissions<UserDocument, UserModel> {
       "updatedAt"
     ];
 
-    // If user is reading their own record
-    if (record.id === user.id) {
-      attributes.push(
-        "level",
-        "resetHash"
-      );
-    }
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+        return attributes.concat(
+          "level",
+          "resetHash"
+        );
 
-    // If user is an admin
-    if (user.level === 1) {
-      attributes.push(
-        "level",
-        "resetHash"
-      );
-    }
+      case AccessLevel.Self:
+        return attributes.concat(
+          "level",
+          "resetHash"
+        );
 
-    return attributes;
+      default:
+        return attributes;
+    }
   }
 
   public async removePermissions(record: UserDocument, user: UserDocument) {
-    // If user is removing their own record
-    if (record.id === user.id) {
-      return true;
-    }
+    const accessLevel = this.getAccessLevel(record, user);
 
-    // If the user is an admin
-    if (user.level === 1) {
-      return true;
-    }
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+      case AccessLevel.Self:
+        return true;
 
-    return false;
+      default:
+        return false;
+    }
   }
 
   public async updatePermissions(record: UserDocument, user: UserDocument) {
+    const accessLevel = this.getAccessLevel(record, user);
     const attributes: string[] = [];
 
-    // If user is modifying their own record
-    if (record.id === user.id) {
-      attributes.push(
-        "email",
-        "password"
-      );
-    }
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+        return attributes.concat(
+          "email",
+          "password",
+          "level"
+        );
 
-    // If the user is an admin
+      case AccessLevel.Self:
+        return attributes.concat(
+          "email",
+          "password"
+        );
+
+      default:
+        return attributes;
+    }
+  }
+
+  private getAccessLevel(record: UserDocument, user: UserDocument) {
     if (user.level === 1) {
-      attributes.push(
-        "email",
-        "password",
-        "level"
-      );
+      return AccessLevel.Admin;
     }
 
-    return attributes;
+    if (record && record._id.equals(user._id)) {
+      return AccessLevel.Self;
+    }
+
+    return AccessLevel.Other;
   }
 
 }

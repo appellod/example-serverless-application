@@ -9,7 +9,7 @@ export class Loggly {
       process.env.LOGGLY_TAGS;
 
     if (!isLogglyConfigured) {
-      console.debug = console.log;
+      (console as any).debug = console.log;
       return;
     }
 
@@ -43,6 +43,6 @@ export class Loggly {
     console.info = function() { logger.info.apply(logger, arguments); };
     console.warn = function() { logger.warn.apply(logger, arguments); };
     console.error = function() { logger.error.apply(logger, arguments); };
-    console.debug = function() { logger.debug.apply(logger, arguments); };
+    (console as any).debug = function() { logger.debug.apply(logger, arguments); };
   }
 }

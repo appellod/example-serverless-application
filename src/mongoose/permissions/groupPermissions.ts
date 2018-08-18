@@ -1,6 +1,14 @@
 import { Group, GroupDocument, GroupModel, UserDocument } from "../index";
 import { Permissions } from "./permissions";
 
+enum AccessLevel {
+  Admin,
+  Owner,
+  Member,
+  Public,
+  Other
+}
+
 export class GroupPermissions extends Permissions<GroupDocument, GroupModel> {
 
   constructor() {
@@ -10,107 +18,123 @@ export class GroupPermissions extends Permissions<GroupDocument, GroupModel> {
   }
 
   public async createPermissions(user: UserDocument): Promise<string[]> {
+    const accessLevel = this.getAccessLevel(null, user);
     const attributes: string[] = [
       "isPrivate",
       "name",
       "userIds"
     ];
 
-    // If the user is an admin.
-    if (user.level === 1) {
-      attributes.push(
-        "ownerId"
-      );
-    }
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+        return attributes.concat(
+          "ownerId"
+        );
 
-    return attributes;
+      default:
+        return attributes;
+    }
   }
 
   public async findPermissions(user: UserDocument): Promise<any> {
+    const accessLevel = this.getAccessLevel(null, user);
     const query: any = {};
 
-    // If the user is a regular user.
-    if (user.level === 0) {
-      query.$or = [
-        { isPrivate: false },
-        { ownerId: user._id},
-        { userIds: user._id }
-      ];
-    }
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+        return query;
 
-    return query;
+      default:
+        return Object.assign(query, {
+          $or: [
+            { isPrivate: false },
+            { ownerId: user._id},
+            { userIds: user._id }
+          ]
+        });
+    }
   }
 
   public async readPermissions(record: GroupDocument, user: UserDocument): Promise<string[]> {
+    const accessLevel = this.getAccessLevel(record, user);
     const attributes: string[] = [];
 
-    if (user.level === 0) {
-      // If user is the owner of the group, a member of the group, or the group is public.
-      if (record.ownerId.equals(user._id) || record.userIds.indexOf(user._id) >= 0 || !record.isPrivate) {
-        attributes.push(
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+      case AccessLevel.Owner:
+      case AccessLevel.Member:
+      case AccessLevel.Public:
+        return attributes.concat(
           "_id",
           "createdAt",
           "isPrivate",
           "name",
-          "owner",
           "ownerId",
           "updatedAt",
-          "users",
           "userIds"
         );
-      }
-    } else {
-      attributes.push(
-        "_id",
-        "createdAt",
-        "isPrivate",
-        "name",
-        "owner",
-        "ownerId",
-        "updatedAt",
-        "users",
-        "userIds"
-      );
-    }
 
-    return attributes;
+      default:
+        return attributes;
+    }
   }
 
   public async removePermissions(record: GroupDocument, user: UserDocument): Promise<boolean> {
-    if (user.level === 0) {
-      // If user is removing their own group.
-      if (record.ownerId.equals(user._id)) {
-        return true;
-      }
-    } else {
-      return true;
-    }
+    const accessLevel = this.getAccessLevel(record, user);
 
-    return false;
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+      case AccessLevel.Owner:
+        return true;
+
+      default:
+        return false;
+    }
   }
 
   public async updatePermissions(record: GroupDocument, user: UserDocument): Promise<string[]> {
+    const accessLevel = this.getAccessLevel(record, user);
     const attributes: string[] = [];
 
-    if (user.level === 0) {
-      // If user is updating their own group.
-      if (record.ownerId.equals(user._id)) {
-        attributes.push(
+    switch (accessLevel) {
+      case AccessLevel.Admin:
+        return attributes.concat(
+          "isPrivate",
+          "name",
+          "ownerId",
+          "userIds"
+        );
+
+      case AccessLevel.Owner:
+        return attributes.concat(
           "isPrivate",
           "name",
           "userIds"
         );
-      }
-    } else {
-      attributes.push(
-        "isPrivate",
-        "name",
-        "ownerId",
-        "userIds"
-      );
+
+      default:
+        return attributes;
+    }
+  }
+
+  private getAccessLevel(record: GroupDocument, user: UserDocument) {
+    if (user.level === 1) {
+      return AccessLevel.Admin;
     }
 
-    return attributes;
+    if (record && record.ownerId.equals(user._id)) {
+      return AccessLevel.Owner;
+    }
+
+    if (record && record.userIds.includes(user._id)) {
+      return AccessLevel.Member;
+    }
+
+    if (record && !record.isPrivate) {
+      return AccessLevel.Public;
+    }
+
+    return AccessLevel.Other;
   }
 
 }

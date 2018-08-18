@@ -3,7 +3,8 @@ process.env.NODE_ENV = "test";
 import { Group, Token, User } from "../mongoose";
 import { Redis } from "../redis";
 
-export * from "../";
+const index = require("../");
+const redis = new Redis();
 
 beforeEach(async function() {
   // Reset the database
