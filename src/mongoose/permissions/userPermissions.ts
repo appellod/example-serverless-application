@@ -58,11 +58,6 @@ export class UserPermissions extends Permissions<UserDocument, UserModel> {
 
     switch (accessLevel) {
       case AccessLevel.Admin:
-        return attributes.concat(
-          "level",
-          "resetHash"
-        );
-
       case AccessLevel.Self:
         return attributes.concat(
           "level",
