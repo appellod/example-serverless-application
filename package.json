@@ -29,7 +29,7 @@
     "url": "https://api.example.com/v1",
     "header": {
       "title": "Using the API",
-      "filename": "src/documentation/public/apidoc/header.md"
+      "filename": "src/common/koa/documentation/header.md"
     }
   },
   "nyc": {
@@ -39,10 +39,12 @@
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
+    "bcrypt": "^3.0.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.1",
     "chance": "^1.0.6",
     "fs": "0.0.2",
+    "knex": "^0.15.2",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",
     "koa-morgan": "^1.0.1",
@@ -53,6 +55,7 @@
     "koa-session-mongoose": "^2.0.5",
     "koa-static": "^5.0.0",
     "mongoose": "^4.10.8",
+    "objection": "^1.2.2",
     "passport-http-bearer": "^1.0.1",
     "redis": "^2.8.0",
     "request": "^2.74.0",
@@ -66,12 +69,14 @@
     "winston-loggly-bulk": "^2.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^2.0.0",
     "@types/bcrypt-nodejs": "0.0.30",
     "@types/bluebird": "^3.5.18",
     "@types/chai": "^4.0.10",
     "@types/chai-as-promised": "^7.1.0",
     "@types/chai-http": "^3.0.5",
     "@types/chance": "^0.7.35",
+    "@types/knex": "^0.14.21",
     "@types/koa": "^2.0.46",
     "@types/koa-bodyparser": "^3.0.26",
     "@types/koa-morgan": "^1.0.4",
