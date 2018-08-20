@@ -76,7 +76,7 @@ describe("microservices/authentication/controllers/authentication.ts", function(
     });
 
     context("when credentials are correct", function() {
-      it("returns the user and access token", async function() {
+      it("returns the refresh token, token, and user", async function() {
         const ctx = {
           request: {
             body: {
@@ -88,6 +88,7 @@ describe("microservices/authentication/controllers/authentication.ts", function(
 
         await authenticationController.login(ctx);
 
+        expect(ctx.body.refreshToken).to.exist;
         expect(ctx.body.token).to.exist;
         expect(ctx.body.user).to.exist;
         expect(ctx.body.user.email).to.exist;
@@ -136,6 +137,30 @@ describe("microservices/authentication/controllers/authentication.ts", function(
       await authenticationController.logout(ctx);
 
       expect(ctx.body.message).to.exist;
+    });
+  });
+
+  describe("refreshToken()", function() {
+    let token: string;
+    let user: UserDocument;
+
+    beforeEach(async function() {
+      user = await User.mock();
+      token = jwt.sign({ user }, process.env.JWT_SECRET);
+    });
+
+    it("returns the refresh token, token, and user", async function() {
+      const ctx = {
+        request: {
+          body: { token }
+        }
+      } as Context;
+
+      await authenticationController.refreshToken(ctx);
+
+      expect(ctx.body.refreshToken).to.exist;
+      expect(ctx.body.token).to.exist;
+      expect(ctx.body.user).to.exist;
     });
   });
 
@@ -197,26 +222,6 @@ describe("microservices/authentication/controllers/authentication.ts", function(
       await authenticationController.resetPassword(ctx);
 
       expect(ctx.body.message).to.exist;
-    });
-  });
-
-  describe("validateToken()", function() {
-    let token: string;
-    let user: UserDocument;
-
-    beforeEach(async function() {
-      user = await User.mock();
-      token = jwt.sign({ user }, process.env.JWT_SECRET);
-    });
-
-    it("returns the user", async function() {
-      const ctx = {
-        query: { token }
-      } as Context;
-
-      await authenticationController.validateToken(ctx);
-
-      expect(ctx.body.user).to.exist;
     });
   });
 });

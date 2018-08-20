@@ -22,13 +22,12 @@ export function AuthenticationRoutes(router: Router) {
    * @api {post} /authentication/signup Sign Up
    * @apiName SignUp
    * @apiGroup Authentication
-   * @apiDescription Creates a user with given email address and password and returns an access token.
+   * @apiDescription Creates a user with given email address and password.
    *
    * @apiParam {String} email The user's email address.
    * @apiParam {String} password The user's password.
    *
    * @apiSuccess {Object} user The created user.
-   * @apiSuccess {String} token The user's access token.
    */
   router.post("/authentication/signup", controller.signup.bind(controller));
 
@@ -41,8 +40,9 @@ export function AuthenticationRoutes(router: Router) {
    * @apiParam {String} email The user's email address.
    * @apiParam {String} password The user's password.
    *
+   * @apiSuccess {String} refreshToken The new refresh token.
+   * @apiSuccess {String} token The new access token.
    * @apiSuccess {Object} user The user.
-   * @apiSuccess {String} token The user's access token.
    */
   router.post("/authentication/login", controller.login.bind(controller));
 
@@ -76,14 +76,16 @@ export function AuthenticationRoutes(router: Router) {
   router.post("/authentication/reset-password", controller.resetPassword.bind(controller));
 
   /**
-   * @api {get} /authentication/validate-token Validate Token
+   * @api {post} /authentication/token Validate Token
    * @apiName ValidateToken
    * @apiGroup Authentication
-   * @apiDescription Refreshes the user's token if user is found.
+   * @apiDescription Returns a new access token if the refresh token is valid.
    *
    * @apiParam {String} token The user's access token.
    *
+   * @apiSuccess {String} refreshToken The new refresh token.
+   * @apiSuccess {String} token The new access token.
    * @apiSuccess {Object} user The user.
    */
-  router.get("/authentication/validate-token", controller.validateToken.bind(controller));
+  router.post("/authentication/token", controller.refreshToken.bind(controller));
 }

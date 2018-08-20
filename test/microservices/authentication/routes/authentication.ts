@@ -124,7 +124,7 @@ describe("microservices/authentication/routes/authentication.ts", function() {
     });
   });
 
-  describe("GET /authentication/validate-token", function() {
+  describe("POST /authentication/token", function() {
     let token: string;
 
     beforeEach(async function() {
@@ -132,8 +132,8 @@ describe("microservices/authentication/routes/authentication.ts", function() {
     });
 
     it("returns a success response", async function() {
-      const method = "get";
-      const path = "/v1/authentication/validate-token";
+      const method = "post";
+      const path = "/v1/authentication/token";
       const params = { token };
 
       const res = await requestHelper.request(method, path, params, user);

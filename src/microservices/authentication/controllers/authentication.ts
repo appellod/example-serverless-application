@@ -28,10 +28,10 @@ export class AuthenticationController {
     const userPermissions = new UserPermissions();
     user = await userPermissions.read(user, user);
 
-    const expiresIn = Number(process.env.JWT_EXPIRES_IN);
-    const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn });
+    const refreshToken = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
+    const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
-    ctx.body = { token, user };
+    ctx.body = { refreshToken, token, user };
   }
 
   public async logout(ctx: Context) {
@@ -39,6 +39,26 @@ export class AuthenticationController {
     const token = authorizationHeader.replace("Bearer ", "");
 
     ctx.body = { message: "Logout successful." };
+  }
+
+  public async refreshToken(ctx: Context) {
+    if (!ctx.request.body.token) {
+      throw new Error("Please provide a refresh token.");
+    }
+
+    let user = await BearerStrategy.authenticate(ctx.request.body.token);
+
+    if (!user) {
+      throw new Error("Invalid refresh token.");
+    }
+
+    const userPermissions = new UserPermissions();
+    user = await userPermissions.read(user, user);
+
+    const refreshToken = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
+    const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+
+    ctx.body = { refreshToken, token, user };
   }
 
   public async requestPasswordReset(ctx: Context) {
@@ -72,24 +92,6 @@ export class AuthenticationController {
         email: ctx.request.body.email,
         password: ctx.request.body.password
     });
-
-    const userPermissions = new UserPermissions();
-    user = await userPermissions.read(user, user);
-
-    ctx.body = { user };
-  }
-
-  public async validateToken(ctx: Context) {
-    if (!ctx.query.token) {
-      throw new Error("Please provide an access token.");
-    }
-
-    const token = ctx.query.token;
-    let user = await BearerStrategy.authenticate(token);
-
-    if (!user) {
-      throw new Error("No users matching given token.");
-    }
 
     const userPermissions = new UserPermissions();
     user = await userPermissions.read(user, user);
