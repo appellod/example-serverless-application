@@ -3,11 +3,11 @@ This is an open-source RESTful API designed to give Typescript developers a soli
 starting point for creating backend applications.
 
 ## Table of Contents
-* [Features](#Features)
-* [Quickstart](#Quickstart)
-* [Development Guide](#Development-Guide)
-* [File Structure](#File-Structure)
-* [Support](#Support)
+* [Features](#features)
+* [Quickstart](#quickstart)
+* [Development Guide](#development-guide)
+* [File Structure](#file-structure)
+* [Support](#support)
 
 ## Features
 
