@@ -4,7 +4,7 @@ import { EventEmitter } from "events";
 import * as mongoose from "mongoose";
 import * as request from "request";
 
-import { Token, TokenDocument, UserDocument, UserModel } from "../";
+import { UserDocument, UserModel } from "../";
 
 const schema = new mongoose.Schema({
   email: {
@@ -88,7 +88,6 @@ schema.statics.resetPassword = async function(resetHash: string, newPassword: st
     new: true
   });
 
-  await Token.remove({ userId: user._id });
   User.events.emit("resetPassword", user);
 
   return user;
@@ -100,32 +99,6 @@ schema.statics.resetPassword = async function(resetHash: string, newPassword: st
  */
 schema.methods.isValidPassword = function(password: string): boolean {
   return bcrypt.compareSync(password, this.password);
-};
-
-/**
- * Logs a user in.
- */
-schema.methods.login = async function(): Promise<{ token: TokenDocument, user: UserDocument }> {
-  const token = await Token.create({
-    expiresAt: Token.getExpirationDate(),
-    userId: this._id
-  });
-
-  return { token, user: this };
-};
-
-/**
- * Logs the user out.
- * @param {String} token The access token to be cleared.
- */
-schema.methods.logout = async function(token: string): Promise<UserDocument> {
-  if (!token) {
-    throw new Error("A valid access token must be used for logout.");
-  }
-
-  await Token.remove({ _id: token });
-
-  return this;
 };
 
 /**

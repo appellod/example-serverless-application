@@ -1,5 +1,6 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
+import * as jwt from "jsonwebtoken";
 
 import { User } from "../../../../src/common/mongo";
 import { AuthenticationController, IContext, ISocket } from "../../../../src/common/socket-io";
@@ -42,7 +43,7 @@ describe("socketIo/controllers/authenticationController.ts", function() {
     context("when a valid token is provided", function() {
       it("does not return an error", async function() {
         const user = await User.mock();
-        const { token } = await user.login();
+        const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
         const ctx = { data: { token }, socket };
         await authenticationController.authenticate(ctx);
@@ -57,7 +58,7 @@ describe("socketIo/controllers/authenticationController.ts", function() {
 
     beforeEach(async function() {
       const user = await User.mock();
-      const { token } = await user.login();
+      const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
       ctx = { data: { token }, socket };
       await authenticationController.authenticate(ctx);

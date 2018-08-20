@@ -1,3 +1,4 @@
+import * as jwt from "jsonwebtoken";
 import { Context } from "koa";
 
 import { User, UserDocument, UserPermissions } from "../../../common/mongo";
@@ -18,24 +19,24 @@ export class AuthenticationController {
       throw new Error("Please provide an email address and password.");
     }
 
-    const user = await User.findOne({ email: ctx.request.body.email });
+    let user = await User.findOne({ email: ctx.request.body.email });
 
     if (!user || !user.isValidPassword(ctx.request.body.password)) {
       throw new Error("Incorrect username or password.");
     }
 
-    const results = await user.login();
-
     const userPermissions = new UserPermissions();
-    results.user = <UserDocument> await userPermissions.read(results.user, results.user);
+    user = await userPermissions.read(user, user);
 
-    ctx.body = { token: results.token._id, user: results.user };
+    const expiresIn = Number(process.env.JWT_EXPIRES_IN);
+    const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn });
+
+    ctx.body = { token, user };
   }
 
   public async logout(ctx: Context) {
     const authorizationHeader = <string> ctx.headers.authorization;
     const token = authorizationHeader.replace("Bearer ", "");
-    await ctx.state.user.logout(token);
 
     ctx.body = { message: "Logout successful." };
   }
@@ -67,29 +68,31 @@ export class AuthenticationController {
       throw new Error("Please provide an email address and password.");
     }
 
-    const user = await User.create({
+    let user = await User.create({
         email: ctx.request.body.email,
         password: ctx.request.body.password
     });
-    const results = await user.login();
 
     const userPermissions = new UserPermissions();
-    results.user = <UserDocument> await userPermissions.read(results.user, results.user);
+    user = await userPermissions.read(user, user);
 
-    ctx.body = { token: results.token._id, user: results.user };
+    ctx.body = { user };
   }
 
   public async validateToken(ctx: Context) {
     if (!ctx.query.token) {
-      throw new Error("Please provide your access token.");
+      throw new Error("Please provide an access token.");
     }
 
     const token = ctx.query.token;
-    const user = await BearerStrategy.authenticate(token);
+    let user = await BearerStrategy.authenticate(token);
 
     if (!user) {
       throw new Error("No users matching given token.");
     }
+
+    const userPermissions = new UserPermissions();
+    user = await userPermissions.read(user, user);
 
     ctx.body = { user };
   }

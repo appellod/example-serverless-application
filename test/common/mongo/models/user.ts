@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as nock from "nock";
 
-import { Token, TokenDocument, User, UserDocument } from "../../../../src/common/mongo";
+import { User, UserDocument } from "../../../../src/common/mongo";
 
 describe("common/mongo/models/user.ts", function() {
   describe("schema.statics.resetPassword()", function() {
@@ -29,50 +29,6 @@ describe("common/mongo/models/user.ts", function() {
     it("removes the user's resetHash", async function() {
       user = await User.resetPassword(user.resetHash, "password");
       expect(user.resetHash).to.be.undefined;
-    });
-
-    it("removes all the user's access token", async function() {
-      await Token.create({ userId: user._id });
-
-      user = await User.resetPassword(user.resetHash, "password");
-
-      const count = await Token.count({ userId: user._id });
-      expect(count).to.eql(0);
-    });
-  });
-
-  describe("schema.methods.login()", function() {
-    let token: TokenDocument;
-    let user: UserDocument;
-
-    beforeEach(async function() {
-      user = await User.mock();
-    });
-
-    it("adds an access token associated with the user", async function() {
-      ({ token, user } = await user.login());
-
-      const tokens = await Token.find({ userId: user._id });
-
-      expect(tokens.length).to.eq(1);
-      expect(tokens[0].id).to.eq(token.id);
-    });
-  });
-
-  describe("schema.methods.logout()", function() {
-    let token: TokenDocument;
-    let user: UserDocument;
-
-    beforeEach(async function() {
-      user = await User.mock();
-      ({ token, user } = await user.login());
-    });
-
-    it("removes the token that was used", async function() {
-      user = await user.logout(token._id);
-
-      const count = await Token.count({ userId: user._id });
-      expect(count).to.eq(0);
     });
   });
 

@@ -5,6 +5,10 @@ set -a
 # COMMON
 # ====================
 
+# JWT
+JWT_EXPIRES_IN="900"
+JWT_SECRET="secret"
+
 # Loggly (Uncomment to activate Loggly)
 # LOGGLY_INPUT_TOKEN="e123456c-d1cd-1e12-123a-123ed1fd1c12"
 # LOGGLY_SUBDOMAIN="example"

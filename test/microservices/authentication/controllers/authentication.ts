@@ -1,9 +1,10 @@
 import { Context } from "koa";
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
+import * as jwt from "jsonwebtoken";
 import * as nock from "nock";
 
-import { TokenDocument, User, UserDocument } from "../../../../src/common/mongo";
+import { User, UserDocument } from "../../../../src/common/mongo";
 import { AuthenticationController } from "../../../../src/microservices/authentication/controllers";
 
 const authenticationController = new AuthenticationController();
@@ -47,7 +48,7 @@ describe("microservices/authentication/controllers/authentication.ts", function(
   });
 
   describe("signup()", function() {
-    it("returns the user and access token", async function() {
+    it("returns the user", async function() {
       const ctx = {
         request: {
           body: {
@@ -59,13 +60,11 @@ describe("microservices/authentication/controllers/authentication.ts", function(
 
       await authenticationController.signup(ctx);
 
-      expect(ctx.body.token).to.exist;
       expect(ctx.body.user).to.exist;
       expect(ctx.body.user.email).to.exist;
       expect(ctx.body.user.level).to.exist;
       expect(ctx.body.user.password).to.be.undefined;
       expect(ctx.body.user.resetHash).to.be.undefined;
-      expect(ctx.body.user.tokens).to.be.undefined;
     });
   });
 
@@ -118,18 +117,18 @@ describe("microservices/authentication/controllers/authentication.ts", function(
   });
 
   describe("logout()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {
       user = await User.mock();
-      ({ token, user } = await user.login());
+      token = jwt.sign({ user }, process.env.JWT_SECRET);
     });
 
     it("returns a success message", async function() {
       const ctx = {
         headers: {
-          authorization: `Bearer ${token._id}`
+          authorization: `Bearer ${token}`
         },
         state: { user }
       } as Context;
@@ -141,12 +140,10 @@ describe("microservices/authentication/controllers/authentication.ts", function(
   });
 
   describe("requestPasswordReset()", function() {
-    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
       user = await User.mock();
-      ({ token, user } = await user.login());
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -172,12 +169,10 @@ describe("microservices/authentication/controllers/authentication.ts", function(
   });
 
   describe("resetPassword()", function() {
-    let token: TokenDocument;
     let user: UserDocument;
 
     beforeEach(async function() {
       user = await User.mock();
-      ({ token, user } = await user.login());
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -206,12 +201,12 @@ describe("microservices/authentication/controllers/authentication.ts", function(
   });
 
   describe("validateToken()", function() {
-    let token: TokenDocument;
+    let token: string;
     let user: UserDocument;
 
     beforeEach(async function() {
       user = await User.mock();
-      ({ token, user } = await user.login());
+      token = jwt.sign({ user }, process.env.JWT_SECRET);
     });
 
     it("returns the user", async function() {

@@ -1,7 +1,8 @@
 import { expect } from "chai";
+import * as jwt from "jsonwebtoken";
 import * as nock from "nock";
 
-import { TokenDocument, User, UserDocument } from "../../../../src/common/mongo";
+import { User, UserDocument } from "../../../../src/common/mongo";
 import { koa } from "../../../../src/microservices/authentication";
 import { RequestHelper } from "../../../request-helper";
 
@@ -124,16 +125,16 @@ describe("microservices/authentication/routes/authentication.ts", function() {
   });
 
   describe("GET /authentication/validate-token", function() {
-    let token: TokenDocument;
+    let token: string;
 
     beforeEach(async function() {
-      ({ token, user } = await user.login());
+      token = jwt.sign({ user }, process.env.JWT_SECRET);
     });
 
     it("returns a success response", async function() {
       const method = "get";
       const path = "/v1/authentication/validate-token";
-      const params = { token: token._id };
+      const params = { token };
 
       const res = await requestHelper.request(method, path, params, user);
 

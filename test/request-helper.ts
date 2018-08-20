@@ -1,7 +1,8 @@
 import * as chai from "chai";
 import { Server } from "http";
+import * as jwt from "jsonwebtoken";
 
-import { Token, UserDocument } from "../src/common/mongo";
+import { UserDocument } from "../src/common/mongo";
 
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
@@ -29,8 +30,8 @@ export class RequestHelper {
     const req = (<any> chai.request(this.server))[method](path);
 
     if (user) {
-      const token = await Token.create({ userId: user._id });
-      req.set("Authorization", `Bearer ${token._id}`);
+      const token = jwt.sign({ user }, process.env.JWT_SECRET);
+      req.set("Authorization", `Bearer ${token}`);
     }
 
     if ((method === "post" || method === "put") && params) {

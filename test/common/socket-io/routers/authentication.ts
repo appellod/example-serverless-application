@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import * as jwt from "jsonwebtoken";
 import * as io from "socket.io-client";
 
 import { User } from "../../../../src/common/mongo";
@@ -32,7 +33,7 @@ describe.skip("socketIo/routers/authenticationRouter.ts", function() {
         const socket = await io.connect("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
 
         const user = await User.mock();
-        const { token } = await user.login();
+        const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
         socket.emit("authenticate", { token });
         const res: any = await new Promise((resolve) => socket.on("authenticate", resolve));
@@ -47,7 +48,7 @@ describe.skip("socketIo/routers/authenticationRouter.ts", function() {
       const socket = await io.connect("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
 
       const user = await User.mock();
-      const { token } = await user.login();
+      const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
       socket.emit("authenticate", { token });
       await new Promise((resolve) => socket.on("authenticate", resolve));
