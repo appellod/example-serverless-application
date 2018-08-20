@@ -120,15 +120,15 @@ schema.methods.requestPasswordReset = async function(): Promise<UserDocument> {
 
   const resetUrl = process.env.PASSWORD_RESET_URL + "?resetHash=" + user.resetHash;
 
-  let html = "You have requested to reset your password. Please click the link below to create a new password:";
-  html += "<br><br>";
-  html += "<a href=" + resetUrl + ">" + resetUrl + "</a>";
-  html += "<br><br>";
-  html += "Thank you,";
-  html += "<br>";
-  html += process.env.PASSWORD_RESET_COMPANY;
+  const html = `You have requested to reset your password. Please click the link below to create a new password:
+  <br><br>
+  <a href=${resetUrl}>${resetUrl}</a>
+  <br><br>
+  Thank you,
+  <br>
+  ${process.env.PASSWORD_RESET_COMPANY}`;
 
-  const url = "https://api:" + process.env.MAILGUN_KEY + "@api.mailgun.net/v3/" + process.env.MAILGUN_DOMAIN + "/messages";
+  const url = `https://api:${process.env.MAILGUN_KEY}@api.mailgun.net/v3/${process.env.MAILGUN_DOMAIN}/messages`;
 
   try {
     await new Promise((res, rej) => {

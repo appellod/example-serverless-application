@@ -4,6 +4,7 @@ import * as path from "path";
 
 import { Koa } from "../../common/koa";
 import * as Loggly from "../../common/loggly";
+import { Mongo } from "../../common/mongo";
 import * as Passport from "../../common/passport";
 import { GroupsRoutes, UsersRoutes } from "./routes";
 
@@ -14,6 +15,9 @@ global.Promise = bluebird;
 if (Loggly.isConfigured) {
   Loggly.setup();
 }
+
+// Connect to Mongo.
+const mongo = new Mongo();
 
 // Create a KOA server.
 const koa = new Koa(process.env.REST_SERVER_PORT);

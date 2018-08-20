@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
-    "bcrypt": "^3.0.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.1",
     "chance": "^1.0.6",
@@ -58,6 +57,7 @@
     "mongoose": "^4.10.8",
     "objection": "^1.2.2",
     "passport-http-bearer": "^1.0.1",
+    "pg": "^7.4.3",
     "redis": "^2.8.0",
     "request": "^2.74.0",
     "request-promise": "^4.2.2",
@@ -70,7 +70,6 @@
     "winston-loggly-bulk": "^2.0.2"
   },
   "devDependencies": {
-    "@types/bcrypt": "^2.0.0",
     "@types/bcrypt-nodejs": "0.0.30",
     "@types/bluebird": "^3.5.18",
     "@types/chai": "^4.0.10",
@@ -92,6 +91,7 @@
     "@types/nock": "^9.1.0",
     "@types/node": "^8.0.58",
     "@types/passport-http-bearer": "^1.0.31",
+    "@types/pg": "^7.4.10",
     "@types/redis": "^2.8.6",
     "@types/request": "^2.0.9",
     "@types/request-promise": "^4.1.39",

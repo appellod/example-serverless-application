@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 
-export class Mongoose {
+export class Mongo {
   constructor() {
     (mongoose as any).Promise = global.Promise;
 
@@ -9,14 +9,17 @@ export class Mongoose {
     const database = process.env.MONGO_DATABASE;
     const url = `mongodb://${host}:${port}/${database}`;
 
-    if (mongoose.connection.readyState !== 1) {
-      mongoose.connect(url, (err) => {
-        if (err) throw err;
-
-        if (process.env.NODE_ENV !== "test") {
-          console.log("Mongoose connection successful.");
-        }
-      });
+    // If Mongoose is already connected then return.
+    if (mongoose.connection.readyState > 0) {
+      return;
     }
+
+    mongoose.connect(url, (err) => {
+      if (err) throw err;
+
+      if (process.env.NODE_ENV !== "test") {
+        console.log("Mongoose connection successful.");
+      }
+    });
   }
 }

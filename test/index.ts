@@ -1,14 +1,21 @@
-import { Group, Mongoose, User } from "../src/common/mongo";
+import { Group, Mongo, User } from "../src/common/mongo";
+import * as Postgres from "../src/common/postgres";
 import { Redis } from "../src/common/redis";
 
-const mongoose = new Mongoose();
+const knex = Postgres.setup();
+const mongo = new Mongo();
 const redis = Redis.create();
 
 beforeEach(async function() {
-  // Reset the database
+  // Reset Mongo
   await Promise.all([
-    await Group.remove({}),
-    await User.remove({})
+    Group.remove({}),
+    User.remove({})
+  ]);
+
+  // Reset Postgres
+  await Promise.all([
+    Postgres.User.query().delete()
   ]);
 
   // Reset Redis

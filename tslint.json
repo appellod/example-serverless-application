@@ -1,6 +1,6 @@
 {
   "extends": [
-    "tslint:recommended"   
+    "tslint:recommended"
   ],
   "jsRules": {},
   "rules": {
@@ -16,7 +16,8 @@
     "no-var-requires": false,
     "only-arrow-functions": false,
     "ordered-imports": false,
-    "trailing-comma": false
+    "trailing-comma": false,
+    "variable-name": false
   },
   "rulesDirectory": []
 }
