@@ -2,20 +2,32 @@
 This is an open-source RESTful API designed to give Typescript developers a solid
 starting point for creating backend applications.
 
+## Table of Contents
+* [Features](#Features)
+* [Quickstart](#Quickstart)
+* [Development Guide](#Development-Guide)
+* [File Structure](#File-Structure)
+* [Support](#Support)
+
 ## Features
+
+**Microservice Architecture**
+Project is setup to allow development of highly-scalable microservices. API uses JWTs
+for authentication so users can communicate with multiple microservices without requiring
+multiple logins. Microservices can also authenticate with each other using JWTs.
+
+**Token-Based Authentication with JWT**  
+Routes can be protected by token-based authentication using JWTs. Access tokens expire
+after 15 minutes and refresh tokens expire after 2 weeks by default. This setup achieves 
+a balance between the security of a short-lived access token and the convenience of a long 
+refresh token that allows users to stay logged in longer. JWT expiration dates can be easily
+adjusted with environment variables.
 
 **Login and Account Recovery**  
 Signup, login, and logout endpoints are provided without any configuration required.
 A two-step password recovery process is also included. A user can request a password
 reset which will email the user a link to enter a new password. Signup, login,
 logout, and password recovery endpoints include full test coverage.
-
-**Token-Based Authentication**  
-Any route can be protected by token-based authentication. Any request to a
-secured route must include a valid access token in the Authorization HTTP
-header. Tokens expire after 30 days. Any invalid tokens will receive a 401 Unauthorized 
-HTTP response. Tokens are automatically removed from Mongo when they expire to keep queries
-running efficiently.
 
 **API Documentation Generator**  
 The API uses ApiDoc to generate API documentation based on in-line comments
@@ -79,7 +91,7 @@ git clone https://github.com/appellod/restful-api
 npm install
 ```
 
-**Run MongoDB and Redis with Docker Compose**  
+**Run Dependencies with Docker Compose**  
 You can start up any development dependencies such as MongoDB using:
 ```
 docker-compose up
@@ -116,7 +128,7 @@ environment, or at the very least, the test and local environments.
 The API comes complete with [Loggly](https://www.loggly.com) support. Simply create an account and enter your
 customer token, subdomain, and tags in the environment configurations you want supported.
 
-## Working on the API
+## Development Guide
 
 **Updating the API Documentation**  
 API documentation is generated from in-line comments within the source code with [apidoc](http://apidocjs.com/).  
@@ -154,7 +166,7 @@ field keys or adding or removing indexes.
 
 Migrations can be run with:
 ```
-NODE_ENV=local npm run migrations
+npm run migrations
 ```
 This will run all migrations on the environment specified by NODE_ENV (local in this example). Migrations will be saved 
 to the schemaMigrations collection within MongoDB.
@@ -168,47 +180,20 @@ This will generate a `coverage/` folder. Open the `index.html ` inside to view t
 
 ## File Structure
 
-**config/**  
-Contains the configuration file for the application. All environment-specific
-configurations are available here. Five environments are included by default:
-* test: For running the test suite.
-* local: For running on localhost.
-* dev: For running on a remote server in a development environment.
-* staging: For running on a remote server in a staging environment.
-* prod: For running on a remote server in a production environment.
-
-Environment can be selected by setting the NODE_ENV system environment variable.
-An example for running the API in production mode on Linux-based machines is:
-```
-NODE_ENV=prod npm start
-```
-
-**documentation/**  
-Contains the documentation for the API. This is separate from the API controllers so it can be ran as an individual
-microservice. This can also be moved into a separate Git repository to allow documentation to be commited without messing
-up PRs and commit diffs.
-
-**koa/**  
-Contains all the controllers and routes for the API. Logic is defined in the controllers and the routers map the logic
-to endpoints.
-
-**mongoose/**  
-Contains the Mongoose models. By default only a User model is included.
-
-**passport/**  
-Contains the Passport strategies for the application's authentication.
-By default only the Bearer strategy is included. The Bearer strategy allows
-basic token-based authentication to any API endpoint.
-
-**redis/**  
-Contains all the code for interacting with Redis such as generating API tokens.
-
-**socketIo/**  
-Contains the logic for Socket.IO. Includes an authentication controller so users
-can associate their socket with their identity, allowing identity-based push messages.
-
-**test/**  
-All tests are included here. The test suite uses Mocha and Chai.
+* **migrations/** : Migrations for MongoDB.
+* **scripts/** : Scripts to help aid development.
+* **src/** : The source code.
+  * **common/** : Files used by multiple microservices.
+    * **koa/** : Module to easily setup a KOA server.
+    * **loggly/** : Saves console messages to Loggly.
+    * **mongo/** : Models for interacting with MongoDB.
+    * **passport/** : Authentication strategies.
+    * **redis/** : Creates connections to Redis.
+    * **socket-io/** : Base for using websockets.\
+  * **microservices/** : Applications for each microservice.
+    * **authentication/** : API that issues tokens to users.
+    * **rest/** : RESTful API with basic CRUD operations.
+* **test/** : Tests for the source code.
 
 ## Support
 Any questions or concerns, please feel free to email me at appellod@gmail.com.
