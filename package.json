@@ -12,7 +12,7 @@
   "scripts": {
     "build": "./scripts/build.sh",
     "documentation": "./scripts/documentation.sh",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "migrations": "mm",
     "migrations:create": "mm create",
     "start": "./scripts/documentation.sh && ./scripts/build.sh && ./scripts/start.sh",
