@@ -1,10 +1,10 @@
 import * as mongoose from "mongoose";
 
-import { Permissions, UserDocument } from "../../../common/mongo";
+import { BasePermissions, UserDocument } from "../../../common/mongo";
 
 export class BaseController<TDocument extends mongoose.Document,
                             TModel extends mongoose.Model<TDocument>,
-                            TPermissions extends Permissions<TDocument, TModel>> {
+                            TPermissions extends BasePermissions<TDocument, TModel>> {
   public Model: TModel;
   public permissions: TPermissions;
 

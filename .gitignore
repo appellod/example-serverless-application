@@ -7,5 +7,5 @@ tscommand*.tmp.txt
 coverage/
 dist/
 node_modules/
-src/documentation/public/apidoc/*
-!src/documentation/public/apidoc/header.md
+src/microservices/authentication/documentation/
+src/microservices/rest/documentation/

@@ -8,6 +8,6 @@ rm -rf dist/
 tsc
 
 # Copy non-Typescript files.
-cp -r src/documentation/public dist/documentation/public
-cp -r src/koa/views dist/koa/views
-cp src/test/mocha.opts dist/test/mocha.opts
+cp -r src/common/koa/documentation dist/src/common/koa/documentation
+cp -r src/microservices/authentication/documentation dist/src/microservices/authentication/documentation
+cp -r src/microservices/rest/documentation dist/src/microservices/rest/documentation
