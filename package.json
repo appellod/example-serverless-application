@@ -2,7 +2,7 @@
   "name": "api",
   "description": "Typescript Restful API",
   "main": "dist/index.js",
-  "engine": "node 8.1.2",
+  "engine": "node 8.11.3",
   "license": "Apache-2.0",
   "version": "0.0.0",
   "repository": {

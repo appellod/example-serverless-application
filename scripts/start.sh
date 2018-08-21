@@ -5,4 +5,4 @@ if [ -f settings.sh ]; then
   source settings.sh
 fi
 
-node dist/index.js
+node dist/src/index.js
