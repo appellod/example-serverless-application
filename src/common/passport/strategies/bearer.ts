@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { Strategy } from "passport-http-bearer";
 
-import { User, UserDocument } from "../../mongo";
+import { User } from "../../postgres";
 
 export class BearerStrategy extends Strategy {
   constructor() {
@@ -15,8 +15,8 @@ export class BearerStrategy extends Strategy {
     });
   }
 
-  public static async authenticate(token: string): Promise<UserDocument> {
+  public static async authenticate(token: string): Promise<User> {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
-    return User.findOne({ _id: decoded.user._id });
+    return User.query().where({ id: decoded.user.id }).first();
   }
 }

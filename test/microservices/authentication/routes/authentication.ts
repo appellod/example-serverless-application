@@ -2,17 +2,18 @@ import { expect } from "chai";
 import * as jwt from "jsonwebtoken";
 import * as nock from "nock";
 
-import { User, UserDocument } from "../../../../src/common/mongo";
+import { User } from "../../../../src/common/postgres";
 import { koa } from "../../../../src/microservices/authentication";
+import { UserMock } from "../../../common/postgres/mocks";
 import { RequestHelper } from "../../../request-helper";
 
 const requestHelper = new RequestHelper(koa.server);
 
 describe("microservices/authentication/routes/authentication.ts", function() {
-  let user: UserDocument;
+  let user: User;
 
   beforeEach(async function() {
-    user = await User.mock();
+    user = await UserMock.insert();
   });
 
   describe("GET /v1/authentication/availability", function() {
@@ -46,7 +47,7 @@ describe("microservices/authentication/routes/authentication.ts", function() {
 
   describe("POST /v1/authentication/login", function() {
     beforeEach(async function() {
-      user = await User.mock({ password: "password" });
+      user = await UserMock.insert({ password: "password" });
     });
 
     it("returns a success response", async function() {
@@ -115,7 +116,7 @@ describe("microservices/authentication/routes/authentication.ts", function() {
       const path = "/v1/authentication/reset-password";
       const params = {
         password: "newpassword",
-        resetHash: user.resetHash
+        reset_hash: user.reset_hash
       };
 
       const res = await requestHelper.request(method, path, params, user);

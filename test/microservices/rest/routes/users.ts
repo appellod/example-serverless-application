@@ -1,18 +1,19 @@
 import { expect } from "chai";
 import { Chance } from "chance";
 
-import { User, UserDocument } from "../../../../src/common/mongo";
+import { User } from "../../../../src/common/postgres";
 import { koa } from "../../../../src/microservices/rest";
+import { UserMock } from "../../../common/postgres/mocks";
 import { RequestHelper } from "../../../request-helper";
 
 const chance = new Chance();
 const requestHelper = new RequestHelper(koa.server);
 
-describe("microservices/rest/controllers/groups.ts", function() {
-  let admin: UserDocument;
+describe.only("microservices/rest/controllers/groups.ts", function() {
+  let user: User;
 
   beforeEach(async function() {
-    admin = await User.mock({ level: 1 });
+    user = await UserMock.insert({ level: 1 });
   });
 
   describe("GET /users", function() {
@@ -21,7 +22,7 @@ describe("microservices/rest/controllers/groups.ts", function() {
       const path = "/v1/users";
       const params: any = null;
 
-      const res = await requestHelper.request(method, path, params, admin);
+      const res = await requestHelper.request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });
@@ -33,7 +34,7 @@ describe("microservices/rest/controllers/groups.ts", function() {
       const path = "/v1/users/count";
       const params: any = null;
 
-      const res = await requestHelper.request(method, path, params, admin);
+      const res = await requestHelper.request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });
@@ -48,7 +49,7 @@ describe("microservices/rest/controllers/groups.ts", function() {
         password: chance.hash()
       };
 
-      const res = await requestHelper.request(method, path, params, admin);
+      const res = await requestHelper.request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });
@@ -57,10 +58,10 @@ describe("microservices/rest/controllers/groups.ts", function() {
   describe("GET /users/:id", function() {
     it ("returns a success response", async function() {
       const method = "get";
-      const path = "/v1/users/" + admin._id;
+      const path = "/v1/users/" + user.id;
       const params: any = null;
 
-      const res = await requestHelper.request(method, path, params, admin);
+      const res = await requestHelper.request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });
@@ -69,13 +70,13 @@ describe("microservices/rest/controllers/groups.ts", function() {
   describe("PUT /users/:id", function() {
     it("returns a success response", async function() {
       const method = "put";
-      const path = "/v1/users/" + admin._id;
+      const path = "/v1/users/" + user.id;
       const params = {
         email: chance.email(),
-        level: admin.level + 1
+        level: user.level + 1
       };
 
-      const res = await requestHelper.request(method, path, params, admin);
+      const res = await requestHelper.request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });
@@ -84,10 +85,10 @@ describe("microservices/rest/controllers/groups.ts", function() {
   describe("DELETE /users/:id", function() {
     it("returns a success response", async function() {
       const method = "delete";
-      const path = "/v1/users/" + admin._id;
+      const path = "/v1/users/" + user.id;
       const params: any = null;
 
-      const res = await requestHelper.request(method, path, params, admin);
+      const res = await requestHelper.request(method, path, params, user);
 
       expect(res.status).to.eql(200);
     });

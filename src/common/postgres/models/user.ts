@@ -14,18 +14,17 @@ export class User extends Model {
   public static eventEmitter: IUserEventEmitter = new EventEmitter();
   public static idColumn = "id";
   public static jsonSchema = {
-    type: "object",
-    required: ["email", "password"],
-
     properties: {
-      id: { type: "integer" },
       created_at: { type: "date" },
       email: { type: "string" },
+      id: { type: "integer" },
       level: { type: "integer" },
       password: { type: "string" },
       reset_hash: { type: "string" },
       updated_at: { type: "date" }
-    }
+    },
+    required: ["email", "password"],
+    type: "object",
   };
   public static tableName = "users";
 
@@ -43,12 +42,12 @@ export class User extends Model {
     Object.assign(this, params);
   }
 
-  public static async resetPassword(resetHash: string, newPassword: string) {
-    if (!resetHash || !newPassword) {
-      throw new Error("Please provide a resetHash and newPassword.");
+  public static async resetPassword(reset_hash: string, newPassword: string) {
+    if (!reset_hash || !newPassword) {
+      throw new Error("Please provide a reset_hash and newPassword.");
     }
 
-    const user = await User.query().where({ reset_hash: resetHash }).first();
+    const user = await User.query().where({ reset_hash }).first();
 
     user.password = newPassword;
     user.reset_hash = null;
@@ -87,7 +86,7 @@ export class User extends Model {
     this.reset_hash = uuid();
     const user = await this.$query().patchAndFetch(this);
 
-    const resetUrl = process.env.PASSWORD_RESET_URL + "?resetHash=" + user.reset_hash;
+    const resetUrl = process.env.PASSWORD_RESET_URL + "?reset_hash=" + user.reset_hash;
 
     const html = `You have requested to reset your password. Please click the link below to create a new password:
     <br><br>

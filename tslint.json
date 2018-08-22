@@ -9,6 +9,7 @@
     "max-classes-per-file": false,
     "max-line-length": false,
     "member-ordering": false,
+    "mocha-avoid-only": true,
     "no-angle-bracket-type-assertion": false,
     "no-console": false,
     "no-empty": false,

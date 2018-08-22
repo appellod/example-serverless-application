@@ -13,29 +13,14 @@
     "build": "./scripts/build.sh",
     "documentation": "./scripts/documentation.sh",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
-    "migrations": "mm",
-    "migrations:create": "mm create",
+    "migrations": "knex migrate:latest",
+    "migrations:create": "knex migrate:make",
+    "migrations:rollback": "knex migrate:rollback",
     "start": "./scripts/documentation.sh && ./scripts/build.sh && ./scripts/start.sh",
     "test": "./scripts/test.sh",
     "test:coverage": "nyc --reporter=html npm test",
     "test:watch": "./scripts/test-watch.sh",
     "watch": "./scripts/watch.sh"
-  },
-  "apidoc": {
-    "name": "API Documentation",
-    "description": "",
-    "version": "0.0.0",
-    "title": "API Documentation",
-    "url": "https://api.example.com/v1",
-    "header": {
-      "title": "Using the API",
-      "filename": "src/common/koa/documentation/header.md"
-    }
-  },
-  "nyc": {
-    "exclude": [
-      "dist/test/**"
-    ]
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
@@ -117,6 +102,7 @@
     "socket.io-client": "^2.1.1",
     "ts-node": "^7.0.0",
     "tslint": "^5.8.0",
+    "tslint-microsoft-contrib": "^5.2.0",
     "typescript": "^2.6.2"
   }
 }

@@ -4,8 +4,9 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as jwt from "jsonwebtoken";
 import * as nock from "nock";
 
-import { User, UserDocument } from "../../../../src/common/mongo";
+import { User } from "../../../../src/common/postgres";
 import { AuthenticationController } from "../../../../src/microservices/authentication/controllers";
+import { UserMock } from "../../../common/postgres/mocks";
 
 const authenticationController = new AuthenticationController();
 const expect = chai.expect;
@@ -30,7 +31,7 @@ describe("microservices/authentication/controllers/authentication.ts", function(
 
     context("when email is unavailable", function() {
       beforeEach(async function() {
-        await User.mock({ email: "taken@example.com" });
+        await UserMock.insert({ email: "taken@example.com" });
       });
 
       it("returns isAvailable set to false", async function() {
@@ -64,15 +65,15 @@ describe("microservices/authentication/controllers/authentication.ts", function(
       expect(ctx.body.user.email).to.exist;
       expect(ctx.body.user.level).to.exist;
       expect(ctx.body.user.password).to.be.undefined;
-      expect(ctx.body.user.resetHash).to.be.undefined;
+      expect(ctx.body.user.reset_hash).to.be.undefined;
     });
   });
 
   describe("login()", function() {
-    let user: UserDocument;
+    let user: User;
 
     beforeEach(async function() {
-      user = await User.mock({ password: "password" });
+      user = await UserMock.insert({ password: "password" });
     });
 
     context("when credentials are correct", function() {
@@ -94,7 +95,7 @@ describe("microservices/authentication/controllers/authentication.ts", function(
         expect(ctx.body.user.email).to.exist;
         expect(ctx.body.user.level).to.exist;
         expect(ctx.body.user.password).to.be.undefined;
-        expect(ctx.body.user.resetHash).to.be.undefined;
+        expect(ctx.body.user.reset_hash).to.be.undefined;
         expect(ctx.body.user.tokens).to.be.undefined;
       });
     });
@@ -119,10 +120,10 @@ describe("microservices/authentication/controllers/authentication.ts", function(
 
   describe("logout()", function() {
     let token: string;
-    let user: UserDocument;
+    let user: User;
 
     beforeEach(async function() {
-      user = await User.mock();
+      user = await UserMock.insert();
       token = jwt.sign({ user }, process.env.JWT_SECRET);
     });
 
@@ -142,10 +143,10 @@ describe("microservices/authentication/controllers/authentication.ts", function(
 
   describe("refreshToken()", function() {
     let token: string;
-    let user: UserDocument;
+    let user: User;
 
     beforeEach(async function() {
-      user = await User.mock();
+      user = await UserMock.insert();
       token = jwt.sign({ user }, process.env.JWT_SECRET);
     });
 
@@ -165,10 +166,10 @@ describe("microservices/authentication/controllers/authentication.ts", function(
   });
 
   describe("requestPasswordReset()", function() {
-    let user: UserDocument;
+    let user: User;
 
     beforeEach(async function() {
-      user = await User.mock();
+      user = await UserMock.insert();
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -194,10 +195,10 @@ describe("microservices/authentication/controllers/authentication.ts", function(
   });
 
   describe("resetPassword()", function() {
-    let user: UserDocument;
+    let user: User;
 
     beforeEach(async function() {
-      user = await User.mock();
+      user = await UserMock.insert();
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -214,7 +215,7 @@ describe("microservices/authentication/controllers/authentication.ts", function(
         request: {
           body: {
             password: "newpassword",
-            resetHash: user.resetHash
+            reset_hash: user.reset_hash
           }
         }
       } as Context;

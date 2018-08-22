@@ -3,16 +3,17 @@ import { Chance } from "chance";
 import { Context } from "koa";
 
 import { UsersController } from "../../../../src/microservices/rest/controllers";
-import { User, UserDocument } from "../../../../src/common/mongo";
+import { User } from "../../../../src/common/postgres";
+import { UserMock } from "../../../common/postgres/mocks";
 
 const chance = new Chance();
 const usersController = new UsersController();
 
-describe("microservices/rest/controllers/users.ts", function() {
-  let user: UserDocument;
+describe.only("microservices/rest/controllers/users.ts", function() {
+  let user: User;
 
   beforeEach(async function() {
-    user = await User.mock({ level: 1 });
+    user = await UserMock.insert({ level: 1 });
   });
 
   describe("count()", function() {
@@ -63,7 +64,7 @@ describe("microservices/rest/controllers/users.ts", function() {
     it("returns the user", async function() {
       const ctx = {
         params: {
-          id: user._id
+          id: user.id
         },
         state: { user }
       } as Context;
@@ -78,7 +79,7 @@ describe("microservices/rest/controllers/users.ts", function() {
     it("returns the removed record", async function() {
       const ctx = {
         params: {
-          id: user._id
+          id: user.id
         },
         state: { user }
       } as Context;
@@ -93,7 +94,7 @@ describe("microservices/rest/controllers/users.ts", function() {
     it("updates and returns the user", async function() {
       const ctx = {
         params: {
-          id: user._id
+          id: user.id
         },
         request: {
           body: {

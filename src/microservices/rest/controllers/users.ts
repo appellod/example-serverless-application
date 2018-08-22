@@ -1,10 +1,10 @@
 import { Context } from "koa";
 
-import { User, UserDocument, UserModel, UserPermissions } from "../../../common/mongo";
+import { User, UserPermissions } from "../../../common/postgres";
 import { BaseController } from "./";
 
 export class UsersController {
-  private restController: BaseController<UserDocument, UserModel, UserPermissions>;
+  private restController: BaseController<User, UserPermissions>;
 
   constructor() {
     this.restController = new BaseController(User, new UserPermissions());
