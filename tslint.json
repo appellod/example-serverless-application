@@ -20,5 +20,7 @@
     "trailing-comma": false,
     "variable-name": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [
+    "./node_modules/tslint-microsoft-contrib"
+  ]
 }
