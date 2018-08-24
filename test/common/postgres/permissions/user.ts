@@ -11,7 +11,7 @@ const permissions = new UserPermissions();
 
 chai.use(chaiAsPromised);
 
-describe("common/mongo/permissions/user.ts", function() {
+describe("common/postgres/permissions/user.ts", function() {
   describe("create()", function() {
     context("when user is an admin", function() {
       it("creates a new record", async function() {
@@ -118,7 +118,7 @@ describe("common/mongo/permissions/user.ts", function() {
 
         const results = await permissions.remove(record, user);
 
-        expect(results).to.eql(1);
+        expect(results).to.eql(record);
       });
     });
 
@@ -127,7 +127,7 @@ describe("common/mongo/permissions/user.ts", function() {
         it ("returns 1", async function() {
           const results = await permissions.remove(record, record);
 
-          expect(results).to.eql(1);
+          expect(results).to.eql(record);
         });
       });
 
@@ -209,36 +209,25 @@ describe("common/mongo/permissions/user.ts", function() {
   describe("where()", function() {
     context("when the user is an admin", function() {
       it("returns a valid where query", async function() {
-        const params = {
-          email: chance.email(),
-          level: 1
-        };
         const user = await UserMock.insert({
           level: 1
         });
 
-        const query = await permissions.where(params, user);
+        const query = await permissions.where(user);
 
-        expect(query.email).to.eql(params.email);
-        expect(query.level).to.eql(1);
+        expect(query).to.be.empty;
       });
     });
 
     context("when the user is not an admin", function() {
       it("returns a valid where query", async function() {
-        const params = {
-          email: chance.email(),
-          level: 1
-        };
         const user = await UserMock.insert({
           level: 0
         });
 
-        const query = await permissions.where(params, user);
+        const query = await permissions.where(user);
 
-        expect(query.email).to.eql(params.email);
-        expect(query.$and[0]).to.eql({ level: 0 });
-        expect(query.$and[1]).to.eql({ level: 1 });
+        expect(query.level).to.eql(0);
       });
     });
   });

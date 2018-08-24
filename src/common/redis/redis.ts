@@ -1,20 +1,18 @@
-import { createClient, RedisClient } from "redis";
+import * as IoRedis from "ioredis";
 
-export class Redis {
-  public static client: RedisClient;
+let connection: IoRedis.Redis;
 
-  constructor() {
-    Redis.client = Redis.create();
+export function connect() {
+  if (connection) {
+    return connection;
   }
 
-  public static create() {
-    const client = createClient(process.env.REDIS_URL);
+  connection = new IoRedis(process.env.REDIS_URL);
 
-    const database = Number(process.env.REDIS_DATABASE);
-    client.select(database);
+  const database = Number(process.env.REDIS_DATABASE);
+  connection.select(database);
 
-    client.on("error", console.error);
+  connection.on("error", console.error);
 
-    return client;
-  }
+  return connection;
 }

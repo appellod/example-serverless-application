@@ -2,9 +2,9 @@ import { expect } from "chai";
 import * as jwt from "jsonwebtoken";
 import * as io from "socket.io-client";
 
-import { User } from "../../../../src/common/mongo";
+import { UserMock } from "../../postgres/mocks";
 
-describe.skip("socketIo/routers/authenticationRouter.ts", function() {
+describe.skip("common/socketIo/routers/authenticationRouter.ts", function() {
   describe("authenticate", function() {
     context("when token is not provided", function() {
       it("returns an error", async function() {
@@ -32,7 +32,7 @@ describe.skip("socketIo/routers/authenticationRouter.ts", function() {
       it("does not return an error", async function() {
         const socket = await io.connect("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
 
-        const user = await User.mock();
+        const user = await UserMock.insert();
         const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
         socket.emit("authenticate", { token });
@@ -47,7 +47,7 @@ describe.skip("socketIo/routers/authenticationRouter.ts", function() {
     it("does not return an error", async function() {
       const socket = await io.connect("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
 
-      const user = await User.mock();
+      const user = await UserMock.insert();
       const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
       socket.emit("authenticate", { token });

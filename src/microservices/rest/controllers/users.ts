@@ -11,26 +11,32 @@ export class UsersController {
   }
 
   public async count(ctx: Context) {
-    ctx.body = await this.restController.count(ctx.query, ctx.state.user);
+    const count = await this.restController.count(ctx.query, ctx.state.user);
+    ctx.body = { count };
   }
 
   public async create(ctx: Context) {
-    ctx.body = await this.restController.create(ctx.request.body, {}, ctx.state.user);
+    const record = await this.restController.create(ctx.request.body, {}, ctx.state.user);
+    ctx.body = { record };
   }
 
   public async find(ctx: Context) {
-    ctx.body = await this.restController.find(ctx.query, ctx.state.user);
+    const records = await this.restController.find(ctx.query, ctx.state.user);
+    ctx.body = { records };
   }
 
   public async findOne(ctx: Context) {
-    ctx.body = await this.restController.findOne(ctx.params, ctx.state.user);
+    const record = await this.restController.findOne(ctx.params, ctx.state.user);
+    ctx.body = { record };
   }
 
   public async remove(ctx: Context) {
-    ctx.body = await this.restController.remove(ctx.params, ctx.state.user);
+    const record = await this.restController.remove(ctx.params, ctx.state.user);
+    ctx.body = { record };
   }
 
   public async update(ctx: Context) {
-    ctx.body = await this.restController.update(ctx.params, ctx.request.body, {}, ctx.state.user);
+    const record = await this.restController.update(ctx.params, ctx.request.body, {}, ctx.state.user);
+    ctx.body = { record };
   }
 }

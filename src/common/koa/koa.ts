@@ -6,11 +6,11 @@ import * as MongooseStore from "koa-session-mongoose";
 import * as morgan from "koa-morgan";
 import * as Router from "koa-router";
 import * as send from "koa-send";
-import * as session from "koa-session";
+import * as session from "koa-session2";
 import * as path from "path";
 
-import { User } from "../mongo";
-import { errorMiddleware, parseQueryJsonMiddleware } from "./";
+import { User } from "../postgres";
+import { errorMiddleware, parseQueryJsonMiddleware, RedisStore } from "./";
 
 export class Koa {
   public app: koa;
@@ -29,14 +29,8 @@ export class Koa {
     // Sets up body parser so we can access req.body in controllers.
     this.app.use(bodyParser({ jsonLimit: "50mb" }));
 
-    // Setup our MongoDB session store for API documentation logins.
-    this.app.keys = ["this is a secret key for the sessions"];
-    const mongooseStore = new MongooseStore({
-      collection: "sessions",
-      name: `Session-${Date.now()}` // Append date to model name to allow mocha --watch
-    });
-    const mongoSession = session({ store: mongooseStore }, this.app);
-    this.app.use(mongoSession);
+    // Setup our Redis session store for API documentation logins.
+    this.app.use(session({ store: new RedisStore() }));
 
     // Setup our middleware.
     this.app.use(errorMiddleware);
@@ -87,7 +81,7 @@ export class Koa {
      * them to documentation page.
      */
     router.post("/login", async (ctx: koa.Context) => {
-      const user = await User.findOne({ email: ctx.request.body.email });
+      const user = await User.query().where({ email: ctx.request.body.email }).first();
 
       if (user && user.isValidPassword(ctx.request.body.password)) {
         ctx.session.isLoggedIn = true;

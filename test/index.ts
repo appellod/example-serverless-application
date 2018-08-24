@@ -1,18 +1,10 @@
-import { Group, Mongo, User } from "../src/common/mongo";
 import * as Postgres from "../src/common/postgres";
-import { Redis } from "../src/common/redis";
+import * as Redis from "../src/common/redis";
 
 const knex = Postgres.setup();
-const mongo = new Mongo();
-const redis = Redis.create();
+const redis = Redis.connect();
 
 beforeEach(async function() {
-  // Reset Mongo
-  await Promise.all([
-    Group.remove({}),
-    User.remove({})
-  ]);
-
   // Reset Postgres
   await Promise.all([
     Postgres.User.query().delete()

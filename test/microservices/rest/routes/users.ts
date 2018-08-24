@@ -9,7 +9,7 @@ import { RequestHelper } from "../../../request-helper";
 const chance = new Chance();
 const requestHelper = new RequestHelper(koa.server);
 
-describe.only("microservices/rest/controllers/groups.ts", function() {
+describe("microservices/rest/controllers/groups.ts", function() {
   let user: User;
 
   beforeEach(async function() {

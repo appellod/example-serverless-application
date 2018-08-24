@@ -42,15 +42,10 @@ is the Bearer strategy which allows basic token-based authentication. Other
 Passport strategies such as Facebook or Google authentication can easily be
 added if needed.
 
-**MongoDB**  
-MongoDB is the chosen data store to allow rapid prototyping without having to worry about constantly
-creating and changing migrations while experimenting with new implementations. Migrations are built-in
-to allow index management and data transformation if needed.
-
-**Mongoose**  
-All database calls are performed using Mongoose, an ORM for MongoDB. By utilizing an ORM,
+**Postgres with Objection**  
+All database calls are performed using Objection, an ORM for Postgres. By utilizing an ORM,
 developers can see Intellisense as they're working with their data to give them more insight
-into database fields and types. Mongoose also allows many useful features such as pre- and post-save 
+into database fields and types. Objection also allows many useful features such as pre- and post-save 
 hooks, and static- and instance-level functions to provide even more development efficiency!
 
 **Socket.IO Authentication and User-based Broadcasting with Redis**  
@@ -92,7 +87,7 @@ npm install
 ```
 
 **Run Dependencies with Docker Compose**  
-You can start up any development dependencies such as MongoDB using:
+You can start up any development dependencies such as Postgres using:
 ```
 docker-compose up
 ```
@@ -105,7 +100,7 @@ A `settings.test.sh` can also need to be created to run your test suite. If this
 will default to your `settings.sh` file.
 
 **Run Test Suite**  
-The test suite uses [Mocha](https://mochajs.org/). Make sure a local MongoDB instance is running and run
+The test suite uses [Mocha](https://mochajs.org/). Make sure your application dependencies are running and start
 the test suite using:
 ```
 npm test
@@ -153,23 +148,20 @@ password: password
 ```
 Entering the above credentials should allow you access to the documentation.
 
-**MongoDB Migrations**  
-Migrations are performed with the [mongodb-migrations](https://github.com/emirotin/mongodb-migrations) NPM module. 
-Any configurations you need to make can be done in the `mm-config.js` file.
+**Postgres Migrations**  
+Migrations are performed with [knex](https://knexjs.org/). 
 
 To create a migration file, run:
 ```
-npm run migrations:create -- [migration-name]
+npm run migrations:create [migration-name]
 ```
-This will create a migration file in the mongodb-migration directory. These migrations should be used for renaming
-field keys or adding or removing indexes.
+This will create a migration file in the `migrations` directory.
 
 Migrations can be run with:
 ```
 npm run migrations
 ```
-This will run all migrations on the environment specified by NODE_ENV (local in this example). Migrations will be saved 
-to the schemaMigrations collection within MongoDB.
+This will run all migrations on the database specified by your POSTGRES_URL environment variable.
 
 **Generating Test Coverage Report**  
 To generate a test coverage report, run:
@@ -180,14 +172,14 @@ This will generate a `coverage/` folder. Open the `index.html ` inside to view t
 
 ## File Structure
 
-* **migrations/** : Migrations for MongoDB.
+* **migrations/** : Migrations for Postgres.
 * **scripts/** : Scripts to help aid development.
 * **src/** : The source code.
   * **common/** : Files used by multiple microservices.
     * **koa/** : Module to easily setup a KOA server.
     * **loggly/** : Saves console messages to Loggly.
-    * **mongo/** : Models for interacting with MongoDB.
     * **passport/** : Authentication strategies.
+    * **postgres/** : Models for interacting with Postgres.
     * **redis/** : Creates connections to Redis.
     * **socket-io/** : Base for using websockets.\
   * **microservices/** : Applications for each microservice.

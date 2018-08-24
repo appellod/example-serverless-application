@@ -62,13 +62,18 @@ export abstract class BasePermissions<TModel extends Model> {
    * @param user The user removing the record.
    * @param The amount of records removed.
    */
-  public async remove(record: TModel, user: User): Promise<number> {
+  public async remove(record: TModel, user: User): Promise<TModel> {
     const removePermissions = await this.removePermissions(record, user);
     if (!removePermissions) {
       throw new Error("User does not have permission to perform this action.");
     }
 
-    return record.$query().delete();
+    const removed = await record.$query().delete();
+    if (removed === 0) {
+      throw new Error("Record not found.");
+    }
+
+    return record;
   }
 
   /**
@@ -104,36 +109,8 @@ export abstract class BasePermissions<TModel extends Model> {
    * @param where The where clause for the query.
    * @param user The user performing the query.
    */
-  public async where(where: any, user: User): Promise<any> {
-    const query = await this.findPermissions(user);
-
-    if (!where) {
-      return query;
-    }
-
-    // Combines the two queries
-    Object.keys(where).forEach((key) => {
-      if (key === "$and" && "$and" in query) {
-        query.$and = query.$and.concat(where.$and);
-      } else if (key === "$or" && "$or" in query) {
-        query.$or = query.$or.concat(where.$or);
-      } else if (key === "$nor" && "$nor" in query) {
-        query.$nor = query.$nor.concat(where.$nor);
-      } else if (key in query) {
-        if (!query.$and) {
-          query.$and = [];
-        }
-
-        query.$and.push({ [key]: query[key] });
-        query.$and.push({ [key]: where[key] });
-
-        delete query[key];
-      } else {
-        query[key] = where[key];
-      }
-    });
-
-    return query;
+  public where(user: User): Promise<any> {
+    return this.findPermissions(user);
   }
 
   /**

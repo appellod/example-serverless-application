@@ -7,9 +7,9 @@ import { User } from "../../../../src/common/postgres";
 import { UserMock } from "../../../common/postgres/mocks";
 
 const chance = new Chance();
-const usersController = new UsersController();
+const controller = new UsersController();
 
-describe.only("microservices/rest/controllers/users.ts", function() {
+describe("microservices/rest/controllers/users.ts", function() {
   let user: User;
 
   beforeEach(async function() {
@@ -23,7 +23,7 @@ describe.only("microservices/rest/controllers/users.ts", function() {
         state: { user }
       } as Context;
 
-      await usersController.count(ctx);
+      await controller.count(ctx);
 
       expect(ctx.body.count).to.eql(1);
     });
@@ -41,7 +41,7 @@ describe.only("microservices/rest/controllers/users.ts", function() {
         state: { user }
       } as Context;
 
-      await usersController.create(ctx);
+      await controller.create(ctx);
 
       expect(ctx.body.record).to.exist;
     });
@@ -54,7 +54,7 @@ describe.only("microservices/rest/controllers/users.ts", function() {
         state: { user }
       } as Context;
 
-      await usersController.find(ctx);
+      await controller.find(ctx);
 
       expect(ctx.body.records.length).to.eql(1);
     });
@@ -69,7 +69,7 @@ describe.only("microservices/rest/controllers/users.ts", function() {
         state: { user }
       } as Context;
 
-      await usersController.findOne(ctx);
+      await controller.findOne(ctx);
 
       expect(ctx.body.record).to.exist;
     });
@@ -84,7 +84,7 @@ describe.only("microservices/rest/controllers/users.ts", function() {
         state: { user }
       } as Context;
 
-      await usersController.remove(ctx);
+      await controller.remove(ctx);
 
       expect(ctx.body.record).to.exist;
     });
@@ -105,7 +105,7 @@ describe.only("microservices/rest/controllers/users.ts", function() {
         state: { user }
       } as Context;
 
-      await usersController.findOne(ctx);
+      await controller.findOne(ctx);
 
       expect(ctx.body.record).to.exist;
     });
