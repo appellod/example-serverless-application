@@ -35,7 +35,11 @@ export class Koa {
     this.app.use(errorMiddleware);
     this.app.use(parseQueryJsonMiddleware);
 
-    this.server = this.app.listen(port);
+    this.server = this.app.listen(port, () => {
+      if (process.env.NODE_ENV !== "test") {
+        console.log(`Koa server running on port ${port}.`);
+      }
+    });
   }
 
   /**
@@ -60,7 +64,7 @@ export class Koa {
      */
     router.get("/apidoc*", async (ctx: koa.Context) => {
       if (ctx.session.isLoggedIn) {
-        const file = ctx.originalUrl.split("?")[0].replace("/", "");
+        const file = ctx.originalUrl.split("?")[0].replace("/apidoc/", "");
         await send(ctx, path.resolve(directory, file), { root: "/" });
       } else {
         ctx.redirect("/login.html");
@@ -70,7 +74,7 @@ export class Koa {
     /**
      * Loads login resources without requiring the user to be logged in.
      */
-    router.get(/(\/login.html|\/css\/login.css|\/js\/login.js)/, async (ctx: koa.Context) => {
+    router.get(/(\/login.html|\/login.css|\/login.js)/, async (ctx: koa.Context) => {
       const file = ctx.originalUrl.split("?")[0].replace("/", "");
       await send(ctx, path.resolve(__dirname, "documentation", file), { root: "/" });
     });
