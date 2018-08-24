@@ -2,7 +2,6 @@ import * as bodyParser from "koa-bodyparser";
 import * as cors from "@koa/cors";
 import * as http from "http";
 import * as koa from "koa";
-import * as MongooseStore from "koa-session-mongoose";
 import * as morgan from "koa-morgan";
 import * as Router from "koa-router";
 import * as send from "koa-send";
