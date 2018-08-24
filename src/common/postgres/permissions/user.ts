@@ -1,4 +1,4 @@
-import { User, UserDocument, UserModel } from "../";
+import { User } from "../models";
 import { BasePermissions } from "./base";
 
 enum AccessLevel {
@@ -7,7 +7,7 @@ enum AccessLevel {
   Other
 }
 
-export class UserPermissions extends BasePermissions<UserDocument, UserModel> {
+export class UserPermissions extends BasePermissions<User> {
 
   constructor() {
     super();
@@ -15,7 +15,7 @@ export class UserPermissions extends BasePermissions<UserDocument, UserModel> {
     this.Model = User;
   }
 
-  public async createPermissions(user: UserDocument) {
+  public async createPermissions(user: User) {
     const accessLevel = this.getAccessLevel(null, user);
     const attributes: string[] = [];
 
@@ -32,7 +32,7 @@ export class UserPermissions extends BasePermissions<UserDocument, UserModel> {
     }
   }
 
-  public async findPermissions(user: UserDocument) {
+  public async findPermissions(user: User) {
     const accessLevel = this.getAccessLevel(null, user);
     const query: any = {};
 
@@ -47,21 +47,20 @@ export class UserPermissions extends BasePermissions<UserDocument, UserModel> {
     }
   }
 
-  public async readPermissions(record: UserDocument, user: UserDocument) {
+  public async readPermissions(record: User, user: User) {
     const accessLevel = this.getAccessLevel(record, user);
     const attributes: string[] = [
-      "_id",
-      "createdAt",
+      "id",
+      "created_at",
       "email",
-      "updatedAt"
+      "updated_at"
     ];
 
     switch (accessLevel) {
       case AccessLevel.Admin:
       case AccessLevel.Self:
         return attributes.concat(
-          "level",
-          "resetHash"
+          "level"
         );
 
       default:
@@ -69,7 +68,7 @@ export class UserPermissions extends BasePermissions<UserDocument, UserModel> {
     }
   }
 
-  public async removePermissions(record: UserDocument, user: UserDocument) {
+  public async removePermissions(record: User, user: User) {
     const accessLevel = this.getAccessLevel(record, user);
 
     switch (accessLevel) {
@@ -82,7 +81,7 @@ export class UserPermissions extends BasePermissions<UserDocument, UserModel> {
     }
   }
 
-  public async updatePermissions(record: UserDocument, user: UserDocument) {
+  public async updatePermissions(record: User, user: User) {
     const accessLevel = this.getAccessLevel(record, user);
     const attributes: string[] = [];
 
@@ -105,12 +104,12 @@ export class UserPermissions extends BasePermissions<UserDocument, UserModel> {
     }
   }
 
-  private getAccessLevel(record: UserDocument, user: UserDocument) {
+  private getAccessLevel(record: User, user: User) {
     if (user.level === 1) {
       return AccessLevel.Admin;
     }
 
-    if (record && record._id.equals(user._id)) {
+    if (record && record.id === user.id) {
       return AccessLevel.Self;
     }
 

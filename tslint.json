@@ -1,6 +1,6 @@
 {
   "extends": [
-    "tslint:recommended"   
+    "tslint:recommended"
   ],
   "jsRules": {},
   "rules": {
@@ -9,6 +9,7 @@
     "max-classes-per-file": false,
     "max-line-length": false,
     "member-ordering": false,
+    "mocha-avoid-only": true,
     "no-angle-bracket-type-assertion": false,
     "no-console": false,
     "no-empty": false,
@@ -16,7 +17,10 @@
     "no-var-requires": false,
     "only-arrow-functions": false,
     "ordered-imports": false,
-    "trailing-comma": false
+    "trailing-comma": false,
+    "variable-name": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [
+    "./node_modules/tslint-microsoft-contrib"
+  ]
 }

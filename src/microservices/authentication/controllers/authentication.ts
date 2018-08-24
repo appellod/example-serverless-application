@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { Context } from "koa";
 
-import { User, UserDocument, UserPermissions } from "../../../common/mongo";
+import { User, UserPermissions } from "../../../common/postgres";
 import { BearerStrategy } from "../../../common/passport";
 
 export class AuthenticationController {
@@ -10,7 +10,7 @@ export class AuthenticationController {
       return ctx.body = { isAvailable: false };
     }
 
-    const user = await User.findOne({ email: ctx.query.email });
+    const user = await User.query().where({ email: ctx.query.email }).first();
     ctx.body = { isAvailable: !user };
   }
 
@@ -19,7 +19,7 @@ export class AuthenticationController {
       throw new Error("Please provide an email address and password.");
     }
 
-    let user = await User.findOne({ email: ctx.request.body.email });
+    let user = await User.query().where({ email: ctx.request.body.email }).first();
 
     if (!user || !user.isValidPassword(ctx.request.body.password)) {
       throw new Error("Incorrect username or password.");
@@ -37,6 +37,8 @@ export class AuthenticationController {
   public async logout(ctx: Context) {
     const authorizationHeader = <string> ctx.headers.authorization;
     const token = authorizationHeader.replace("Bearer ", "");
+
+    // TODO Implement token revocation here.
 
     ctx.body = { message: "Logout successful." };
   }
@@ -62,7 +64,7 @@ export class AuthenticationController {
   }
 
   public async requestPasswordReset(ctx: Context) {
-    let user = await User.findOne({ email: ctx.request.body.email });
+    let user = await User.query().where({ email: ctx.request.body.email }).first();
 
     if (!user) {
       throw new Error("User with email " + ctx.request.body.email + " not found.");
@@ -74,10 +76,10 @@ export class AuthenticationController {
   }
 
   public async resetPassword(ctx: Context) {
-    const user = await User.resetPassword(ctx.request.body.resetHash, ctx.request.body.password);
+    const user = await User.resetPassword(ctx.request.body.reset_hash, ctx.request.body.password);
 
     if (!user) {
-      throw new Error("No users matching given resetHash.");
+      throw new Error("No users matching given reset_hash.");
     }
 
     ctx.body = { message: "Password reset successfully." };
@@ -88,7 +90,7 @@ export class AuthenticationController {
       throw new Error("Please provide an email address and password.");
     }
 
-    let user = await User.create({
+    let user = await User.query().insertAndFetch({
         email: ctx.request.body.email,
         password: ctx.request.body.password
     });

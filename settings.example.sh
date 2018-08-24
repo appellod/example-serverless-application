@@ -29,9 +29,7 @@ PASSWORD_RESET_FROM="Example Support Team <no-reply@example.com>"
 PASSWORD_RESET_URL="http://127.0.0.1:3001/reset-password.html"
 
 # Postgres
-POSTGRES_DATABASE="example_local"
-POSTGRES_HOST="127.0.0.1"
-POSTGRES_PORT="5432"
+POSTGRES_URL="postgres://postgres@localhost/example_local"
 
 # Redis
 REDIS_DATABASE="0"

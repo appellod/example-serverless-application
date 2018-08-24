@@ -1,5 +1,4 @@
-export * from "./mongo";
+export * from "./postgres";
 
-export * from "./schemas";
 export * from "./models";
 export * from "./permissions";

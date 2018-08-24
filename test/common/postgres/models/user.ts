@@ -1,14 +1,15 @@
 import { expect } from "chai";
 import * as nock from "nock";
 
-import { User, UserDocument } from "../../../../src/common/mongo";
+import { User } from "../../../../src/common/postgres";
+import { UserMock } from "../mocks";
 
-describe("common/mongo/models/user.ts", function() {
+describe("common/postgres/models/user.ts", function() {
   describe("schema.statics.resetPassword()", function() {
-    let user: UserDocument;
+    let user: User;
 
     beforeEach(async function() {
-      user = await User.mock();
+      user = await UserMock.insert();
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -22,21 +23,21 @@ describe("common/mongo/models/user.ts", function() {
 
     it("updates the user's password", async function() {
       const previousPassword = user.password;
-      user = await User.resetPassword(user.resetHash, "password");
+      user = await UserMock.resetPassword(user.reset_hash, "password");
       expect(user.password).to.not.eql(previousPassword);
     });
 
-    it("removes the user's resetHash", async function() {
-      user = await User.resetPassword(user.resetHash, "password");
-      expect(user.resetHash).to.be.undefined;
+    it("clears the user's reset_hash", async function() {
+      user = await UserMock.resetPassword(user.reset_hash, "password");
+      expect(user.reset_hash).to.be.null;
     });
   });
 
   describe("schema.methods.requestPasswordReset()", async function() {
-    let user: UserDocument;
+    let user: User;
 
     beforeEach(async function() {
-      user = await User.mock();
+      user = await UserMock.insert();
 
       nock(/mailgun\.net/)
         .post(/.*/)
@@ -46,9 +47,9 @@ describe("common/mongo/models/user.ts", function() {
         });
     });
 
-    it("sets the user's resetHash to a random hash", async function() {
+    it("sets the user's reset_hash to a random hash", async function() {
       user = await user.requestPasswordReset();
-      expect(user.resetHash).to.be.exist;
+      expect(user.reset_hash).to.be.exist;
     });
   });
 });

@@ -1,0 +1,11 @@
+{
+  "name": "API Documentation",
+  "description": "",
+  "version": "0.0.0",
+  "title": "API Documentation",
+  "url": "https://api.example.com/v1",
+  "header": {
+    "title": "Using the API",
+    "filename": "src/common/koa/documentation/header.md"
+  }
+}

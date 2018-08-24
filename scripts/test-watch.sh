@@ -7,4 +7,5 @@ elif [ -f settings.sh ]; then
   source settings.sh
 fi
 
+knex migrate:latest
 NODE_ENV=test mocha --opts ./test/mocha.opts -r ./ts-node.js --watch-extensions ts --watch --inspect $(find ./test -name '*.ts')
