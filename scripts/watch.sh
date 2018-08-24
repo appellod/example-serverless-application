@@ -6,4 +6,4 @@ if [ -f settings.sh ]; then
 fi
 
 knex migrate:latest
-nodemon src/index.ts
+nodemon src/microservices/$1/index.ts --watch "src/common/**/*.ts" --watch "src/microservices/${1}/**/*.ts"

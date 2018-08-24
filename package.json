@@ -16,11 +16,12 @@
     "migrations": "knex migrate:latest",
     "migrations:create": "knex migrate:make",
     "migrations:rollback": "knex migrate:rollback",
-    "start": "./scripts/documentation.sh && ./scripts/build.sh && ./scripts/start.sh",
+    "start": "./scripts/start.sh",
     "test": "./scripts/test.sh",
     "test:coverage": "nyc --reporter=html npm test",
     "test:watch": "./scripts/test-watch.sh",
-    "watch": "./scripts/watch.sh"
+    "watch": "./scripts/watch.sh",
+    "watch:all": "./scripts/watch-all.sh"
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
