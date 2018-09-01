@@ -13,6 +13,6 @@ export class UserMock extends User {
       password: params.password || chance.hash()
     });
 
-    return User.query().insert(params);
+    return User.query().insertAndFetch(params);
   }
 }

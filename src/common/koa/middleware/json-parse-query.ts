@@ -9,7 +9,10 @@ export async function parseQueryJsonMiddleware(ctx: Context, next: () => {}) {
   }
 
   try {
-    ctx.query = JSON.parse(ctx.query.query);
+    const json = JSON.parse(ctx.query.query);
+    Object.assign(ctx.query, json);
+    delete ctx.query.query;
+
     await next();
   } catch (err) {
     ctx.status = 400;

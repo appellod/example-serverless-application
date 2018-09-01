@@ -93,4 +93,92 @@ describe("microservices/rest/controllers/groups.ts", function() {
       expect(res.status).to.eql(200);
     });
   });
+
+  describe("GET /users/:id/friends", function() {
+    it("returns a success response", async function() {
+      const method = "get";
+      const path = "/v1/users/" + user.id + "/friends";
+      const params = null;
+
+      const res = await requestHelper.request(method, path, params, user);
+
+      expect(res.status).to.eql(200);
+    });
+  });
+
+  describe("POST /users/:id/friends", function() {
+    it("returns a success response", async function() {
+      const child = await UserMock.insert();
+
+      const method = "post";
+      const path = "/v1/users/" + user.id + "/friends";
+      const params = {
+        childIds: [child.id]
+      };
+
+      const res = await requestHelper.request(method, path, params, user);
+
+      expect(res.status).to.eql(200);
+    });
+  });
+
+  describe("DELETE /users/:id/friends", function() {
+    it("returns a success response", async function() {
+      const child = await UserMock.insert();
+
+      const method = "delete";
+      const path = "/v1/users/" + user.id + "/friends";
+      const params = {
+        childIds: [child.id]
+      };
+
+      const res = await requestHelper.request(method, path, params, user);
+
+      expect(res.status).to.eql(200);
+    });
+  });
+
+  describe("GET /users/:id/ignored-users", function() {
+    it("returns a success response", async function() {
+      const method = "get";
+      const path = "/v1/users/" + user.id + "/ignored-users";
+      const params = null;
+
+      const res = await requestHelper.request(method, path, params, user);
+
+      expect(res.status).to.eql(200);
+    });
+  });
+
+  describe("POST /users/:id/ignored-users", function() {
+    it("returns a success response", async function() {
+      const child = await UserMock.insert();
+
+      const method = "post";
+      const path = "/v1/users/" + user.id + "/ignored-users";
+      const params = {
+        childIds: [child.id]
+      };
+
+      const res = await requestHelper.request(method, path, params, user);
+
+      expect(res.status).to.eql(200);
+    });
+  });
+
+  describe("DELETE /users/:id/ignored-users", function() {
+    it("returns a success response", async function() {
+      const child = await UserMock.insert();
+
+      const method = "delete";
+      const path = "/v1/users/" + user.id + "/ignored-users";
+      const params = {
+        childIds: [child.id]
+      };
+
+      const res = await requestHelper.request(method, path, params, user);
+
+      expect(res.status).to.eql(200);
+    });
+  });
 });

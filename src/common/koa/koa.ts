@@ -26,7 +26,7 @@ export class Koa {
     this.app.use(cors());
 
     // Sets up body parser so we can access req.body in controllers.
-    this.app.use(bodyParser({ jsonLimit: "50mb" }));
+    this.app.use(bodyParser({ jsonLimit: "5mb" }));
 
     // Setup our Redis session store for API documentation logins.
     this.app.use(session({ store: new RedisStore() }));

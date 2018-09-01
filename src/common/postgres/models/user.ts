@@ -1,17 +1,12 @@
 import * as bcrypt from "bcrypt-nodejs";
-import { EventEmitter } from "events";
-import { Model, QueryContext } from "objection";
+import { Model, QueryBuilder, QueryContext } from "objection";
 import * as request from "request";
 import * as uuid from "uuid/v1";
 
-interface IUserEventEmitter extends EventEmitter {
-  emit(event: "delete" | "insert" | "update", user: User);
-  on(event: "delete" | "insert" | "update", listener: (user: User) => void);
-}
+import { UserPermissions } from "../permissions";
 
 export class User extends Model {
 
-  public static eventEmitter: IUserEventEmitter = new EventEmitter();
   public static idColumn = "id";
   public static jsonSchema = {
     properties: {
@@ -26,28 +21,58 @@ export class User extends Model {
     required: ["email", "password"],
     type: "object",
   };
+  public static relationMappings = {
+    friends: {
+      join: {
+        from: "users.id",
+        through: {
+          from: "friends.from_user_id",
+          to: "friends.to_user_id"
+        },
+        to: "users.id"
+      },
+      modelClass: User,
+      permissions: UserPermissions,
+      relation: Model.ManyToManyRelation
+    },
+    ignored_users: {
+      join: {
+        from: "users.id",
+        through: {
+          from: "ignored_users.from_user_id",
+          to: "ignored_users.to_user_id"
+        },
+        to: "users.id"
+      },
+      modelClass: User,
+      permissions: UserPermissions,
+      relation: Model.ManyToManyRelation
+    }
+  };
   public static tableName = "users";
 
   public id: number;
   public created_at: Date;
   public email: string;
+  public friends: User[];
+  public ignored_users: User[];
   public level: number;
   public password: string;
   public reset_hash: string;
   public updated_at: Date;
 
-  constructor(params: Partial<User>) {
+  constructor(params: Partial<User> = {}) {
     super();
 
     Object.assign(this, params);
   }
 
-  public static async resetPassword(reset_hash: string, newPassword: string) {
-    if (!reset_hash || !newPassword) {
+  public static async resetPassword(resetHash: string, newPassword: string) {
+    if (!resetHash || !newPassword) {
       throw new Error("Please provide a reset_hash and newPassword.");
     }
 
-    const user = await User.query().where({ reset_hash }).first();
+    const user = await this.query().where({ reset_hash: resetHash }).first();
 
     user.password = newPassword;
     user.reset_hash = null;

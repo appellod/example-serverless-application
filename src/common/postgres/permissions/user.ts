@@ -32,7 +32,7 @@ export class UserPermissions extends BasePermissions<User> {
     }
   }
 
-  public async findPermissions(user: User) {
+  public findPermissions(user: User) {
     const accessLevel = this.getAccessLevel(null, user);
     const query: any = {};
 
@@ -60,6 +60,8 @@ export class UserPermissions extends BasePermissions<User> {
       case AccessLevel.Admin:
       case AccessLevel.Self:
         return attributes.concat(
+          "friends",
+          "ignored_users",
           "level"
         );
 
@@ -89,6 +91,8 @@ export class UserPermissions extends BasePermissions<User> {
       case AccessLevel.Admin:
         return attributes.concat(
           "email",
+          "friends",
+          "ignored_users",
           "password",
           "level"
         );
@@ -96,6 +100,8 @@ export class UserPermissions extends BasePermissions<User> {
       case AccessLevel.Self:
         return attributes.concat(
           "email",
+          "friends",
+          "ignored_users",
           "password"
         );
 

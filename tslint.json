@@ -13,6 +13,7 @@
     "no-angle-bracket-type-assertion": false,
     "no-console": false,
     "no-empty": false,
+    "no-string-literal": false,
     "no-unused-expression": false,
     "no-var-requires": false,
     "only-arrow-functions": false,

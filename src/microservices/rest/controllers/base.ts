@@ -2,8 +2,7 @@ import { Model as BaseModel, QueryBuilder } from "objection";
 
 import { BasePermissions, User } from "../../../common/postgres";
 
-export class BaseController<TModel extends BaseModel,
-                            TPermissions extends BasePermissions<TModel>> {
+export class BaseController<TModel extends BaseModel, TPermissions extends BasePermissions<TModel>> {
   public Model: any;
   public permissions: TPermissions;
 
@@ -12,36 +11,95 @@ export class BaseController<TModel extends BaseModel,
     this.permissions = permissions;
   }
 
-  /**
-   * Finds the number of elements matching the criteria.
-   */
   public async count(params: any, user: User) {
-    let query: QueryBuilder<TModel, TModel[], TModel[]> = this.Model.query();
-
-    if (params.where) {
-      query = query.where((builder) => this.where(builder, params.where));
-
-      const where = await this.permissions.where(user);
-      query = query.where((builder) => this.where(builder, where));
-    }
-
+    const query = this.query(this.permissions, this.Model.query(), params, user);
     const results: any[] = await query.count();
+
     return parseInt(results[0].count, 10);
   }
 
-  /**
-   * Creates a new record.
-   */
-  public async create(body: any, override: any, user: User) {
-    return this.permissions.create(body, override, user);
+  public async create(params: any, override: any, user: User) {
+    return this.permissions.create(params, override, user);
+  }
+
+  public async find(params: any, user: User) {
+    const records = await this.query(this.permissions, this.Model.query(), params, user);
+
+    return Promise.all(records.map((record) => this.permissions.read(record, user)));
+  }
+
+  public async findOne(id: number | string, user: User) {
+    const params = { where: { id } };
+
+    const query = this.query(this.permissions, this.Model.query(), params, user);
+    const record = await query.first();
+
+    if (!record) {
+      throw new Error("Record not found.");
+    }
+
+    return this.permissions.read(record, user);
+  }
+
+  public async relate(id: number | string, field: string, childIds: number[] | string[], user: User) {
+    const record = await this.Model.query().findById(id);
+
+    if (!record) {
+      throw new Error("Record not found.");
+    }
+
+    return this.permissions.relate(record, field, childIds, user);
+  }
+
+  public async relatedQuery(id: number | string, field: string, params: any, user: User) {
+    const record = await this.Model.query().findById(id);
+
+    if (!record) {
+      throw new Error("Record not found.");
+    }
+
+    const Permissions = record.constructor.relationMappings[field].permissions;
+    const permissions = new Permissions();
+
+    const records = await this.query(permissions, record.$relatedQuery(field), params, user);
+
+    return Promise.all(records.map((r) => this.permissions.read(r, user)));
+  }
+
+  public async remove(id: number | string, user: User) {
+    const record = await this.Model.query().findById(id);
+
+    if (!record) {
+      throw new Error("Record not found.");
+    }
+
+    return this.permissions.remove(record, user);
+  }
+
+  public async unrelate(id: number | string, field: string, childIds: number[] | string[], user: User) {
+    const record = await this.Model.query().findById(id);
+
+    if (!record) {
+      throw new Error("Record not found.");
+    }
+
+    return this.permissions.unrelate(record, field, childIds, user);
+  }
+
+  public async update(id: number | string, params: any, override: any, user: User) {
+    const record = await this.Model.query().findById(id);
+
+    if (!record) {
+      throw new Error("Record not found");
+    }
+
+    return this.permissions.update(record, params, override, user);
   }
 
   /**
-   * Returns all the records matching the criteria.
+   * Applies limit, select, offset, orderBy, and where to a query.
    */
-  public async find(params: any, user: User) {
-    let query: QueryBuilder<TModel, TModel[], TModel[]> = this.Model.query();
-
+  private query(permissions: BasePermissions<TModel>, query: QueryBuilder<TModel, TModel[], TModel[]>, params: any, user: User) {
     if (params.limit) {
       query = query.limit(params.limit);
     }
@@ -61,52 +119,17 @@ export class BaseController<TModel extends BaseModel,
     if (params.where) {
       query = query.where((builder) => this.where(builder, params.where));
 
-      const where = await this.permissions.where(user);
+      const where = permissions.where(user);
       query = query.where((builder) => this.where(builder, where));
     }
 
-    const records = await query;
-
-    return Promise.all(records.map((record) => this.permissions.read(record, user)));
-  }
-
-  /**
-   * Finds the record by ID.
-   */
-  public async findOne(params: any, user: User) {
-    let query: QueryBuilder<TModel, TModel[], TModel[]> = this.Model.query();
-
-    query = query.where((builder) => this.where(builder, { id: params.id }));
-
-    const where = await this.permissions.where(user);
-    query = query.where((builder) => this.where(builder, where));
-
-    const record = await query.first();
-
-    if (!record) {
-      throw new Error("Record not found.");
-    }
-
-    return this.permissions.read(record, user);
-  }
-
-  /**
-   * Removes a record.
-   */
-  public async remove(params: any, user: User) {
-    const record = await this.Model.query().where({ id: params.id }).first();
-
-    if (!record) {
-      throw new Error("Record not found.");
-    }
-
-    return this.permissions.remove(record, user);
+    return query;
   }
 
   /**
    * Applies ORDER BY for each array element. Negative elements are marked as DESC.
    */
-  public sort(query: QueryBuilder<TModel, TModel[], TModel[]>, sort: string[]) {
+  private sort(query: QueryBuilder<TModel, TModel[], TModel[]>, sort: string[]) {
     sort.forEach((field) => {
       if (field.charAt(0) === "-") {
         field = field.substring(1);
@@ -120,22 +143,9 @@ export class BaseController<TModel extends BaseModel,
   }
 
   /**
-   * Updates a record.
-   */
-  public async update(params: any, body: any, override: any, user: User) {
-    const record = await this.Model.query().where({ id: params.id }).first();
-
-    if (!record) {
-      throw new Error("Record not found");
-    }
-
-    return this.permissions.update(record, body, override, user);
-  }
-
-  /**
    * Parses Mongo-like syntax and converts it into SQL.
    */
-  public where(query: QueryBuilder<TModel, TModel[], TModel[]>, params: any, isAnd = true) {
+  private where(query: QueryBuilder<TModel, TModel[], TModel[]>, params: any, isAnd = true) {
     Object.keys(params).forEach((key) => {
       let value = params[key];
 

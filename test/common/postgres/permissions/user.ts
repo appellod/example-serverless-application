@@ -103,6 +103,46 @@ describe("common/postgres/permissions/user.ts", function() {
     });
   });
 
+  describe("relate()", function() {
+    let admin: User;
+    let child: User;
+    let parent: User;
+    let user: User;
+
+    beforeEach(async function() {
+      admin = await UserMock.insert({ level: 1 });
+      child = await UserMock.insert();
+      parent = await UserMock.insert();
+      user = await UserMock.insert();
+    });
+
+    context("when the operation is valid", function() {
+      it("relates the two records", async function() {
+        const record = await permissions.relate(parent, "friends", [child.id], admin);
+        expect(record).to.exist;
+
+        const children = await parent.$relatedQuery("friends");
+        expect(children.length).to.eql(1);
+      });
+    });
+
+    context("when the field is not a relation", function() {
+      it("throws an error", async function() {
+        const promise = permissions.relate(parent, "email", [child.id], admin);
+
+        return expect(promise).to.be.rejectedWith("Cannot find relation: email.");
+      });
+    });
+
+    context("when the user does not have permission", function() {
+      it("throws an error", async function() {
+        const promise = permissions.relate(parent, "friends", [child.id], user);
+
+        return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
+      });
+    });
+  });
+
   describe("remove()", function() {
     let record: User;
 
@@ -141,6 +181,48 @@ describe("common/postgres/permissions/user.ts", function() {
 
           return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
         });
+      });
+    });
+  });
+
+  describe("unrelate()", function() {
+    let admin: User;
+    let child: User;
+    let parent: User;
+    let user: User;
+
+    beforeEach(async function() {
+      admin = await UserMock.insert({ level: 1 });
+      child = await UserMock.insert();
+      parent = await UserMock.insert();
+      user = await UserMock.insert();
+
+      await parent.$relatedQuery("friends").relate(child.id);
+    });
+
+    context("when the operation is valid", function() {
+      it("unrelates the two records", async function() {
+        const record = await permissions.unrelate(parent, "friends", [child.id], admin);
+        expect(record).to.exist;
+
+        const children = await parent.$relatedQuery("friends");
+        expect(children.length).to.eql(0);
+      });
+    });
+
+    context("when the field is not a relation", function() {
+      it("throws an error", async function() {
+        const promise = permissions.unrelate(parent, "email", [child.id], admin);
+
+        return expect(promise).to.be.rejectedWith("Cannot find relation: email.");
+      });
+    });
+
+    context("when the user does not have permission", function() {
+      it("throws an error", async function() {
+        const promise = permissions.unrelate(parent, "friends", [child.id], user);
+
+        return expect(promise).to.be.rejectedWith("User does not have permission to perform this action.");
       });
     });
   });
@@ -204,6 +286,10 @@ describe("common/postgres/permissions/user.ts", function() {
         });
       });
     });
+  });
+
+  describe("unrelate()", function() {
+
   });
 
   describe("where()", function() {

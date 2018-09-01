@@ -5,11 +5,11 @@ const knex = Postgres.setup();
 const redis = Redis.connect();
 
 beforeEach(async function() {
-  // Reset Postgres
   await Promise.all([
-    Postgres.User.query().delete()
-  ]);
+    // Reset Postgres
+    Postgres.User.query().delete(),
 
-  // Reset Redis
-  await new Promise((res) => redis.flushdb(res));
+    // Reset Redis
+    new Promise((res) => redis.flushdb(res))
+  ]);
 });
