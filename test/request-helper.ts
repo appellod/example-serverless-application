@@ -34,10 +34,6 @@ export class RequestHelper {
       req.set("Authorization", `Bearer ${token}`);
     }
 
-    if ((method === "post" || method === "put") && params) {
-      return req.send(params);
-    } else {
-      return req.send();
-    }
+    return params ? req.send(params) : req.send();
   }
 }

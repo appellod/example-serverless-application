@@ -75,6 +75,52 @@ describe("microservices/rest/controllers/users.ts", function() {
     });
   });
 
+  describe("relateFriends()", function() {
+    it("returns the parent", async function() {
+      const child = await UserMock.insert();
+
+      const ctx = {
+        params: {
+          id: user.id
+        },
+        request: {
+          body: {
+            childIds: [child.id],
+            field: "friends"
+          }
+        },
+        state: { user }
+      } as Context;
+
+      await controller.relateFriends(ctx);
+
+      expect(ctx.body.record).to.exist;
+    });
+  });
+
+  describe("relateIgnoredUsers()", function() {
+    it("returns the parent", async function() {
+      const child = await UserMock.insert();
+
+      const ctx = {
+        params: {
+          id: user.id
+        },
+        request: {
+          body: {
+            childIds: [child.id],
+            field: "friends"
+          }
+        },
+        state: { user }
+      } as Context;
+
+      await controller.relateIgnoredUsers(ctx);
+
+      expect(ctx.body.record).to.exist;
+    });
+  });
+
   describe("remove()", function() {
     it("returns the removed record", async function() {
       const ctx = {
@@ -85,6 +131,52 @@ describe("microservices/rest/controllers/users.ts", function() {
       } as Context;
 
       await controller.remove(ctx);
+
+      expect(ctx.body.record).to.exist;
+    });
+  });
+
+  describe("unrelateFriends()", function() {
+    it("returns the parent", async function() {
+      const child = await UserMock.insert();
+
+      const ctx = {
+        params: {
+          id: user.id
+        },
+        request: {
+          body: {
+            childIds: [child.id],
+            field: "friends"
+          }
+        },
+        state: { user }
+      } as Context;
+
+      await controller.unrelateFriends(ctx);
+
+      expect(ctx.body.record).to.exist;
+    });
+  });
+
+  describe("unrelateIgnoredUsers()", function() {
+    it("returns the parent", async function() {
+      const child = await UserMock.insert();
+
+      const ctx = {
+        params: {
+          id: user.id
+        },
+        request: {
+          body: {
+            childIds: [child.id],
+            field: "friends"
+          }
+        },
+        state: { user }
+      } as Context;
+
+      await controller.unrelateIgnoredUsers(ctx);
 
       expect(ctx.body.record).to.exist;
     });

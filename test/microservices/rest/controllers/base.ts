@@ -14,7 +14,7 @@ class TestController extends BaseController<User, UserPermissions> {
 const controller = new TestController();
 
 describe("microservices/rest/controllers/base.ts", function() {
-  describe("find()", function() {
+  describe("count()", function() {
     let users: User[];
 
     beforeEach(async function() {
@@ -141,11 +141,8 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("finds the user with the correct id", async function() {
       const user = users[1];
-      const params = {
-        id: user.id
-      };
 
-      const record = await controller.findOne(params, users[0]);
+      const record = await controller.findOne(user.id, users[0]);
 
       expect(record.id).to.eql(user.id);
     });
@@ -156,7 +153,7 @@ describe("microservices/rest/controllers/base.ts", function() {
       let query = User.query();
 
       const sort = ["email", "-password"];
-      query = controller.sort(query, sort);
+      query = controller["sort"](query, sort);
 
       const sql = query.toSql();
       expect(sql).to.contain(`order by "email" asc, "password" desc`);
@@ -172,7 +169,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles no operator", function() {
       const where = { level: 0 };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" = 0`);
@@ -180,7 +177,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $eq", function() {
       const where = { level: { $eq: 0 } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" = 0`);
@@ -188,7 +185,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $gt", function() {
       const where = { level: { $gt: 0 } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" > 0`);
@@ -196,7 +193,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $gte", function() {
       const where = { level: { $gte: 0 } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" >= 0`);
@@ -204,7 +201,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $in", function() {
       const where = { level: { $in: [0, 1] } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" in (0, 1)`);
@@ -212,7 +209,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $lt", function() {
       const where = { level: { $lt: 0 } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" < 0`);
@@ -220,7 +217,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $lte", function() {
       const where = { level: { $lte: 0 } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" <= 0`);
@@ -228,7 +225,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $ne", function() {
       const where = { level: { $ne: 0 } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`not "level" = 0`);
@@ -236,7 +233,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $nin", function() {
       const where = { level: { $nin: [0, 1] } };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" not in (0, 1)`);
@@ -244,7 +241,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $and", function() {
       const where = { $and: [{ level: { $eq: 0 } }, { level: { $ne: 1 } }] };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" = 0 and not "level" = 1`);
@@ -252,7 +249,7 @@ describe("microservices/rest/controllers/base.ts", function() {
 
     it("handles $or", function() {
       const where = { $or: [{ level: { $eq: 0 } }, { level: { $ne: 1 } }] };
-      query = controller.where(query, where);
+      query = controller["where"](query, where);
 
       const sql = query.toSql();
       expect(sql).to.contain(`"level" = 0 or not "level" = 1`);

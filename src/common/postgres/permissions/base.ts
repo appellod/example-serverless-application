@@ -6,7 +6,7 @@ export abstract class BasePermissions<TModel extends Model> {
   public Model: any;
 
   public abstract createPermissions(user: User): Promise<string[]>;
-  public abstract findPermissions(user: User): Promise<any>;
+  public abstract findPermissions(user: User): any;
   public abstract readPermissions(record: TModel, user: User): Promise<string[]>;
   public abstract removePermissions(record: TModel, user: User): Promise<boolean>;
   public abstract updatePermissions(record: TModel, user: User): Promise<string[]>;
@@ -57,6 +57,31 @@ export abstract class BasePermissions<TModel extends Model> {
   }
 
   /**
+   * Relates children to the parent.
+   */
+  public async relate(parent: TModel, field: string, childIds: number[] | string[], user: User) {
+    // Check to make sure the field is a relation.
+    const relations = Object.keys(this.Model.relationMappings);
+    if (!relations.includes(field)) {
+      throw new Error(`Cannot find relation: ${field}.`);
+    }
+
+    // Check to make sure user can update relation.
+    const permissions = await this.updatePermissions(parent, user);
+    if (!permissions.includes(field)) {
+      throw new Error("User does not have permission to perform this action.");
+    }
+
+    await parent.$relatedQuery(field).relate(childIds);
+
+    // Remove unauthorized fields
+    const readPermissions = await this.readPermissions(parent, user);
+    const filteredRecord = this.removeUnauthorizedAttributes(parent, readPermissions);
+
+    return filteredRecord;
+  }
+
+  /**
    * Removes a record if the user is authorized to do so.
    * @param record The record to remove.
    * @param user The user removing the record.
@@ -73,7 +98,36 @@ export abstract class BasePermissions<TModel extends Model> {
       throw new Error("Record not found.");
     }
 
-    return record;
+    // Remove unauthorized fields
+    const readPermissions = await this.readPermissions(record, user);
+    const filteredRecord = this.removeUnauthorizedAttributes(record, readPermissions);
+
+    return filteredRecord;
+  }
+
+  /**
+   * Unrelates children from the parent.
+   */
+  public async unrelate(parent: TModel, field: string, childIds: number[] | string[], user: User) {
+    // Check to make sure the field is a relation.
+    const relations = Object.keys(this.Model.relationMappings);
+    if (!relations.includes(field)) {
+      throw new Error(`Cannot find relation: ${field}.`);
+    }
+
+    // Check to make sure user can update relation.
+    const permissions = await this.updatePermissions(parent, user);
+    if (!permissions.includes(field)) {
+      throw new Error("User does not have permission to perform this action.");
+    }
+
+    await parent.$relatedQuery(field).unrelate().whereIn("id", childIds);
+
+    // Remove unauthorized fields
+    const readPermissions = await this.readPermissions(parent, user);
+    const filteredRecord = this.removeUnauthorizedAttributes(parent, readPermissions);
+
+    return filteredRecord;
   }
 
   /**
@@ -109,7 +163,7 @@ export abstract class BasePermissions<TModel extends Model> {
    * @param where The where clause for the query.
    * @param user The user performing the query.
    */
-  public where(user: User): Promise<any> {
+  public where(user: User): any {
     return this.findPermissions(user);
   }
 

@@ -1,2 +1,2 @@
 export * from "./error";
-export * from "./parse-query-json";
+export * from "./json-parse-query";
