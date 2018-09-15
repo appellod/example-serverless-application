@@ -1,0 +1,21 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "direction": "in",
+      "methods": [
+        "post"
+      ],
+      "name": "req",
+      "route": "authentication/signup",
+      "type": "httpTrigger"
+    },
+    {
+      "direction": "out",
+      "name": "res",
+      "type": "http"
+    }
+  ],
+  "disabled": false,
+  "scriptFile": "./route.js"
+}

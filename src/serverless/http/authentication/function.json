@@ -1,0 +1,21 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "direction": "in",
+      "methods": [
+        "get"
+      ],
+      "name": "req",
+      "route": "authenticationn/{*segments}",
+      "type": "httpTrigger"
+    },
+    {
+      "direction": "out",
+      "name": "res",
+      "type": "http"
+    }
+  ],
+  "disabled": false,
+  "scriptFile": "../routes/authentication.js"
+}

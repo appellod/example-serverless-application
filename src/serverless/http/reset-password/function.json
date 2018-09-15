@@ -1,0 +1,21 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "direction": "in",
+      "methods": [
+        "put"
+      ],
+      "name": "req",
+      "route": "authentication/reset-password",
+      "type": "httpTrigger"
+    },
+    {
+      "direction": "out",
+      "name": "res",
+      "type": "http"
+    }
+  ],
+  "disabled": false,
+  "scriptFile": "./route.js"
+}

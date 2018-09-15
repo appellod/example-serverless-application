@@ -1,0 +1,21 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "direction": "in",
+      "methods": [
+        "delete"
+      ],
+      "name": "req",
+      "route": "authentication/logout",
+      "type": "httpTrigger"
+    },
+    {
+      "direction": "out",
+      "name": "res",
+      "type": "http"
+    }
+  ],
+  "disabled": false,
+  "scriptFile": "./route.js"
+}

@@ -9,3 +9,4 @@ dist/
 node_modules/
 src/microservices/authentication/documentation/
 src/microservices/rest/documentation/
+src/serverless/http/local.settings.json
