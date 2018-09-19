@@ -7,6 +7,5 @@ tscommand*.tmp.txt
 coverage/
 dist/
 node_modules/
-src/microservices/authentication/documentation/
-src/microservices/rest/documentation/
-src/serverless/http/local.settings.json
+src/serverless/local.settings.json
+src/serverless/api/documentation

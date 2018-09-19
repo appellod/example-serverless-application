@@ -8,4 +8,5 @@ rm -rf dist/
 tsc
 
 # Copy non-Typescript files.
-rsync -aP --exclude=*.ts ./src/* ./dist/
+rsync -aP --exclude=*.ts ./src/* ./dist/src/
+rsync -aP --exclude=*.ts ./test/* ./dist/test/

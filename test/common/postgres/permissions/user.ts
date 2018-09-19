@@ -19,9 +19,9 @@ describe("common/postgres/permissions/user.ts", function() {
           email: chance.email(),
           password: chance.hash()
         };
-        const user = await UserMock.insert({
+        const user = await new UserMock({
           level: 1
-        });
+        }).create();
 
         const record = await permissions.create(params, {}, user);
 
@@ -38,9 +38,9 @@ describe("common/postgres/permissions/user.ts", function() {
           email: chance.email(),
           password: chance.hash()
         };
-        const user = await UserMock.insert({
+        const user = await new UserMock({
           level: 0
-        });
+        }).create();
 
         const promise = permissions.create(params, {}, user);
 
@@ -53,14 +53,14 @@ describe("common/postgres/permissions/user.ts", function() {
     let record: User;
 
     beforeEach(async function() {
-      record = await UserMock.insert();
+      record = await new UserMock().create();
     });
 
     context("when user is an admin", function() {
       it ("returns the record", async function() {
-        const user = await UserMock.insert({
+        const user = await new UserMock({
           level: 1
-        });
+        }).create();
 
         record = await permissions.read(record, user);
 
@@ -87,9 +87,9 @@ describe("common/postgres/permissions/user.ts", function() {
 
       context("when user is accessing another user's record", function() {
         it ("returns the record", async function() {
-          const user = await UserMock.insert({
+          const user = await new UserMock({
             level: 0
-          });
+          }).create();
 
           record = await permissions.read(record, user);
 
@@ -110,10 +110,10 @@ describe("common/postgres/permissions/user.ts", function() {
     let user: User;
 
     beforeEach(async function() {
-      admin = await UserMock.insert({ level: 1 });
-      child = await UserMock.insert();
-      parent = await UserMock.insert();
-      user = await UserMock.insert();
+      admin = await new UserMock({ level: 1 }).create();
+      child = await new UserMock().create();
+      parent = await new UserMock().create();
+      user = await new UserMock().create();
     });
 
     context("when the operation is valid", function() {
@@ -147,14 +147,14 @@ describe("common/postgres/permissions/user.ts", function() {
     let record: User;
 
     beforeEach(async function() {
-      record = await UserMock.insert();
+      record = await new UserMock().create();
     });
 
     context("when the user is an admin", function() {
       it("returns 1", async function() {
-        const user = await UserMock.insert({
+        const user = await new UserMock({
           level: 1
-        });
+        }).create();
 
         const results = await permissions.remove(record, user);
 
@@ -173,9 +173,9 @@ describe("common/postgres/permissions/user.ts", function() {
 
       context("when user is removing another user's record", function() {
         it ("returns an error", async function() {
-          const user = await UserMock.insert({
+          const user = await new UserMock({
             level: 0
-          });
+          }).create();
 
           const promise = permissions.remove(record, user);
 
@@ -192,10 +192,10 @@ describe("common/postgres/permissions/user.ts", function() {
     let user: User;
 
     beforeEach(async function() {
-      admin = await UserMock.insert({ level: 1 });
-      child = await UserMock.insert();
-      parent = await UserMock.insert();
-      user = await UserMock.insert();
+      admin = await new UserMock({ level: 1 }).create();
+      child = await new UserMock().create();
+      parent = await new UserMock().create();
+      user = await new UserMock().create();
 
       await parent.$relatedQuery("friends").relate(child.id);
     });
@@ -231,7 +231,7 @@ describe("common/postgres/permissions/user.ts", function() {
     let record: User;
 
     beforeEach(async function() {
-      record = await UserMock.insert();
+      record = await new UserMock().create();
     });
 
     context("when the user is an admin", function() {
@@ -240,9 +240,9 @@ describe("common/postgres/permissions/user.ts", function() {
           email: chance.email(),
           level: record.level + 1
         };
-        const user = await UserMock.insert({
+        const user = await new UserMock({
           level: 1
-        });
+        }).create();
 
         record = await permissions.update(record, params, {}, user);
 
@@ -276,9 +276,9 @@ describe("common/postgres/permissions/user.ts", function() {
             email: chance.email(),
             level: record.level + 1
           };
-          const user = await UserMock.insert({
+          const user = await new UserMock({
             level: 0
-          });
+          }).create();
 
           const promise = permissions.update(record, params, {}, user);
 
@@ -295,9 +295,9 @@ describe("common/postgres/permissions/user.ts", function() {
   describe("where()", function() {
     context("when the user is an admin", function() {
       it("returns a valid where query", async function() {
-        const user = await UserMock.insert({
+        const user = await new UserMock({
           level: 1
-        });
+        }).create();
 
         const query = await permissions.where(user);
 
@@ -307,9 +307,9 @@ describe("common/postgres/permissions/user.ts", function() {
 
     context("when the user is not an admin", function() {
       it("returns a valid where query", async function() {
-        const user = await UserMock.insert({
+        const user = await new UserMock({
           level: 0
-        });
+        }).create();
 
         const query = await permissions.where(user);
 

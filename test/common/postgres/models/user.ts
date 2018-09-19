@@ -3,19 +3,18 @@ import * as nock from "nock";
 
 import { User } from "../../../../src/common/postgres";
 import { UserMock } from "../mocks";
-import { Model } from "objection";
 
 describe("common/postgres/models/user.ts", function() {
   let user: User;
 
   beforeEach(async function() {
-    user = await UserMock.insert();
+    user = await new UserMock().create();
   });
 
   describe("relationMappings", function() {
     describe("friends", function() {
       it("gets the friends of the user", async function() {
-        const friend = await UserMock.insert();
+        const friend = await new UserMock().create();
         await user.$relatedQuery("friends").relate(friend.id);
 
         const result = await User.query().findById(user.id).eager({ friends: true });
@@ -25,7 +24,7 @@ describe("common/postgres/models/user.ts", function() {
 
     describe("ignored_users", function() {
       it("gets the ignored users", async function() {
-        const friend = await UserMock.insert();
+        const friend = await new UserMock().create();
         await user.$relatedQuery("ignored_users").relate(friend.id);
 
         const result = await User.query().findById(user.id).eager({ ignored_users: true });

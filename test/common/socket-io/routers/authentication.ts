@@ -32,7 +32,7 @@ describe.skip("common/socketIo/routers/authenticationRouter.ts", function() {
       it("does not return an error", async function() {
         const socket = await io.connect("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
 
-        const user = await UserMock.insert();
+        const user = await new UserMock().create();
         const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
         socket.emit("authenticate", { token });
@@ -47,7 +47,7 @@ describe.skip("common/socketIo/routers/authenticationRouter.ts", function() {
     it("does not return an error", async function() {
       const socket = await io.connect("http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT);
 
-      const user = await UserMock.insert();
+      const user = await new UserMock().create();
       const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
       socket.emit("authenticate", { token });

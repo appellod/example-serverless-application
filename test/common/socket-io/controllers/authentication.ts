@@ -42,7 +42,7 @@ describe("common/socketIo/controllers/authenticationController.ts", function() {
 
     context("when a valid token is provided", function() {
       it("does not return an error", async function() {
-        const user = await UserMock.insert();
+        const user = await new UserMock().create();
         const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
         const ctx = { data: { token }, socket };
@@ -57,7 +57,7 @@ describe("common/socketIo/controllers/authenticationController.ts", function() {
     let ctx: IContext;
 
     beforeEach(async function() {
-      const user = await UserMock.insert();
+      const user = await new UserMock().create();
       const token = jwt.sign({ user }, process.env.JWT_SECRET);
 
       ctx = { data: { token }, socket };

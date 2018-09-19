@@ -1,6 +1,6 @@
 import { User } from "../postgres";
 
-export interface Context {
+export interface HttpContext {
   bindingData: any;
   bindings: any;
   invocationId: string;
@@ -11,40 +11,22 @@ export interface Context {
     info: (...text: string[]) => void;
     verbose: (...text: string[]) => void;
   };
+  res: IFunctionResponse;
 
   done(err?: any, output?: { [s: string]: any }): void;
 }
 
+export class HttpError extends Error {
+  public status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+
+    this.status = status;
+  }
+}
+
 export type HttpMethod = "CONNECT" | "DELETE" |  "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT" | "TRACE";
-
-export interface IFunctionRequest {
-  body: any;
-  headers: { [s: string]: string; };
-  method: HttpMethod;
-  originalUrl: string;
-  params: { [s: string]: string; };
-  query: { [s: string]: string; };
-  rawbody: any;
-  user?: User;
-}
-
-export interface IFunctionResponse {
-  body?: any;
-  headers?: {
-    "content-type"?: string;
-    "content-length"?: HttpStatusCodes | number;
-    "content-disposition"?: string;
-    "content-encoding"?: string;
-    "content-language"?: string;
-    "content-range"?: string;
-    "content-location"?: string;
-    "content-md5"?: Buffer;
-    "expires"?: Date;
-    "last-modified"?: Date;
-    [s: string]: any;
-  };
-  status?: number;
-}
 
 export enum HttpStatusCodes {
   // 1XX Informational
@@ -143,6 +125,34 @@ export enum HttpStatusCodes {
   SiteIsFrozen = 530,
 }
 
-export interface HttpContext extends Context {
-  res: IFunctionResponse;
+export interface IFunctionRequest {
+  body: { [s: string]: any; };
+  headers: { [s: string]: string; };
+  method: HttpMethod;
+  originalUrl: string;
+  params: { [s: string]: any; };
+  query: { [s: string]: any; };
+  rawbody: any;
+  session?: any;
+  user?: User;
+}
+
+export interface IFunctionResponse {
+  body?: any;
+  headers?: {
+    "content-type"?: string;
+    "content-length"?: HttpStatusCodes | number;
+    "content-disposition"?: string;
+    "content-encoding"?: string;
+    "content-language"?: string;
+    "content-range"?: string;
+    "content-location"?: string;
+    "content-md5"?: Buffer;
+    "expires"?: Date;
+    "last-modified"?: Date;
+    "set-cookie"?: string;
+    [s: string]: any;
+  };
+  isRaw?: boolean;
+  status?: number;
 }

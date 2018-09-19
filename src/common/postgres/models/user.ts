@@ -1,11 +1,12 @@
 import * as bcrypt from "bcrypt-nodejs";
-import { Model, QueryBuilder, QueryContext } from "objection";
+import { Model, QueryContext } from "objection";
 import * as request from "request";
 import * as uuid from "uuid/v1";
 
 import { UserPermissions } from "../permissions";
+import { BaseModel } from "./base";
 
-export class User extends Model {
+export class User extends BaseModel {
 
   public static idColumn = "id";
   public static jsonSchema = {
@@ -62,9 +63,7 @@ export class User extends Model {
   public updated_at: Date;
 
   constructor(params: Partial<User> = {}) {
-    super();
-
-    Object.assign(this, params);
+    super(params);
   }
 
   public static async resetPassword(resetHash: string, newPassword: string) {
@@ -77,7 +76,7 @@ export class User extends Model {
     user.password = newPassword;
     user.reset_hash = null;
 
-    return user.$query().patchAndFetch(user);
+    return user.update();
   }
 
   public async $beforeInsert(queryContext: QueryContext) {
@@ -109,7 +108,7 @@ export class User extends Model {
     }
 
     this.reset_hash = uuid();
-    const user = await this.$query().patchAndFetch(this);
+    const user = await this.update();
 
     const resetUrl = process.env.PASSWORD_RESET_URL + "?reset_hash=" + user.reset_hash;
 

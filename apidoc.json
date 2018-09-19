@@ -3,9 +3,9 @@
   "description": "",
   "version": "0.0.0",
   "title": "API Documentation",
-  "url": "https://api.example.com/v1",
+  "url": "https://api.example.com",
   "header": {
     "title": "Using the API",
-    "filename": "src/common/koa/documentation/header.md"
+    "filename": "header.md"
   }
 }

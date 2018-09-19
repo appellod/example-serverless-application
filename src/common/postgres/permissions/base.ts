@@ -1,8 +1,6 @@
-import { Model } from "objection";
+import { BaseModel, User } from "../models";
 
-import { User } from "../models";
-
-export abstract class BasePermissions<TModel extends Model> {
+export abstract class BasePermissions<TModel extends BaseModel> {
   public Model: any;
 
   public abstract createPermissions(user: User): Promise<string[]>;
@@ -30,13 +28,11 @@ export abstract class BasePermissions<TModel extends Model> {
     Object.assign(params, override);
 
     let record = new this.Model(params) as TModel;
-    record = await record.$query().insertAndFetch(params);
+    record = await record.create();
 
     // Filter unauthorized attributes
     const readPermissions = await this.readPermissions(record, user);
-    const filteredRecord = this.removeUnauthorizedAttributes(record, readPermissions);
-
-    return filteredRecord;
+    return this.removeUnauthorizedAttributes(record, readPermissions);
   }
 
   /**
@@ -51,9 +47,7 @@ export abstract class BasePermissions<TModel extends Model> {
       throw new Error("User does not have permission to perform this action.");
     }
 
-    record = this.removeUnauthorizedAttributes(record, readPermissions);
-
-    return record;
+    return this.removeUnauthorizedAttributes(record, readPermissions);
   }
 
   /**
@@ -76,9 +70,7 @@ export abstract class BasePermissions<TModel extends Model> {
 
     // Remove unauthorized fields
     const readPermissions = await this.readPermissions(parent, user);
-    const filteredRecord = this.removeUnauthorizedAttributes(parent, readPermissions);
-
-    return filteredRecord;
+    return this.removeUnauthorizedAttributes(parent, readPermissions);
   }
 
   /**
@@ -100,9 +92,7 @@ export abstract class BasePermissions<TModel extends Model> {
 
     // Remove unauthorized fields
     const readPermissions = await this.readPermissions(record, user);
-    const filteredRecord = this.removeUnauthorizedAttributes(record, readPermissions);
-
-    return filteredRecord;
+    return this.removeUnauthorizedAttributes(record, readPermissions);
   }
 
   /**
@@ -125,9 +115,7 @@ export abstract class BasePermissions<TModel extends Model> {
 
     // Remove unauthorized fields
     const readPermissions = await this.readPermissions(parent, user);
-    const filteredRecord = this.removeUnauthorizedAttributes(parent, readPermissions);
-
-    return filteredRecord;
+    return this.removeUnauthorizedAttributes(parent, readPermissions);
   }
 
   /**
@@ -147,15 +135,13 @@ export abstract class BasePermissions<TModel extends Model> {
     // Update record with authorized fields
     params = Object.assign({}, params);
     params = this.removeUnauthorizedAttributes(params, updatePermissions);
-    Object.assign(params, override);
 
-    record = await record.$query().patchAndFetch(params);
+    Object.assign(record, params, override);
+    await record.update();
 
     // Remove unauthorized fields
     const readPermissions = await this.readPermissions(record, user);
-    const filteredRecord = this.removeUnauthorizedAttributes(record, readPermissions);
-
-    return filteredRecord;
+    return this.removeUnauthorizedAttributes(record, readPermissions);
   }
 
   /**

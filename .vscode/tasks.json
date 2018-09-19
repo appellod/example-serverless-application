@@ -5,10 +5,10 @@
       "label": "Run Functions Host",
       "identifier": "runFunctionsHost",
       "type": "shell",
-      "command": "func host start -p 7073",
+      "command": "func host start -p 7071",
       "isBackground": true,
       "options": {
-        "cwd": "${workspaceFolder}/dist/serverless/http"
+        "cwd": "${workspaceFolder}/dist/src/serverless"
       },
       "presentation": {
         "reveal": "always"
