@@ -23,6 +23,7 @@
     "start": "./scripts/start.sh",
     "test": "./scripts/test.sh",
     "test:coverage": "nyc ./scripts/test.sh",
+    "test:vsts": "./scripts/test-vsts.sh",
     "test:watch": "./scripts/test-watch.sh",
     "watch": "./scripts/watch.sh",
     "watch:all": "./scripts/watch-all.sh"
