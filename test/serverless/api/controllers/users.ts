@@ -1,12 +1,10 @@
 import { expect } from "chai";
 import { Chance } from "chance";
-import { Context } from "koa";
 
-import * as controller from "../../../../src/serverless/api/controllers/users";
+import { HttpContextMock, FunctionRequestMock } from "../../../../src/common/serverless/mocks";
 import { User } from "../../../../src/common/postgres";
-
-import { UserMock } from "../../../common/postgres/mocks";
-import { HttpContextMock, FunctionRequestMock } from "../../../common/serverless/mocks";
+import { UserMock } from "../../../../src/common/postgres/mocks";
+import * as controller from "../../../../src/serverless/api/controllers/users";
 
 const chance = new Chance();
 

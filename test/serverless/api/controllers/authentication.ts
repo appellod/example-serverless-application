@@ -1,17 +1,13 @@
 import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
 import * as jwt from "jsonwebtoken";
 import * as nock from "nock";
 
+import { FunctionRequestMock, HttpContextMock } from "../../../../src/common/serverless/mocks";
 import { User } from "../../../../src/common/postgres";
+import { UserMock } from "../../../../src/common/postgres/mocks";
 import * as controller from "../../../../src/serverless/api/controllers/authentication";
 
-import { UserMock } from "../../../common/postgres/mocks";
-import { FunctionRequestMock, HttpContextMock } from "../../../common/serverless/mocks";
-
 const expect = chai.expect;
-
-chai.use(chaiAsPromised);
 
 describe("serverless/api/controllers/authentication.ts", function() {
   describe("checkAvailability()", function() {
@@ -197,7 +193,7 @@ describe("serverless/api/controllers/authentication.ts", function() {
       const req = new FunctionRequestMock({
         body: {
           password: "newpassword",
-          reset_hash: user.reset_hash
+          resetHash: user.reset_hash
         }
       });
 

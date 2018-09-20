@@ -1,6 +1,6 @@
 import * as Chance from "chance";
 
-import { User } from "../../../../src/common/postgres";
+import { User } from "../";
 
 export class UserMock extends User {
   constructor(params?: Partial<User>) {

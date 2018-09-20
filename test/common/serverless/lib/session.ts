@@ -3,8 +3,7 @@ import * as Chance from "chance";
 import * as cookie from "cookie";
 
 import { HttpContext, IFunctionRequest, MiddlewareLayer, session } from "../../../../src/common/serverless";
-
-import { FunctionRequestMock, HttpContextMock, SessionStoreMock } from "../mocks";
+import { FunctionRequestMock, HttpContextMock, SessionStoreMock } from "../../../../src/common/serverless/mocks";
 
 const chance = new Chance();
 const noop = async () => {};

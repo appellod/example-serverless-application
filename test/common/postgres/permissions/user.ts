@@ -3,7 +3,7 @@ import * as chaiAsPromised from "chai-as-promised";
 import { Chance } from "chance";
 
 import { User, UserPermissions } from "../../../../src/common/postgres";
-import { UserMock } from "../mocks";
+import { UserMock } from "../../../../src/common/postgres/mocks";
 
 const chance = new Chance();
 const expect = chai.expect;

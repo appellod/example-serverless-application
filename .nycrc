@@ -1,5 +1,17 @@
 {
   "exclude": [
-    "dist/test/**"
-  ]
+    "**/*.spec.js"
+  ],
+  "extension": [
+    ".ts"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "reporter": [
+    "cobertura",
+    "html"
+  ],
+  "report-dir": "./.test-results/coverage",
+  "sourceMap": true
 }

@@ -2,7 +2,7 @@ import { expect } from "chai";
 import * as jwt from "jsonwebtoken";
 import * as io from "socket.io-client";
 
-import { UserMock } from "../../postgres/mocks";
+import { UserMock } from "../../../../src/common/postgres/mocks";
 
 describe.skip("common/socketIo/routers/authenticationRouter.ts", function() {
   describe("authenticate", function() {

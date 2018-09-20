@@ -99,7 +99,7 @@ export class Router {
    */
   private pathToRegExp(path) {
     // Replace all variables with alphanumeric regular expression matching.
-    path = path.replace(/:\w+/g, "(\\w+)");
+    path = path.replace(/:\w+/g, "([^\\/]+)");
 
     // Combine basePath with path.
     const basePath = this.basePath ? this.basePath : "";

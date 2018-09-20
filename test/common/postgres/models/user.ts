@@ -2,7 +2,7 @@ import { expect } from "chai";
 import * as nock from "nock";
 
 import { User } from "../../../../src/common/postgres";
-import { UserMock } from "../mocks";
+import { UserMock } from "../../../../src/common/postgres/mocks";
 
 describe("common/postgres/models/user.ts", function() {
   let user: User;

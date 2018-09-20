@@ -8,9 +8,10 @@ elif [ -f settings.sh ]; then
 fi
 
 knex migrate:latest
-NODE_ENV=test mocha \
+NODE_ENV=test nyc mocha \
   --exit \
-  --inspect \
   --opts ./test/mocha.opts \
+  --reporter mocha-multi-reporters \
+  --reporter-options configFile=mocha-multi-reporters.json \
   --require ./ts-node.js \
   $(find ./test -name '*.ts')

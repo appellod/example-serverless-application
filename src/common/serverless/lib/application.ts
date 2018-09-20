@@ -13,6 +13,9 @@ export class Application {
    */
   public listen() {
     return async (ctx: HttpContext, req: IFunctionRequest) => {
+      // Set the default content-type to JSON.
+      ctx.res.headers = { "content-type": "application/json" };
+
       // Set the default status to 404 in case no middleware alter the response.
       ctx.res.status = 404;
 

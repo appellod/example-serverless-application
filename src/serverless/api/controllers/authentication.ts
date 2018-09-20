@@ -63,11 +63,7 @@ export async function requestPasswordReset(ctx: HttpContext, req: IFunctionReque
 }
 
 export async function resetPassword(ctx: HttpContext, req: IFunctionRequest) {
-  const user = await User.resetPassword(req.body.reset_hash, req.body.password);
-
-  if (!user) {
-    throw new Error("No users matching given reset_hash.");
-  }
+  await User.resetPassword(req.body.resetHash, req.body.password);
 
   ctx.res.body = { message: "Password reset successfully." };
 }

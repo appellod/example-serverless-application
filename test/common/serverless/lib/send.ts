@@ -1,8 +1,7 @@
 import { expect } from "chai";
 
 import { HttpContext, send } from "../../../../src/common/serverless";
-
-import { HttpContextMock } from "../mocks";
+import { HttpContextMock } from "../../../../src/common/serverless/mocks";
 
 describe("common/serverless/lib/send.ts", function() {
   let ctx: HttpContext;

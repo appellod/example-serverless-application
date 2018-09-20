@@ -1,4 +1,5 @@
 settings.sh
+settings.e2e.sh
 settings.test.sh
 tscommand*.tmp.txt
 

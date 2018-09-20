@@ -2,8 +2,7 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 
 import { Application, HttpContext, IFunctionRequest } from "../../../../src/common/serverless";
-
-import { FunctionRequestMock, HttpContextMock } from "../mocks";
+import { FunctionRequestMock, HttpContextMock } from "../../../../src/common/serverless/mocks";
 
 describe("common/serverless/lib/application.ts", function() {
   let app: Application;

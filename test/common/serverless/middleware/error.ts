@@ -2,8 +2,7 @@ import { expect } from "chai";
 import * as Chance from "chance";
 
 import { errorMiddleware, HttpContext, HttpError, IFunctionRequest } from "../../../../src/common/serverless";
-
-import { FunctionRequestMock, HttpContextMock,  } from "../mocks";
+import { FunctionRequestMock, HttpContextMock,  } from "../../../../src/common/serverless/mocks";
 
 const chance = new Chance();
 

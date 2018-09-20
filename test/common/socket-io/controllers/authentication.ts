@@ -3,8 +3,8 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as jwt from "jsonwebtoken";
 
 import { AuthenticationController, IContext, ISocket } from "../../../../src/common/socket-io";
-import { UserMock } from "../../postgres/mocks";
-import { SocketMock } from "../mocks";
+import { UserMock } from "../../../../src/common/postgres/mocks";
+import { SocketMock } from "../../../../src/common/socket-io/mocks";
 
 const expect = chai.expect;
 

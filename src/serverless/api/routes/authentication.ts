@@ -3,6 +3,14 @@ import * as controller from "../controllers/authentication";
 
 export function init(router: Router) {
   /**
+   * @api {delete} /authentication/logout Log Out
+   * @apiName LogOut
+   * @apiGroup Authentication
+   * @apiDescription Logs a user out.
+   */
+  router.delete("/authentication/logout", authenticationMiddleware, controller.logout);
+
+  /**
    * @api {get} /authentication/check-availability Check Availability
    * @apiName CheckAvailability
    * @apiGroup Authentication
@@ -28,14 +36,6 @@ export function init(router: Router) {
    * @apiSuccess {Object} user The user.
    */
   router.post("/authentication/login", controller.loginWithCredentials);
-
-  /**
-   * @api {delete} /authentication/logout Log Out
-   * @apiName LogOut
-   * @apiGroup Authentication
-   * @apiDescription Logs a user out.
-   */
-  router.delete("/authentication/logout", authenticationMiddleware, controller.logout);
 
   /**
    * @api {post} /authentication/refresh-token Refresh Token

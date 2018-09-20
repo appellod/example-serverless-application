@@ -2,9 +2,8 @@ import { expect } from "chai";
 import * as jwt from "jsonwebtoken";
 
 import { authenticationMiddleware, HttpContext, IFunctionRequest } from "../../../../src/common/serverless";
-
-import { UserMock } from "../../postgres/mocks";
-import { FunctionRequestMock, HttpContextMock,  } from "../mocks";
+import { FunctionRequestMock, HttpContextMock,  } from "../../../../src/common/serverless/mocks";
+import { UserMock } from "../../../../src/common/postgres/mocks";
 
 describe("common/serverless/middleware/authentication.ts", function() {
   let ctx: HttpContext;

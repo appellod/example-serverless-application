@@ -2,8 +2,7 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 
 import { HttpContext, IFunctionRequest, Middleware, Router } from "../../../../src/common/serverless";
-
-import { FunctionRequestMock, HttpContextMock,  } from "../mocks";
+import { FunctionRequestMock, HttpContextMock,  } from "../../../../src/common/serverless/mocks";
 
 describe("common/serverless/lib/router.ts", function() {
   let ctx: HttpContext;
@@ -84,7 +83,7 @@ describe("common/serverless/lib/router.ts", function() {
     it("converts params to alphanumeric wildcards", function() {
       const regex = router["pathToRegExp"]("/users/:id");
 
-      expect(regex).to.eql(/^\/users\/(\w+)$/);
+      expect(regex).to.eql(/^\/users\/([^\/]+)$/);
     });
   });
 

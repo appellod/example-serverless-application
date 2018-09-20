@@ -9,6 +9,7 @@
     "target": "es2017"
   },
   "include": [
+    "e2e/**/*",
     "src/**/*",
     "test/**/*"
   ]

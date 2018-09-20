@@ -1,9 +1,9 @@
 import { expect } from "chai";
 import { QueryBuilder } from "objection";
 
-import { RestController } from "../../../../src/serverless/api/controllers/rest";
 import { User, UserPermissions } from "../../../../src/common/postgres";
-import { UserMock } from "../../../common/postgres/mocks";
+import { UserMock } from "../../../../src/common/postgres/mocks";
+import { RestController } from "../../../../src/serverless/api/controllers/rest";
 
 class TestController extends RestController<User, UserPermissions> {
   constructor() {

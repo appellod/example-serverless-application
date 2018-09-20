@@ -1,8 +1,7 @@
 import { expect } from "chai";
 
 import { HttpContext, IFunctionRequest, MiddlewareLayer, serve } from "../../../../src/common/serverless";
-
-import { FunctionRequestMock, HttpContextMock,  } from "../mocks";
+import { FunctionRequestMock, HttpContextMock,  } from "../../../../src/common/serverless/mocks";
 
 describe("common/serverless/lib/serve.ts", function() {
   let callback: MiddlewareLayer;

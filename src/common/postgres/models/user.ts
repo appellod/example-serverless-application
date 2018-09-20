@@ -68,10 +68,14 @@ export class User extends BaseModel {
 
   public static async resetPassword(resetHash: string, newPassword: string) {
     if (!resetHash || !newPassword) {
-      throw new Error("Please provide a reset_hash and newPassword.");
+      throw new Error("Invalid reset hash or password.");
     }
 
     const user = await this.query().where({ reset_hash: resetHash }).first();
+
+    if (!user) {
+      throw new Error("Invalid reset hash.");
+    }
 
     user.password = newPassword;
     user.reset_hash = null;
