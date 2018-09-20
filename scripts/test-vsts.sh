@@ -13,5 +13,4 @@ NODE_ENV=test nyc mocha \
   --opts ./test/mocha.opts \
   --reporter mocha-multi-reporters \
   --reporter-options configFile=mocha-multi-reporters.json \
-  --require ./ts-node.js \
   $(find ./test -name '*.ts')

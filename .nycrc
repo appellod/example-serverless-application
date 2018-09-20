@@ -1,6 +1,7 @@
 {
   "exclude": [
-    "**/*.spec.js"
+    "e2e/**/*",
+    "test/**/*"
   ],
   "extension": [
     ".ts"
@@ -8,10 +9,14 @@
   "include": [
     "src/**/*.ts"
   ],
+  "instrument": true,
   "reporter": [
     "cobertura",
     "html"
   ],
   "report-dir": "./.test-results/coverage",
+  "require": [
+    "ts-node/register"
+  ],
   "sourceMap": true
 }

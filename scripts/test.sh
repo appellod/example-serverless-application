@@ -12,5 +12,4 @@ NODE_ENV=test mocha \
   --exit \
   --inspect \
   --opts ./test/mocha.opts \
-  --require ./ts-node.js \
   $(find ./test -name '*.ts')

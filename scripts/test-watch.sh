@@ -11,7 +11,6 @@ knex migrate:latest
 NODE_ENV=test mocha \
   --inspect \
   --opts ./test/mocha.opts \
-  --require ./ts-node.js \
   --watch \
   --watch-extensions ts \
   $(find ./test -name '*.ts')

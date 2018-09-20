@@ -3,9 +3,11 @@ settings.e2e.sh
 settings.test.sh
 tscommand*.tmp.txt
 
+.funcpack/
 .nyc_output/
+.test-results/
 .tscache/
-coverage/
+build/
 dist/
 node_modules/
 src/serverless/local.settings.json

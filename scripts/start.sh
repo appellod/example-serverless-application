@@ -9,4 +9,4 @@ fi
 ./scripts/build.sh
 
 knex migrate:latest
-node dist/src/microservices/$1/index.js
+node build/src/microservices/$1/index.js

@@ -10,5 +10,4 @@ NODE_ENV=test mocha \
   --exit \
   --inspect \
   --opts ./e2e/mocha.opts \
-  --require ./ts-node.js \
   $(find ./e2e -name '*.ts')
