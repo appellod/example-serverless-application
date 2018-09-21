@@ -39,4 +39,4 @@ app.use(apiRouter.routes());
 const staticMiddleware = serve({ root: __dirname + "/documentation" });
 app.use(staticMiddleware);
 
-export const index = app.listen();
+module.exports = app.listen();

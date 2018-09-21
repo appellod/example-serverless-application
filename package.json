@@ -18,7 +18,7 @@
     "migrations": "knex migrate:latest",
     "migrations:create": "knex migrate:make",
     "migrations:rollback": "knex migrate:rollback",
-    "pack": "funcpack pack ./build/src/serverless -u -c -o ../../../",
+    "pack": "funcpack pack ./build/src/serverless -c -e ../../../webpack.config.js -o ../../../",
     "process-coverage": "node ./scripts/process-coverage.js",
     "start": "./scripts/start.sh",
     "test": "./scripts/test.sh",
@@ -55,6 +55,7 @@
     "request-promise": "^4.2.2",
     "socket.io": "^2.0.4",
     "socket.io-redis": "^5.2.0",
+    "uglify-js": "^2.8.29",
     "uuid": "^3.3.2",
     "ware": "^1.3.0",
     "winston": "^2.4.0",
@@ -116,6 +117,7 @@
     "ts-node": "^7.0.0",
     "tslint": "^5.8.0",
     "tslint-microsoft-contrib": "^5.2.0",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "uglifyjs-webpack-plugin": "^1.0.0-rc.0"
   }
 }
