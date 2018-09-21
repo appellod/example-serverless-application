@@ -38,9 +38,9 @@ files.forEach(async (file) => {
         display: none;
       }
 
-      td.line-count a { font-size: 12px; }
+      td.line-count a { font-size: 12px; line-height: 16.8px; }
       td.line-count a:not([name]) { display: block; }
-      td.line-coverage { font-size: 12px; width: 1px; }
+      td.line-coverage { font-size: 12px; line-height: 16.8px; width: 1px; }
     `
   };
 
