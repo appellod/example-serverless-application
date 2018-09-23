@@ -1,6 +1,5 @@
 {
   "exclude": [
-    "e2e/**/*",
     "test/**/*"
   ],
   "extension": [
@@ -12,7 +11,8 @@
   "instrument": true,
   "reporter": [
     "cobertura",
-    "html"
+    "html",
+    "json"
   ],
   "report-dir": "./.test-results/coverage",
   "require": [

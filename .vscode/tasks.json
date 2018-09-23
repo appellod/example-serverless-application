@@ -8,7 +8,7 @@
       "command": "func host start -p 7071",
       "isBackground": true,
       "options": {
-        "cwd": "${workspaceFolder}/build/src/serverless"
+        "cwd": "${workspaceFolder}/packages/serverless/.funcpack"
       },
       "presentation": {
         "reveal": "always"

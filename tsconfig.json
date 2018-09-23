@@ -1,16 +1,24 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./packages",
+    "composite": true,
+    "declaration": true,
     "lib":["dom", "es2015", "es2016", "es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./build",
+    "paths": {
+      "@example/azura": ["./azura/src"],
+      "@example/azura/*": ["./azura/src/*"],
+      "@example/common": ["./common/src"],
+      "@example/common/*": ["./common/src/*"],
+      "@example/loggly": ["./loggly/src"],
+      "@example/loggly/*": ["./loggly/src/*"],
+      "@example/postgres": ["./postgres/src"],
+      "@example/postgres/*": ["./postgres/src/*"],
+      "@example/redis": ["./redis/src"],
+      "@example/redis/*": ["./redis/src/*"]
+    },
     "sourceMap": true,
     "target": "es2017"
-  },
-  "include": [
-    "e2e/**/*",
-    "src/**/*",
-    "test/**/*"
-  ]
+  }
 }

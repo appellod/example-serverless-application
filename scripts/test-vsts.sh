@@ -1,16 +1,21 @@
 #!/bin/bash
 set -e
 
-if [ -f settings.test.sh ]; then
-  source settings.test.sh
-elif [ -f settings.sh ]; then
-  source settings.sh
+DIRNAME=$(dirname $0)
+ENV=${1:-test}
+
+DEFAULT_SETTINGS="$DIRNAME/../settings.sh"
+TEST_SETTINGS="$DIRNAME/../settings.$ENV.sh"
+
+if [ -f $TEST_SETTINGS ]; then
+  source $TEST_SETTINGS
+elif [ -f $DEFAULT_SETTINGS ]; then
+  source $DEFAULT_SETTINGS
 fi
 
-knex migrate:latest
 NODE_ENV=test nyc mocha \
   --exit \
-  --opts ./test/mocha.opts \
+  --opts ./$ENV/mocha.opts \
   --reporter mocha-multi-reporters \
-  --reporter-options configFile=mocha-multi-reporters.json \
-  $(find ./test -name '*.ts')
+  --reporter-options configFile="$DIRNAME/../mocha-multi-reporters.json" \
+  "$ENV/**/*.ts"

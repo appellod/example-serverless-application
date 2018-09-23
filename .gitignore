@@ -1,14 +1,13 @@
+lerna-debug.log
+local.settings.json
 settings.sh
-settings.e2e.sh
 settings.test.sh
 tscommand*.tmp.txt
+yarn-error.log
 
 .funcpack/
 .nyc_output/
 .test-results/
 .tscache/
-build/
-dist/
+lib/
 node_modules/
-src/serverless/local.settings.json
-src/serverless/api/documentation
