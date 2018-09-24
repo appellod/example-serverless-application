@@ -21,13 +21,22 @@ files.forEach(async (file) => {
   let options = {
     url: "file://" + filePath,
     extraCss: `
+      div.body {
+        margin-top: 0px;
+      }
+
       div.clearfix {
-          overflow: hidden;
-          width: 100%;
+        overflow: hidden;
+        width: 100%;
       }
 
       div.footer {
         display: none;
+      }
+
+      div.header.high {
+        padding-top: 4px;
+        position: relative;
       }
 
       div.status-line {
@@ -38,15 +47,32 @@ files.forEach(async (file) => {
         display: none;
       }
 
-      td.line-count a { font-size: 12px; line-height: 16.8px; }
-      td.line-count a:not([name]) { display: block; }
-      td.line-coverage { font-size: 12px; line-height: 16.8px; width: 1px; }
+      pre.prettyprint, td.line-count, td.line-coverage {
+        font-size: 12px;
+        line-height: 16.8px;
+      }
+
+      pre.prettyprint {
+        padding: 0px 5px !important;
+      }
+
+      span.missing-if-branch {
+        display: none;
+      }
+
+      td.line-count {
+        padding: 0px 5px;
+        white-space: pre;
+      }
     `
   };
 
   // Inline all CSS to HTML file.
   const data = fs.readFileSync(filePath).toString();
-  const html = await inline(data, options);
+  let html = await inline(data, options);
+
+  // Replace unsupported HTML codes.
+  html = html.replace(/&#187;/g, "&rsaquo;");
 
   // Save new HTML file.
   const outputFile = path.resolve(CODE_COVERAGE_VSTS_DIRECTORY, file);
