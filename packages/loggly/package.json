@@ -1,0 +1,27 @@
+{
+  "description": "Example Monorepo: Loggly Package",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "name": "@example/loggly",
+  "typings": "lib/index.d.ts",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "../../scripts/build.sh",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "test": "../../scripts/test.sh",
+    "test:coverage": "nyc ../../scripts/test.sh",
+    "test:vsts": "../../scripts/test-vsts.sh",
+    "test:watch": "../../scripts/test-watch.sh"
+  },
+  "dependencies": {
+    "winston": "^2.4.0",
+    "winston-loggly-bulk": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/winston": "^2.3.7",
+    "mocha": "^4.0.1",
+    "nyc": "^12.0.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  }
+}

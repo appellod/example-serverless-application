@@ -1,0 +1,32 @@
+{
+  "description": "Example Monorepo: Azura Package",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "name": "@example/azura",
+  "typings": "lib/index.d.ts",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "../../scripts/build.sh",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "test": "../../scripts/test.sh",
+    "test:coverage": "nyc ../../scripts/test.sh",
+    "test:vsts": "../../scripts/test-vsts.sh",
+    "test:watch": "../../scripts/test-watch.sh"
+  },
+  "dependencies": {
+    "@example/postgres": "^0.0.0",
+    "cookie": "^0.3.1",
+    "fs": "0.0.2",
+    "mime": "^2.3.1",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.3.1",
+    "@types/mime": "^2.0.0",
+    "@types/uuid": "^3.4.3",
+    "mocha": "^4.0.1",
+    "nyc": "^12.0.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  }
+}

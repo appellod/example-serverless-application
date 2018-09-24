@@ -1,0 +1,38 @@
+{
+  "description": "Example Monorepo: Postgres Package",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "name": "@example/postgres",
+  "typings": "lib/index.d.ts",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "../../scripts/build.sh",
+    "migrations": "knex migrate:latest",
+    "migrations:create": "knex migrate:make",
+    "migrations:rollback": "knex migrate:rollback",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "test": "../../scripts/test.sh",
+    "test:coverage": "nyc ../../scripts/test.sh",
+    "test:vsts": "../../scripts/test-vsts.sh",
+    "test:watch": "../../scripts/test-watch.sh"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "knex": "^0.15.2",
+    "objection": "^1.2.2",
+    "pg": "^7.4.3",
+    "request": "^2.74.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt-nodejs": "0.0.30",
+    "@types/knex": "^0.14.21",
+    "@types/pg": "^7.4.10",
+    "@types/request": "^2.0.9",
+    "@types/uuid": "^3.4.3",
+    "mocha": "^4.0.1",
+    "nyc": "^12.0.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  }
+}

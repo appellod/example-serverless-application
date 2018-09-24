@@ -1,0 +1,12 @@
+{
+  "azureFunctions.projectRuntime": "~1",
+  "azureFunctions.projectLanguage": "JavaScript",
+  "azureFunctions.templateFilter": "Verified",
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "html.format.wrapAttributes": "force-aligned",
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  }
+}

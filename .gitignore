@@ -1,11 +1,13 @@
+lerna-debug.log
+local.settings.json
 settings.sh
 settings.test.sh
 tscommand*.tmp.txt
+yarn-error.log
 
+.funcpack/
 .nyc_output/
+.test-results/
 .tscache/
-coverage/
-dist/
+lib/
 node_modules/
-src/microservices/authentication/documentation/
-src/microservices/rest/documentation/
