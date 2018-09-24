@@ -11,7 +11,7 @@ export class Application {
    * Begin processing requests.
    */
   public listen() {
-    return async (ctx: HttpContext, req: FunctionRequest) => {
+    return (ctx: HttpContext, req: FunctionRequest) => {
       // Set the default content-type to JSON.
       ctx.res.headers = { "content-type": "application/json" };
 
@@ -19,10 +19,7 @@ export class Application {
       ctx.res.status = 404;
 
       // Run middleware.
-      await this.middleware.run(ctx, req);
-
-      // Let Azure know we are done after middleware finish.
-      ctx.done();
+      return this.middleware.run(ctx, req);
     };
   }
 

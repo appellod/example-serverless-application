@@ -40,15 +40,6 @@ describe("application.ts", function() {
 
         expect(spy.calledOnce).to.eql(true);
       });
-
-      it("calls ctx.done()", async function() {
-        const spy = sinon.spy();
-        ctx.done = spy;
-
-        await callback(ctx, req);
-
-        expect(spy.calledOnce).to.eql(true);
-      });
     });
   });
 
