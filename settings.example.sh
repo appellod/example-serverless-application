@@ -25,4 +25,7 @@ POSTGRES_URL="postgres://postgres@localhost/example_local"
 
 # Redis
 REDIS_DATABASE="0"
-REDIS_URL="redis://127.0.0.1:6379"
+REDIS_HOST="127.0.0.1"
+REDIS_PASSWORD=""
+REDIS_PORT="6379"
+REDIS_TLS="false"
