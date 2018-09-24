@@ -13,6 +13,7 @@
     "build": "lerna run build",
     "combine:coverage": "istanbul-combine -d .test-results/coverage -r cobertura -r html packages/**/.test-results/coverage/coverage-final.json",
     "combine:junit": "node ./scripts/combine-junit.js",
+    "funcpack": "lerna run funcpack",
     "lint": "lerna run lint",
     "process:coverage": "node ./scripts/process-coverage.js",
     "test": "lerna run test",
