@@ -4,10 +4,11 @@
   "name": "@example/serverless",
   "version": "0.0.0",
   "scripts": {
-    "build": "../../scripts/build.sh && ./scripts/funcpack.sh",
+    "build": "../../scripts/build.sh",
     "documentation": "./scripts/documentation.sh",
     "e2e": "../../scripts/test.sh e2e",
     "e2e:watch": "../../scripts/test-watch.sh e2e",
+    "funcpack": "./scripts/funcpack.sh",
     "lint": "tslint -c tslint.json 'e2e/**/*.ts' 'src/**/*.ts' 'test/**/*.ts'",
     "test": "../../scripts/test.sh",
     "test:coverage": "nyc ../../scripts/test.sh",

@@ -8,4 +8,4 @@ rm -rf lib/
 tsc
 
 # Copy non-Typescript files.
-rsync -aP --exclude=*.ts ./src/* ./lib/
+rsync -aPq --exclude=*.ts ./src/* ./lib/

@@ -30,6 +30,11 @@ files.forEach(async (file) => {
         width: 100%;
       }
 
+      div.coverage-summary table {
+        margin: 16px;
+        width: calc(100% - 32px);
+      }
+
       div.footer {
         display: none;
       }
@@ -72,7 +77,7 @@ files.forEach(async (file) => {
   let html = await inline(data, options);
 
   // Replace unsupported HTML codes.
-  html = html.replace(/&#187;/g, "&rsaquo;");
+  html = html.replace(/&#187;/g, ">");
 
   // Save new HTML file.
   const outputFile = path.resolve(CODE_COVERAGE_VSTS_DIRECTORY, file);
