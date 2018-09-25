@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import * as jwt from "jsonwebtoken";
 
-import { User } from "../src/common/postgres";
+import { User } from "@example/postgres";
 
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);

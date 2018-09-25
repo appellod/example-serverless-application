@@ -16,7 +16,15 @@ module.exports = function(config, webpack) {
     'pg-query-stream': 'pg-query-stream',
     'tedious': 'tedious'
   };
-  config.plugins.push(new UglifyJSPlugin({ cache: true }));
+
+  config.plugins.push(new UglifyJSPlugin({
+    cache: true,
+    uglifyOptions: {
+      mangle: {
+        keep_fnames: true // Objection cannot generate joins if false.
+      }
+    }
+  }));
 
   return config;
 }

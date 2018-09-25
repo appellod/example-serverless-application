@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-apidoc -i src/serverless/api/routes -o src/serverless/api/documentation
+apidoc -i ./src/api/routes -o ./documentation
