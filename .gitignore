@@ -11,3 +11,4 @@ yarn-error.log
 .tscache/
 lib/
 node_modules/
+packages/serverless/documentation
