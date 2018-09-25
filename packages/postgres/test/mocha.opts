@@ -2,3 +2,4 @@
 --require source-map-support/register
 --require ts-node/register
 --require tsconfig-paths/register
+--timeout 5000
